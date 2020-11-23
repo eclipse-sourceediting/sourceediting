@@ -1,8 +1,14 @@
 /*******************************************************************************
- * Licensed Materials - Property of IBM
- * © Copyright IBM Corporation 2020. All Rights Reserved.
- * U.S. Government Users Restricted Rights - Use, duplication or disclosure
- * restricted by GSA ADP Schedule Contract with IBM Corp. 
+ * Copyright (c) 2020 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
 package org.eclipse.wst.jsdt.web.ui.internal.tasks;
@@ -10,6 +16,7 @@ package org.eclipse.wst.jsdt.web.ui.internal.tasks;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -22,7 +29,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IRegion;
@@ -94,45 +100,84 @@ public class JSFileTaskScanner implements IFileTaskScanner {
 			textFileBufferManager.connect(file.getFullPath(), LocationKind.IFILE, localMonitor.newChild(1));
 			IDocument document = textFileBufferManager.getTextFileBuffer(file.getFullPath(), LocationKind.IFILE).getDocument();
 			IDocumentPartitioner partitioner = JavaScriptPlugin.getDefault().getJavaTextTools().createDocumentPartitioner();
-			FindReplaceDocumentAdapter finder = new FindReplaceDocumentAdapter(document);
 			partitioner.connect(document);
 			ITypedRegion[] partitions = partitioner.computePartitioning(0, document.getLength());
 			SubMonitor partitionMonitor = localMonitor.newChild(1);
 			partitionMonitor.beginTask("", partitions.length);
+			String[] lowerTags = new String[taskTags.length];
+			for (int i = 0; i < taskTags.length; i++) {
+				lowerTags[i] = taskTags[i].getTag().toLowerCase(Locale.US);
+			}
 			for (int i = 0; i < partitions.length; i++) {
-				for (int j = 0; j < taskTags.length; j++) {
-					switch (partitions[i].getType()) {
-						case IJavaScriptPartitions.JAVA_SINGLE_LINE_COMMENT : {
-							IRegion lineMatch = finder.find(partitions[i].getOffset(), taskTags[j].getTag(), true, false, true, false);
-							if (lineMatch != null) {
-								IRegion lineInfo = document.getLineInformationOfOffset(lineMatch.getOffset());
-								int start = lineMatch.getOffset();
-								int lengthToEndOfLine = lineInfo.getLength() - (lineMatch.getOffset() - lineInfo.getOffset());
-								String text = document.get(start, lengthToEndOfLine).trim();
-								Map<String, Object> attributesForNewTaskMarker = createInitialMarkerAttributes(text, document.getLineOfOffset(lineMatch.getOffset()), start, text.length(), taskTags[j].getPriority());
+				int openingLength = 2;
+				switch (partitions[i].getType()) {
+					case IJavaScriptPartitions.JAVA_SINGLE_LINE_COMMENT : {
+						// includes the // leading characters
+						IRegion lineInfo = document.getLineInformationOfOffset(partitions[i].getOffset());
+						int start = partitions[i].getOffset() + openingLength;
+						int lengthToEndOfLine = lineInfo.getOffset() + lineInfo.getLength() - start;
+						String text = document.get(start, lengthToEndOfLine);
+						String lowerText = text.toLowerCase(Locale.US);
+						for (int j = 0; j < lowerTags.length; j++) {
+							if ((lowerText.indexOf(lowerTags[j])) >= 0) {
+								while (start < lineInfo.getOffset() + lineInfo.getLength() && Character.isWhitespace(text.charAt(start - partitions[i].getOffset() - openingLength))) {
+									start++;
+								}
+								Map<String, Object> attributesForNewTaskMarker = createInitialMarkerAttributes(text.trim(), document.getLineOfOffset(partitions[i].getOffset()), start, lineInfo.getOffset() + lineInfo.getLength() - start, taskTags[j].getPriority());
 								newMarkers.add(attributesForNewTaskMarker);
 							}
-							break;
 						}
-						case IJavaScriptPartitions.JAVA_DOC :
-						case IJavaScriptPartitions.JAVA_MULTI_LINE_COMMENT : {
-							IRegion tagMatch = finder.find(partitions[i].getOffset(), taskTags[j].getTag(), true, false, true, false);
-							while (tagMatch != null && tagMatch.getOffset() + tagMatch.getLength() < partitions[i].getOffset() + partitions[i].getLength()) {
-								int start = tagMatch.getOffset();
-								IRegion lineInfo = document.getLineInformationOfOffset(tagMatch.getOffset());
-								int lengthToEndOfLine = lineInfo.getLength() - (tagMatch.getOffset() - lineInfo.getOffset());
-								// shorter of end of line or all but the close of the comment
-								lengthToEndOfLine = Math.min(lengthToEndOfLine, partitions[i].getOffset() + partitions[i].getLength() - 2 - start);
-								String text = document.get(start, lengthToEndOfLine).trim();
-								int lineNumber = document.getLineOfOffset(tagMatch.getOffset());
-								Map<String, Object> attributesForNewTaskMarker = createInitialMarkerAttributes(text, lineNumber, start, text.length(), taskTags[j].getPriority());
+						break;
+					}
+					case IJavaScriptPartitions.JAVA_DOC :
+						openingLength = 3;
+						//$FALL-THROUGH$
+					case IJavaScriptPartitions.JAVA_MULTI_LINE_COMMENT : {
+						// first line is possibly only partially a comment, act much like a single line comment
+						int partitionEnd = partitions[i].getOffset() + partitions[i].getLength();
+						// partition includes the opening 2 or 3 /**? and closing two */
+						IRegion lineInformation = document.getLineInformationOfOffset(partitions[i].getOffset());
+						int start = partitions[i].getOffset() + openingLength;
+						int lengthToEndOfCommentLine = Math.min(lineInformation.getOffset() + lineInformation.getLength() - start, partitionEnd);
+						String text = document.get(start, lengthToEndOfCommentLine);
+						String lowerText = text.toLowerCase(Locale.US);
+						for (int j = 0; j < lowerTags.length; j++) {
+							if ((lowerText.indexOf(lowerTags[j])) >= 0) {
+								while (start < lineInformation.getOffset() + lineInformation.getLength() && Character.isWhitespace(text.charAt(start - partitions[i].getOffset() - openingLength))) {
+									start++;
+								}
+								Map<String, Object> attributesForNewTaskMarker = createInitialMarkerAttributes(text.trim(), document.getLineOfOffset(partitions[i].getOffset()), start, lengthToEndOfCommentLine, taskTags[j].getPriority());
 								newMarkers.add(attributesForNewTaskMarker);
+							}
+						}
+						// subsequent lines
+						int secondLineNumber = document.getLineOfOffset(start) + 1;
+						int lastLineNumber = document.getLineOfOffset(partitionEnd);
+						for (int currentLineNumber = secondLineNumber; currentLineNumber <= lastLineNumber; currentLineNumber++) {
+							lineInformation = document.getLineInformation(currentLineNumber);
+							int applicableLength = lineInformation.getLength();
+							text = document.get(lineInformation.getOffset(), applicableLength);
 
-								tagMatch = finder.find(lineInfo.getOffset() + lineInfo.getLength(), taskTags[j].getTag(), true, false, true, false);
+							// handle a last line that has more after the comment ends
+							if (lineInformation.getOffset() + lineInformation.getLength() > partitionEnd) {
+								applicableLength = partitionEnd - lineInformation.getOffset();
+								text = document.get(lineInformation.getOffset(), applicableLength);
+								while (text.length() > 2 && (text.charAt(text.length() - 1) == '/' || text.charAt(text.length() - 1) == '*')) {
+									text = text.substring(0, text.length() - 1);
+									applicableLength--;
+								}
 							}
-							break;
+
+							lowerText = text.toLowerCase(Locale.US);
+							for (int j = 0; j < lowerTags.length; j++) {
+								int index = 0;
+								if ((index = lowerText.indexOf(lowerTags[j])) >= 0) {
+									Map<String, Object> attributesForNewTaskMarker = createInitialMarkerAttributes(text.substring(index).trim(), currentLineNumber, lineInformation.getOffset() + index, applicableLength - index, taskTags[j].getPriority());
+									newMarkers.add(attributesForNewTaskMarker);
+								}
+							}
 						}
-						default :
+						break;
 					}
 				}
 				partitionMonitor.worked(1);
