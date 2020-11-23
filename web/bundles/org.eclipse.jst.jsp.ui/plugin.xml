@@ -21,9 +21,11 @@
 			name="%CSS_JSP_Source_Page_Editor.name"
 			icon="$nl$/icons//full/obj16/sourceEditor.gif"
 			contributorClass="org.eclipse.jst.jsp.ui.internal.editor.ActionContributorJSP"
-			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.jst.jsp.core.cssjspsource.source">
+			<class class="org.eclipse.wst.sse.ui.StructuredTextEditor">
+				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.jst.jsp.ui"/>
+			</class>
 			<contentTypeBinding
 				contentTypeId="org.eclipse.jst.jsp.core.cssjspsource" />
 			<contentTypeBinding

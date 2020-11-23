@@ -47,15 +47,14 @@ public class RemoveAttributesProposal implements ICompletionProposal {
 		if (fTag.getNumberOfRegions() > 2) {
 			int removalStart = fTag.getTextEndOffset(regions.get(1));
 			int removalEnd = fTag.getStartOffset(fTag.getLastRegion());
-			if (!isEndType(fTag.getLastRegion().getType())) {
-				removalEnd = removalStart;
-			}
-			try {
-				document.replace(removalStart, removalEnd - removalStart, "");
-			}
-			catch (BadLocationException e) {
-				Logger.logException(e);
-			}
+//			if (isEndType(fTag.getLastRegion().getType())) {
+				try {
+					document.replace(removalStart, removalEnd - removalStart, "");
+				}
+				catch (BadLocationException e) {
+					Logger.logException(e);
+				}
+//			}
 		}
 	}
 

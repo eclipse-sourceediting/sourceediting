@@ -46,6 +46,7 @@ import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.html.ui.internal.style.LineStyleProviderForHTML;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
+import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
@@ -235,7 +236,14 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			providers = new LineStyleProvider[]{getLineStyleProviderForEmbeddedCSS()};
 		}
 		else {
-			Logger.log(Logger.INFO, "No line style provider for " + partitionType);
+			ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
+			LineStyleProvider provider = (LineStyleProvider) builder.getConfiguration("linestyleprovider", partitionType);
+			if (provider != null) {
+				providers = new LineStyleProvider[]{provider};
+			}
+			else {
+				Logger.log(Logger.WARNING_DEBUG, "No line style provider for " + partitionType);
+			}
 		}
 
 		return providers;
