@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2013 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.Logger;
-import org.eclipse.wst.xml.core.internal.parser.IntStack;
 import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
