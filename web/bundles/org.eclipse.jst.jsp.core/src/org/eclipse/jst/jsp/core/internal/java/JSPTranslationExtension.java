@@ -14,9 +14,9 @@ package org.eclipse.jst.jsp.core.internal.java;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IJavaProject;
@@ -151,7 +151,7 @@ public class JSPTranslationExtension extends JSPTranslation {
 			// text
 			// mapping from java <-> jsp (eg. an import statement)
 			if (!isIndirect(javaPositions[i].offset))
-				jspPositions[i] = (Position) getJava2JspMap().get(javaPositions[i]);
+				jspPositions[i] = getJava2JspMap().get(javaPositions[i]);
 		}
 
 		if (DEBUG) {
@@ -399,11 +399,11 @@ public class JSPTranslationExtension extends JSPTranslation {
 		// can be null if it's a NullJSPTranslation
 		if (getJavaDocument() != null && getJspDocument() != null) {
 
-			HashMap java2jsp = getJava2JspMap();
-			Iterator it = java2jsp.keySet().iterator();
+			Map<Position,Position> java2jsp = getJava2JspMap();
+			Iterator<Position> it = java2jsp.keySet().iterator();
 			Position javaPos = null;
 			while (it.hasNext()) {
-				javaPos = (Position) it.next();
+				javaPos = it.next();
 				try {
 
 					fJavaDocument.addPosition(javaPos);
@@ -421,12 +421,12 @@ public class JSPTranslationExtension extends JSPTranslation {
 
 				try {
 
-					fJspDocument.addPosition((Position) java2jsp.get(javaPos));
+					fJspDocument.addPosition(java2jsp.get(javaPos));
 
 				}
 				catch (BadLocationException e) {
 					if (DEBUG) {
-						System.out.println("tyring to add JSP Position:[" + ((Position) java2jsp.get(javaPos)).offset + ":" + ((Position) java2jsp.get(javaPos)).length + "] to " + getJavaPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+						System.out.println("tyring to add JSP Position:[" + java2jsp.get(javaPos).offset + ":" + java2jsp.get(javaPos).length + "] to " + getJavaPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						Logger.logException(e);
 					}
 				}

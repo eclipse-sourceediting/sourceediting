@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
@@ -162,7 +162,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	 */
 	private String debug(JSPTranslation translation) {
 		StringBuffer debugString = new StringBuffer();
-		HashMap jsp2java = translation.getJsp2JavaMap();
+		Map<Position,Position> jsp2java = translation.getJsp2JavaMap();
 		String javaText = translation.getJavaText();
 		String jspText = fViewer.getDocument().get();
 		debugString.append("[jsp2JavaMap in JSPCompletionProcessor]\r\n"); //$NON-NLS-1$
@@ -171,7 +171,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 		while (it.hasNext()) {
 			try {
 				Position jspPos = (Position) it.next();
-				Position javaPos = (Position) jsp2java.get(jspPos);
+				Position javaPos = jsp2java.get(jspPos);
 				debugString.append("jsp > " + jspPos.offset + ":" + jspPos.length + ":" + jspText.substring(jspPos.offset, jspPos.offset + jspPos.length) + ":\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				debugString.append("java > " + javaPos.offset + ":" + javaPos.length + ":" + javaText.substring(javaPos.offset, javaPos.offset + javaPos.length) + ":\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				debugString.append("-------------------------------------------------\n"); //$NON-NLS-1$

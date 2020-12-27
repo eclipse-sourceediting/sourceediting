@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2017 IBM Corporation and others.
+ * Copyright (c) 2006, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -174,10 +175,10 @@ public class JSPTranslationTest extends TestCase {
 		JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
 		JSPTranslation translation = adapter.getJSPTranslation();
 		try {
-			HashMap java2jsp = translation.getJava2JspMap();
+			Map<Position, Position> java2jsp = translation.getJava2JspMap();
 			assertEquals("java2jsp map size:", 11, java2jsp.size());
 
-			HashMap jsp2java = translation.getJsp2JavaMap();
+			Map<Position, Position> jsp2java = translation.getJsp2JavaMap();
 			assertEquals("jsp2java map size:", 3, jsp2java.size());
 
 			// some test positions (out.print("" + | );)
@@ -304,13 +305,13 @@ public class JSPTranslationTest extends TestCase {
 			JSPTranslationAdapter adapter = (JSPTranslationAdapter) sModel.getDocument().getAdapterFor(IJSPTranslation.class);
 			JSPTranslation translation = adapter.getJSPTranslation();
 			
-			HashMap jsp2java = translation.getJsp2JavaMap();
+			Map<Position, Position> jsp2java = translation.getJsp2JavaMap();
 			Object[] jspRanges = jsp2java.keySet().toArray();
 			Position jspPos = null;
 			Position javaPos = null;
 			for (int i = 0; i < jspRanges.length; i++) {
 				jspPos = (Position)jspRanges[i];
-				javaPos = (Position)jsp2java.get(jspPos);
+				javaPos = jsp2java.get(jspPos);
 				//System.out.println("jsp:" + printPos(jspPos) + " >> java:" + printPos(javaPos));
 				checkPosition(jspPos, javaPos);
 			}

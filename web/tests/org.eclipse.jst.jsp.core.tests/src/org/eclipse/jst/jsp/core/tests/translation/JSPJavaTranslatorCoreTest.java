@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2018 IBM Corporation and others.
+ * Copyright (c) 2006, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -36,8 +36,12 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
+import org.eclipse.jst.jsp.core.internal.contenttype.ServletAPIDescriptor;
 import org.eclipse.jst.jsp.core.internal.java.IJSPProblem;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
@@ -442,6 +446,55 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			if (model != null)
 				model.releaseFromEdit();
 		}
+	}
+	
+	public void testApiDetection1() throws Exception {
+		String testName = "testapidetection1";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		synchronized (creationLock) {
+			if (!project.isAccessible()) {
+				// Create new project
+				project = BundleResourceUtil.createSimpleProject(testName, null, new String[] {JavaCore.NATURE_ID, "org.eclipse.pde.PluginNature"});
+				assertTrue(project.exists());
+				BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+			}
+		}
+		ServletAPIDescriptor servletAPIVersion = DeploymentDescriptorPropertyCache.getInstance().getServletAPIVersion(project);
+		assertNotNull("no API version was detected", servletAPIVersion);
+		IClasspathEntry[] resolvedClasspath = JavaCore.create(project).getResolvedClasspath(true);
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < resolvedClasspath.length; i++) {
+			builder.append('\n');
+			builder.append(resolvedClasspath[i].getPath());
+		}
+		assertFalse("Default API version returned, nothing was detected\n" + builder, servletAPIVersion == ServletAPIDescriptor.DEFAULT);
+		assertEquals("Unexpected API version", 3.1f, servletAPIVersion.getAPIversion());
+		assertEquals("Unexpected root package", "javax.servlet", servletAPIVersion.getRootPackage());
+	}
+
+	// TODO: enable this test
+	public void testApiDetection2() throws Exception {
+		String testName = "testapidetection2";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		synchronized (creationLock) {
+			if (!project.isAccessible()) {
+				// Create new project
+				project = BundleResourceUtil.createSimpleProject(testName, null, new String[] {JavaCore.NATURE_ID, "org.eclipse.pde.PluginNature"});
+				assertTrue(project.exists());
+				BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+			}
+		}
+		ServletAPIDescriptor servletAPIVersion = DeploymentDescriptorPropertyCache.getInstance().getServletAPIVersion(project);
+		assertNotNull("no API version was detected", servletAPIVersion);
+		IClasspathEntry[] resolvedClasspath = JavaCore.create(project).getResolvedClasspath(true);
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < resolvedClasspath.length; i++) {
+			builder.append('\n');
+			builder.append(resolvedClasspath[i].getPath());
+		}
+//		assertFalse("Default API version returned, nothing was detected\n" + builder, servletAPIVersion == ServletAPIDescriptor.DEFAULT);
+//		assertEquals("Unexpected API version", 3.1f, servletAPIVersion.getAPIversion());
+//		assertEquals("Unexpected root package", "javax.servlet", servletAPIVersion.getRootPackage());
 	}
 
 	public void test_codas() throws Exception {

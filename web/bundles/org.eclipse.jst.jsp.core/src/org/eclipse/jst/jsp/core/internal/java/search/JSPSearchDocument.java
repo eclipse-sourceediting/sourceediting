@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2009 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,8 @@
 package org.eclipse.jst.jsp.core.internal.java.search;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -175,7 +175,7 @@ public class JSPSearchDocument {
 		Position jspPos, javaPos = null;
 		JSPTranslation trans = getJSPTranslation();
 		if (trans != null) {
-			HashMap java2jspMap = trans.getJava2JspMap();
+			Map<Position,Position> java2jspMap = trans.getJava2JspMap();
 
 			// iterate all mapped java ranges
 			Iterator it = java2jspMap.keySet().iterator();
@@ -186,7 +186,7 @@ public class JSPSearchDocument {
 					continue;
 
 				offsetInRange = javaOffset - javaPos.offset;
-				jspPos = (Position) java2jspMap.get(javaPos);
+				jspPos = java2jspMap.get(javaPos);
 
 				if (jspPos != null)
 					result = jspPos.offset + offsetInRange;

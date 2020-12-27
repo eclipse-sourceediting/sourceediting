@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2018 IBM Corporation and others.
+ * Copyright (c) 2007, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -69,12 +69,11 @@ public final class FacetModuleCoreSupport {
 
 	/**
 	 * @param project
-	 * @return the version of the JST Web facet installed on the project, a default version otherwise
+	 * @return the version of the JST Web facet installed on the project, -1 otherwise
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
 	public static float getDynamicWebProjectVersion(IProject project) {
-		// In the absence of any facet information, assume the highest level
-		float version = DEFAULT_SERVLET_VERSION;
+		float version = -1;
 		try {
 			version = FacetModuleCoreSupportDelegate.getDynamicWebProjectVersion(project);
 		}

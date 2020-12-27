@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2018 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -74,8 +75,8 @@ public class JSPTranslation implements IJSPTranslation {
 	/** the name of the class (w/out extension) **/
 	private String fClassname = ""; //$NON-NLS-1$
 	private IJavaProject fJavaProject = null;
-	private HashMap fJava2JspMap = null;
-	private HashMap fJsp2JavaMap = null;
+	private Map<Position, Position> fJava2JspMap = null;
+	private Map<Position, Position> fJsp2JavaMap = null;
 	private HashMap fJava2JspImportsMap = null;
 	private HashMap fJava2JspUseBeanMap = null;
 	private HashMap fJava2JspIndirectMap = null;
@@ -171,7 +172,7 @@ public class JSPTranslation implements IJSPTranslation {
 				continue;
 
 			offsetInRange = jspOffset - jspPos.offset;
-			javaPos = (Position) fJsp2JavaMap.get(jspPos);
+			javaPos = fJsp2JavaMap.get(jspPos);
 			if(javaPos != null)
 				result = javaPos.offset + offsetInRange;
 			else  {
@@ -201,7 +202,7 @@ public class JSPTranslation implements IJSPTranslation {
 				continue;
 
 			offsetInRange = javaOffset - javaPos.offset;
-			jspPos = (Position) fJava2JspMap.get(javaPos);
+			jspPos = fJava2JspMap.get(javaPos);
 			
 			if(jspPos != null)
 				result = jspPos.offset + offsetInRange;
@@ -222,7 +223,7 @@ public class JSPTranslation implements IJSPTranslation {
 	 * 
 	 * @return a map of Positions in the Java document to corresponding Positions in the JSP document
 	 */
-	public HashMap getJava2JspMap() {
+	public Map<Position,Position> getJava2JspMap() {
 		return fJava2JspMap;
 	}
 
@@ -230,7 +231,7 @@ public class JSPTranslation implements IJSPTranslation {
 	 * 
 	 * @return a map of Positions in the JSP document to corresponding Positions in the Java document
 	 */
-	public HashMap getJsp2JavaMap() {
+	public Map<Position,Position> getJsp2JavaMap() {
 		return fJsp2JavaMap;
 	}
 
@@ -264,12 +265,12 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @return <code>true</code> if the java code spans multiple JSP partitions, otherwise false.
 	 */
 	public boolean javaSpansMultipleJspPartitions(int javaOffset, int javaLength) {
-		HashMap java2jsp = getJava2JspMap();
+		Map<Position,Position> java2jsp = getJava2JspMap();
 		int count = 0;
-		Iterator it = java2jsp.keySet().iterator();
+		Iterator<Position> it = java2jsp.keySet().iterator();
 		Position javaRange = null;
 		while(it.hasNext()) {
-			javaRange = (Position)it.next();
+			javaRange = it.next();
 			if(javaRange.overlapsWith(javaOffset, javaLength))
 				count++;
 			if(count > 1)

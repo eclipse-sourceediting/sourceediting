@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2018 IBM Corporation and others.
+ * Copyright (c) 2007, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -39,6 +39,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.util.CommonXML;
 import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
@@ -243,13 +248,13 @@ public final class DeploymentDescriptorPropertyCache {
 					getInstance().deploymentDescriptorChanged(path);
 				}
 			}
-			else if (resource.getType() == IResource.PROJECT) {
+			else if (resource.getType() == IResource.PROJECT && (delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED)) {
 				String name = resource.getName();
 				if (_debugResolutionCache) {
 					System.out.println("Removing DeploymentDescriptorPropertyCache resolution cache for project " + name); //$NON-NLS-1$
 				}
 				synchronized (LOCK) {
-					getInstance().resolvedMap.remove(name);
+					getInstance().invalidate(name);
 				}
 			}
 			return true;
@@ -646,6 +651,11 @@ public final class DeploymentDescriptorPropertyCache {
 	 */
 	Map<String, Map<IPath, IPath>> resolvedMap = new HashMap<>();
 
+	/**
+	 * Map of project names to a structure representing the available Servlet API.
+	 */
+	Map<String, ServletAPIDescriptor> apiVersions = new HashMap<>();
+
 	final static Object LOCK = new Object();
 
 	private DeploymentDescriptorPropertyCache() {
@@ -742,6 +752,51 @@ public final class DeploymentDescriptorPropertyCache {
 		if (fDeploymentDescriptors.containsKey(fullPath.makeAbsolute())) {
 			updateCacheEntry(fullPath);
 		}
+	}
+
+	/**
+	 * @param project
+	 * @return Descriptor for the Servlet API version found on the project's Java
+	 *         Build Path, <code>null</code> if none was discoverable.
+	 */
+	private ServletAPIDescriptor discoverServletAPIVersion(IProject project) {
+		IJavaProject javaProject = JavaCore.create(project);
+		if (!javaProject.exists()) {
+			return null;
+		}
+		try {
+			if (javaProject.findType("jakarta.servlet.GenericFilter") != null) {
+				return new ServletAPIDescriptor("jakarta.servlet", 4);
+			}
+			if (javaProject.findType("javax.servlet.GenericFilter") != null) {
+				return new ServletAPIDescriptor("javax.servlet", 4);
+			}
+			if (javaProject.findType("javax.servlet.ReadListener") != null) {
+				return new ServletAPIDescriptor("javax.servlet", 3.1f);
+			}
+			if (javaProject.findType("javax.servlet.SessionCookieConfig") != null) {
+				return new ServletAPIDescriptor("javax.servlet", 3);
+			}
+			IType servletRequestType = javaProject.findType("javax.servlet.http.HttpServletRequest");
+			if (servletRequestType != null) {
+				IMethod[] methods = servletRequestType.getMethods();
+				for (int i = 0; i < methods.length; i++) {
+					if ("getContextPath".equals(methods[i].getElementName())) {
+						return new ServletAPIDescriptor("javax.servlet", 2.5f);
+					}
+				}
+			}
+			if (javaProject.findType("javax.servlet.ServletRequestAttributeEvent") != null) {
+				return new ServletAPIDescriptor("javax.servlet", 2.4f);
+			}
+			if (javaProject.findType("javax.servlet.Filter") != null) {
+				return new ServletAPIDescriptor("javax.servlet", 2.3f);
+			}
+		}
+		catch (JavaModelException e) {
+			Logger.logException(e);
+		}
+		return null;
 	}
 
 	/**
@@ -874,7 +929,19 @@ public final class DeploymentDescriptorPropertyCache {
 
 		/* check facet settings */
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(fullPath.segment(0));
-		version = FacetModuleCoreSupport.getDynamicWebProjectVersion(project);
+		float facetVersion = FacetModuleCoreSupport.getDynamicWebProjectVersion(project);
+
+		if (facetVersion > 0) {
+			// use it if set
+			version = facetVersion;
+		}
+		else {
+			// try to detect from classpath
+			ServletAPIDescriptor detected = getServletAPIVersion(project);
+			if (detected != null) {
+				return convertSpecVersions(detected.getAPIversion());
+			}
+		}
 
 		return convertSpecVersions(version);
 	}
@@ -905,6 +972,26 @@ public final class DeploymentDescriptorPropertyCache {
 			}
 		}
 		return matchingGroups.toArray(new PropertyGroup[matchingGroups.size()]);
+	}
+
+	/**
+	 * @param project
+	 * @return Descriptor for the Servlet API version found on the project's Java
+	 *         Build Path, <code>null</code> if none was discoverable.
+	 */
+	public ServletAPIDescriptor getServletAPIVersion(IProject project) {
+		ServletAPIDescriptor descriptor = apiVersions.get(project.getName());
+		if (descriptor == null) {
+			descriptor = discoverServletAPIVersion(project);
+			if (descriptor != null) {
+				apiVersions.put(project.getName(), descriptor);
+			}
+			else {
+				apiVersions.put(project.getName(), ServletAPIDescriptor.DEFAULT);
+				descriptor = ServletAPIDescriptor.DEFAULT;
+			}
+		}
+		return descriptor;
 	}
 
 	/**
@@ -975,6 +1062,11 @@ public final class DeploymentDescriptorPropertyCache {
 		return ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
 	}
 
+	public void invalidate(String name) {
+		getInstance().resolvedMap.remove(name);
+		getInstance().apiVersions.remove(name);
+	}
+	
 	private void updateCacheEntry(IPath fullPath) {
 		/* don't update right now; remove and wait for another query to do that work */
 		fDeploymentDescriptors.remove(fullPath);

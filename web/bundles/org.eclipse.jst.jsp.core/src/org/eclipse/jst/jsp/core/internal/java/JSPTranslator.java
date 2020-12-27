@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2018 IBM Corporation and others.
+ * Copyright (c) 2004, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -67,6 +67,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNa
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
+import org.eclipse.jst.jsp.core.internal.contenttype.ServletAPIDescriptor;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
@@ -205,7 +206,10 @@ public class JSPTranslator implements Externalizable {
 
 	/** translated class service header */
 	String fServiceHeader = null;
-	
+
+	/** descriptor for the API available to build against */
+	ServletAPIDescriptor fServletAPIDescriptor = ServletAPIDescriptor.DEFAULT;
+
 	/** The context of the translation */
 	String fContext = null;
 
@@ -284,7 +288,7 @@ public class JSPTranslator implements Externalizable {
 	private int fOffsetInUserCode = 0;
 
 	/** correlates ranges (positions) in java to ranges in jsp */
-	private HashMap fJava2JspRanges = new HashMap();
+	private Map<Position,Position> fJava2JspRanges = new HashMap<>();
 
 	/**
 	 * map of ranges in fUserImports (relative to the start of the buffer) to
@@ -376,6 +380,9 @@ public class JSPTranslator implements Externalizable {
 
 		fStructuredDocument = fStructuredModel.getStructuredDocument();
 
+		fServletAPIDescriptor = DeploymentDescriptorPropertyCache.getInstance().getServletAPIVersion(ResourcesPlugin.getWorkspace().getRoot().getProject(new Path(baseLocation).segment(0)));
+		fSuperclass = fServletAPIDescriptor.getRootPackage() + ".http.HttpServlet"; //$NON-NLS-1$
+
 		String className = createClassname(node);
 		if (className.length() > 0) {
 			setClassname(className);
@@ -398,6 +405,9 @@ public class JSPTranslator implements Externalizable {
 		fProgressMonitor = monitor;
 
 		fELTranslatorID = getELTranslatorProperty(jspFile);
+
+		fServletAPIDescriptor = DeploymentDescriptorPropertyCache.getInstance().getServletAPIVersion(jspFile.getProject());
+		fSuperclass = fServletAPIDescriptor.getRootPackage() + ".http.HttpServlet"; //$NON-NLS-1$
 
 		String className = createClassname(jspFile);
 		if (className.length() > 0) {
@@ -743,7 +753,7 @@ public class JSPTranslator implements Externalizable {
 		javaOffset += fServiceHeader.length();
 		// session participant
 		if (fIsInASession) {
-			final String sessionVariableDeclaration = "javax.servlet.http.HttpSession session = "+ fSession + ENDL; //$NON-NLS-1$
+			final String sessionVariableDeclaration = fServletAPIDescriptor.getRootPackage() + ".http.HttpSession session = "+ fSession + ENDL; //$NON-NLS-1$
 			fResult.append(sessionVariableDeclaration);
 			javaOffset += sessionVariableDeclaration.length();
 		}
@@ -796,7 +806,7 @@ public class JSPTranslator implements Externalizable {
 	 * 
 	 * @return a map of java positions to jsp positions.
 	 */
-	public HashMap getJava2JspRanges() {
+	public Map<Position,Position> getJava2JspRanges() {
 		return fJava2JspRanges;
 	}
 
@@ -806,12 +816,12 @@ public class JSPTranslator implements Externalizable {
 	 * @return a map of jsp positions to java positions, or null if no
 	 *         translation has occured yet (the map hasn't been built).
 	 */
-	public HashMap getJsp2JavaRanges() {
+	public Map<Position,Position> getJsp2JavaRanges() {
 		if (fJava2JspRanges == null)
 			return null;
-		HashMap flipFlopped = new HashMap();
-		Iterator keys = fJava2JspRanges.keySet().iterator();
-		Object range = null;
+		Map<Position,Position> flipFlopped = new HashMap<>();
+		Iterator<Position> keys = fJava2JspRanges.keySet().iterator();
+		Position range = null;
 		while (keys.hasNext()) {
 			range = keys.next();
 			flipFlopped.put(fJava2JspRanges.get(range), range);
@@ -892,7 +902,7 @@ public class JSPTranslator implements Externalizable {
 					debugString.append("--------------------------------------------------------------\n"); //$NON-NLS-1$
 					debugString.append("|maps to...|\n"); //$NON-NLS-1$
 					debugString.append("==============================================================\n"); //$NON-NLS-1$
-					Position jsp = (Position) fJava2JspRanges.get(java);
+					Position jsp = fJava2JspRanges.get(java);
 					debugString.append("JSP range:[" + jsp.offset + ":" + jsp.length + "]\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					debugString.append("[" + fJspTextBuffer.toString().substring(jsp.offset, jsp.offset + jsp.length) + "]\n"); //$NON-NLS-1$ //$NON-NLS-2$
 					debugString.append("==============================================================\n"); //$NON-NLS-1$
@@ -1142,7 +1152,7 @@ public class JSPTranslator implements Externalizable {
 	private void doAfterBody(StringBuffer buffer, RegionTags regionTag) {
 		buffer.append("\tif ( (new "); //$NON-NLS-1$
 		buffer.append(regionTag.tag.getTagClassName());
-		buffer.append("()).doAfterBody() != javax.servlet.jsp.tagext.BodyTag.EVAL_BODY_AGAIN)\n\t\tbreak;\n"); //$NON-NLS-1$
+		buffer.append("()).doAfterBody() != " + fServletAPIDescriptor.getRootPackage() + ".jsp.tagext.BodyTag.EVAL_BODY_AGAIN)\n\t\tbreak;\n"); //$NON-NLS-1$
 	}
 
 	/**
@@ -1300,19 +1310,19 @@ public class JSPTranslator implements Externalizable {
 		fClassname = "_JSPServlet"; //$NON-NLS-1$
 		fClassHeader = "public class " + fClassname + " extends "; //$NON-NLS-1$ //$NON-NLS-2$
 		
-		fImplicitImports = "import javax.servlet.*;" + ENDL + //$NON-NLS-1$
-					"import javax.servlet.http.*;" + ENDL + //$NON-NLS-1$
-					"import javax.servlet.jsp.*;" + ENDL + ENDL; //$NON-NLS-1$
+		fImplicitImports = "import " + fServletAPIDescriptor.getRootPackage() + ".*;" + ENDL + //$NON-NLS-1$
+					"import "+ fServletAPIDescriptor.getRootPackage() + ".http.*;" + ENDL + //$NON-NLS-1$
+					"import " + fServletAPIDescriptor.getRootPackage() + ".jsp.*;" + ENDL + ENDL; //$NON-NLS-1$
 
-		fServiceHeader = "public void _jspService(javax.servlet.http.HttpServletRequest request," + //$NON-NLS-1$
-					" javax.servlet.http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
-					"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
-					"javax.servlet.jsp.PageContext pageContext = JspFactory.getDefaultFactory().getPageContext(this, request, response, null, true, JspWriter.DEFAULT_BUFFER, true);" + ENDL + //$NON-NLS-1$
-					"javax.servlet.ServletContext application = pageContext.getServletContext();" + ENDL + //$NON-NLS-1$
-					"javax.servlet.ServletConfig config = pageContext.getServletConfig();" + ENDL + //$NON-NLS-1$ 
-					"javax.servlet.jsp.JspWriter out = pageContext.getOut();" + ENDL + //$NON-NLS-1$
+		fServiceHeader = "public void _jspService(" + fServletAPIDescriptor.getRootPackage() + ".http.HttpServletRequest request," + //$NON-NLS-1$
+					" " + fServletAPIDescriptor.getRootPackage() + ".http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
+					"\t\tthrows java.io.IOException, " + fServletAPIDescriptor.getRootPackage() + ".ServletException {" + ENDL + //$NON-NLS-1$
+					fServletAPIDescriptor.getRootPackage() + ".jsp.PageContext pageContext = JspFactory.getDefaultFactory().getPageContext(this, request, response, null, true, JspWriter.DEFAULT_BUFFER, true);" + ENDL + //$NON-NLS-1$
+					fServletAPIDescriptor.getRootPackage() + ".ServletContext application = pageContext.getServletContext();" + ENDL + //$NON-NLS-1$
+					fServletAPIDescriptor.getRootPackage() + ".ServletConfig config = pageContext.getServletConfig();" + ENDL + //$NON-NLS-1$ 
+					fServletAPIDescriptor.getRootPackage() + ".jsp.JspWriter out = pageContext.getOut();" + ENDL + //$NON-NLS-1$
 					"Object page = this;" + ENDL; //$NON-NLS-1$
-		fSuperclass = "javax.servlet.http.HttpServlet"; //$NON-NLS-1$
+		fSuperclass = fServletAPIDescriptor.getRootPackage() + ".http.HttpServlet"; //$NON-NLS-1$
 		fContext = "pageContext"; //$NON-NLS-1$
 		fSession = fContext+".getSession();"; //$NON-NLS-1$
 	}
@@ -2168,7 +2178,7 @@ public class JSPTranslator implements Externalizable {
 		if (varName != null) {
 			if (isFragment) {
 				// 2.0:JSP.8.5.2
-				varType = "javax.servlet.jsp.tagext.JspFragment"; //$NON-NLS-1$
+				varType = fServletAPIDescriptor.getRootPackage() + ".jsp.tagext.JspFragment"; //$NON-NLS-1$
 			}
 			String declaration = new TaglibVariable(varType, varName, "", description).getDeclarationString(true, fContext, TaglibVariable.M_PRIVATE); //$NON-NLS-1$
 			appendToBuffer(declaration, fUserDeclarations, false, fCurrentNode);

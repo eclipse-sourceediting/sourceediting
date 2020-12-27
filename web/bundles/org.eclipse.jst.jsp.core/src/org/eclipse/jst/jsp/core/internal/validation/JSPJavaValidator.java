@@ -236,7 +236,7 @@ public class JSPJavaValidator extends JSPValidator {
 						if (((problemID & IProblem.Internal) != 0) && ((problemID & IProblem.Syntax) != 0) && translation instanceof JSPTranslation) {
 							// Attach to the last code scripting section
 							JSPTranslation jspTranslation = ((JSPTranslation) translation);
-							Position[] jspPositions = (Position[]) jspTranslation.getJsp2JavaMap().keySet().toArray(new Position[jspTranslation.getJsp2JavaMap().size()]);
+							Position[] jspPositions = jspTranslation.getJsp2JavaMap().keySet().toArray(new Position[jspTranslation.getJsp2JavaMap().size()]);
 							for (int i = 0; i < jspPositions.length; i++) {
 								sourceStart = Math.max(sourceStart, jspPositions[i].getOffset());
 							}

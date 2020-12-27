@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2015 IBM Corporation and others.
+ * Copyright (c) 2005, 2020 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,8 @@ import org.eclipse.jdt.core.IJavaElementDelta;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
+import org.eclipse.jst.jsp.core.internal.java.JSPTranslatorPersister;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 
 /**
@@ -79,8 +81,9 @@ public class TaglibHelperManager implements IElementChangedListener {
 			IJavaElementDelta[] changed = delta.getChangedChildren();
 			for (int i = 0; i < changed.length; i++) {
 				if ((changed[i].getFlags() & IJavaElementDelta.F_CLASSPATH_CHANGED) != 0 || (changed[i].getFlags() & IJavaElementDelta.F_REORDER) != 0 || (changed[i].getFlags() & IJavaElementDelta.F_RESOLVED_CLASSPATH_CHANGED) != 0 || (changed[i].getFlags() & IJavaElementDelta.F_PRIMARY_RESOURCE) != 0) {
-					IJavaElement proj = changed[i].getElement();
-					handleClasspathChange(changed, i, proj);
+					IJavaElement project = changed[i].getElement();
+					handleClasspathChange(changed, i, project);
+					DeploymentDescriptorPropertyCache.getInstance().invalidate(project.getJavaProject().getElementName());
 				}
 			}
 		}
@@ -119,7 +122,8 @@ public class TaglibHelperManager implements IElementChangedListener {
 						project.accept(new IResourceProxyVisitor() {
 							public boolean visit(IResourceProxy proxy) throws CoreException {
 								if (!proxy.isDerived() && ContentTypeIdForJSP.indexOfJSPExtension(proxy.getName()) >= 0) {
-									proxy.requestResource().touch(null);
+									JSPTranslatorPersister.removePersistedTranslation(proxy.requestResource());
+//									proxy.requestResource().touch(null);
 								}
 								return !proxy.isDerived();
 							}
