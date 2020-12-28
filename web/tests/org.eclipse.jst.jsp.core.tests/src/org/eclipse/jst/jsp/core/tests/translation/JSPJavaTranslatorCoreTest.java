@@ -447,7 +447,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 				model.releaseFromEdit();
 		}
 	}
-	
+
 	public void testApiDetection1() throws Exception {
 		String testName = "testapidetection1";
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
@@ -461,6 +461,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		}
 		ServletAPIDescriptor servletAPIVersion = DeploymentDescriptorPropertyCache.getInstance().getServletAPIVersion(project);
 		assertNotNull("no API version was detected", servletAPIVersion);
+		// TODO: enable this test
 		IClasspathEntry[] resolvedClasspath = JavaCore.create(project).getResolvedClasspath(true);
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < resolvedClasspath.length; i++) {
@@ -472,7 +473,6 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		assertEquals("Unexpected root package", "javax.servlet", servletAPIVersion.getRootPackage());
 	}
 
-	// TODO: enable this test
 	public void testApiDetection2() throws Exception {
 		String testName = "testapidetection2";
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
@@ -486,12 +486,13 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		}
 		ServletAPIDescriptor servletAPIVersion = DeploymentDescriptorPropertyCache.getInstance().getServletAPIVersion(project);
 		assertNotNull("no API version was detected", servletAPIVersion);
-		IClasspathEntry[] resolvedClasspath = JavaCore.create(project).getResolvedClasspath(true);
-		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < resolvedClasspath.length; i++) {
-			builder.append('\n');
-			builder.append(resolvedClasspath[i].getPath());
-		}
+		// TODO: enable this test
+//		IClasspathEntry[] resolvedClasspath = JavaCore.create(project).getResolvedClasspath(true);
+//		StringBuilder builder = new StringBuilder();
+//		for (int i = 0; i < resolvedClasspath.length; i++) {
+//			builder.append('\n');
+//			builder.append(resolvedClasspath[i].getPath());
+//		}
 //		assertFalse("Default API version returned, nothing was detected\n" + builder, servletAPIVersion == ServletAPIDescriptor.DEFAULT);
 //		assertEquals("Unexpected API version", 3.1f, servletAPIVersion.getAPIversion());
 //		assertEquals("Unexpected root package", "javax.servlet", servletAPIVersion.getRootPackage());
