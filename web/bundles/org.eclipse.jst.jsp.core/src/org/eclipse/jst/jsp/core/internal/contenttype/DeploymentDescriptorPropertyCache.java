@@ -684,7 +684,7 @@ public final class DeploymentDescriptorPropertyCache {
 				if (version[0] == null) {
 					// try determining from schema declarations
 					String schemaLocations = webapp.getAttribute(SCHEMA_LOCATION);
-					if (schemaLocations.length() > 0) {
+					if (schemaLocations != null && schemaLocations.length() > 0) {
 						if (schemaLocations.contains("/web-app_5_0.xsd")) {
 							version[0] = new Float(5);
 						}
@@ -721,6 +721,10 @@ public final class DeploymentDescriptorPropertyCache {
 				}
 			}
 		}
+		if (version[0] == null) {
+			version[0] = new Float(DEFAULT_WEBAPP_VERSION);
+		}
+
 		NodeList propertyGroupElements = document.getElementsByTagName(JSP_PROPERTY_GROUP);
 		int length = propertyGroupElements.getLength();
 		subMonitor.beginTask("Reading Property Groups", length); //$NON-NLS-1$
@@ -837,7 +841,7 @@ public final class DeploymentDescriptorPropertyCache {
 		IStructuredModel model = null;
 		List<PropertyGroup> propertyGroupList = new ArrayList<>();
 		List<StringMatcher> urlPatterns = new ArrayList<>();
-		Float[] version = new Float[]{new Float(DEFAULT_WEBAPP_VERSION)};
+		Float[] version = new Float[1];
 		SubProgressMonitor subMonitor = new SubProgressMonitor(monitor, 2);
 		DocumentBuilder builder = CommonXML.getDocumentBuilder(false);
 		builder.setEntityResolver(getEntityNonResolver());

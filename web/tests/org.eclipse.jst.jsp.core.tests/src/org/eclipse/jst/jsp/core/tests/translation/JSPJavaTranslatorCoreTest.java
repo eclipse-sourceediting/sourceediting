@@ -497,6 +497,38 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 //		assertEquals("Unexpected root package", "javax.servlet", servletAPIVersion.getRootPackage());
 	}
 
+	public void testDDVersionDetection1() throws Exception {
+		String testName = "testversiondetection1";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		synchronized (creationLock) {
+			if (!project.isAccessible()) {
+				// Create new project
+				project = BundleResourceUtil.createSimpleProject(testName, null, new String[] {});
+				assertTrue(project.exists());
+				BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+			}
+		}
+		Float version = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(project.getFullPath());
+		assertNotNull("no API version was detected", version);
+		assertEquals(2.3f, version);
+	}
+
+	public void testDDVersionDetection2() throws Exception {
+		String testName = "testversiondetection2";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		synchronized (creationLock) {
+			if (!project.isAccessible()) {
+				// Create new project
+				project = BundleResourceUtil.createSimpleProject(testName, null, new String[] {});
+				assertTrue(project.exists());
+				BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+			}
+		}
+		Float version = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(project.getFullPath());
+		assertNotNull("no API version was detected", version);
+		assertEquals(2.2f, version);
+	}
+
 	public void test_codas() throws Exception {
 		String testName = "testPreludeAndCodas";
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
