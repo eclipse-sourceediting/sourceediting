@@ -868,7 +868,8 @@ public class XMLValidator
             /* (non-Javadoc)
              * @see org.apache.xerces.impl.XMLErrorReporter#reportError(java.lang.String, java.lang.String, java.lang.Object[], short)
              */
-            public void reportError(String domain, String key, Object[] arguments, short severity) throws XNIException
+    		@Override
+            public String reportError(String domain, String key, Object[] arguments, short severity) throws XNIException
             {
 		      boolean reportError = true;
               valinfo.setCurrentErrorKey(key);  
@@ -903,8 +904,13 @@ public class XMLValidator
               }          
 		      if (reportError)
 		      {
-		        super.reportError(domain, key, arguments, severity);
+		        String formattedError = super.reportError(domain, key, arguments, severity);
 		        valinfo.getErrorCustomizationManager().considerReportedError(valinfo, key, arguments);
+		        return formattedError;
+		      }
+		      else
+		      {
+		    	return null;
 		      }
 		    }
 		};
