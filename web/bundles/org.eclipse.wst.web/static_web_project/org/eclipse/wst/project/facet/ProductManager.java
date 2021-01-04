@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2018 IBM Corporation and others.
+ * Copyright (c) 2005, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,10 @@ public class ProductManager {
 	 * Default values for WTP level product
 	 */
 	private static final String APPLICATION_CONTENT_FOLDER = "EarContent"; //$NON-NLS-1$
+//	private static final String WEB_CONTENT_FOLDER = "src/main/webapp"; //$NON-NLS-1$
+//	private static final String STATIC_WEB_CONTENT_FOLDER = "static"; //$NON-NLS-1$
 	private static final String WEB_CONTENT_FOLDER = "WebContent"; //$NON-NLS-1$
+	private static final String STATIC_WEB_CONTENT_FOLDER = "WebContent"; //$NON-NLS-1$
 	private static final String EJB_CONTENT_FOLDER = "ejbModule"; //$NON-NLS-1$
 	private static final String APP_CLIENT_CONTENT_FOLDER = "appClientModule"; //$NON-NLS-1$
 	private static final String JCA_CONTENT_FOLDER = "connectorModule"; //$NON-NLS-1$
@@ -74,6 +77,8 @@ public class ProductManager {
 				return APPLICATION_CONTENT_FOLDER;
 			else if (key.equals(IProductConstants.WEB_CONTENT_FOLDER))
 				return WEB_CONTENT_FOLDER;
+			else if (key.equals(IProductConstants.STATIC_WEB_CONTENT_FOLDER))
+				return STATIC_WEB_CONTENT_FOLDER;
 			else if (key.equals(IProductConstants.EJB_CONTENT_FOLDER))
 				return EJB_CONTENT_FOLDER;
 			else if (key.equals(IProductConstants.APP_CLIENT_CONTENT_FOLDER))
