@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2020 IBM Corporation and others.
+ * Copyright (c) 2007, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -562,7 +562,7 @@ public final class DeploymentDescriptorPropertyCache {
 	private static final boolean _debugResolutionCache = false;
 
 	// Java Servlet API version
-	static final float DEFAULT_WEBAPP_VERSION = 4f; // Java EE 8
+	static final float DEFAULT_WEBAPP_VERSION = 5f; // Jakarta EE 9
 
 	static final String EL_IGNORED = "el-ignored"; //$NON-NLS-1$
 	static final String ID = "id"; //$NON-NLS-1$
@@ -575,6 +575,8 @@ public final class DeploymentDescriptorPropertyCache {
 
 	static final String SCRIPTING_INVALID = "scripting-invalid"; //$NON-NLS-1$
 	static final String URL_PATTERN = "url-pattern"; //$NON-NLS-1$
+	
+	private static final String SCHEMA_LOCATION = "xsi:schemaLocation"; //$NON-NLS-1$
 	private static final String SERVLET_MAPPING = "servlet-mapping"; //$NON-NLS-1$
 	private static final String WEB_APP_ELEMENT_LOCAL_NAME = ":web-app"; //$NON-NLS-1$
 	private static final String WEB_APP_ELEMENT_NAME = "web-app"; //$NON-NLS-1$
@@ -680,6 +682,27 @@ public final class DeploymentDescriptorPropertyCache {
 					}
 				}
 				if (version[0] == null) {
+					// try determining from schema declarations
+					String schemaLocations = webapp.getAttribute(SCHEMA_LOCATION);
+					if (schemaLocations.length() > 0) {
+						if (schemaLocations.contains("/web-app_5_0.xsd")) {
+							version[0] = new Float(5);
+						}
+						/**
+						 * Technically there's a 4.0.3, but treat it the same
+						 */
+						else if (schemaLocations.contains("/web-app_4_0.xsd")) {
+							version[0] = new Float(4);
+						}
+						else if (schemaLocations.contains("/web-app_3_1.xsd")) {
+							version[0] = new Float(3.1);
+						}
+						else if (schemaLocations.contains("/web-app_3_0.xsd")) {
+							version[0] = new Float(3);
+						}
+					}
+				}
+				if (version[0] == null) {
 					// try determining the version from the doctype reference
 					DocumentType doctype = document.getDoctype();
 					if (doctype != null) {
@@ -728,6 +751,8 @@ public final class DeploymentDescriptorPropertyCache {
 	 */
 	private float convertSpecVersions(float version) {
 		if (version > 0) {
+			if (version == 5f)
+				return 3f;
 			if (version == 4f)
 				return 2.3f;
 			if (version == 3.1f)
@@ -766,7 +791,7 @@ public final class DeploymentDescriptorPropertyCache {
 		}
 		try {
 			if (javaProject.findType("jakarta.servlet.GenericFilter") != null) {
-				return new ServletAPIDescriptor("jakarta.servlet", 4);
+				return new ServletAPIDescriptor("jakarta.servlet", 5);
 			}
 			if (javaProject.findType("javax.servlet.GenericFilter") != null) {
 				return new ServletAPIDescriptor("javax.servlet", 4);
