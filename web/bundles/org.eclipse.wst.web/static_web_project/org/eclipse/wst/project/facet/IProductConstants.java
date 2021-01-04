@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2013 IBM Corporation and others.
+ * Copyright (c) 2005, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,7 +13,7 @@
 package org.eclipse.wst.project.facet;
 
 /**
- * These constants define the set of properties that this pluging expects to
+ * These constants define the set of properties that this plug-in expects to
  * be available via <code>IProduct.getProperty(String)</code>. The status of
  * this interface and the facilities offered is highly provisional. 
  * Productization support will be reviewed and possibly modified in future 
@@ -29,6 +29,12 @@ public interface IProductConstants {
     
     public static final String APPLICATION_CONTENT_FOLDER = "earContent"; //$NON-NLS-1$
 	public static final String WEB_CONTENT_FOLDER = "webContent"; //$NON-NLS-1$
+
+	/**
+	 * @since 1.3.0
+	 */
+	public static final String STATIC_WEB_CONTENT_FOLDER = "staticWebContent"; //$NON-NLS-1$
+
 	public static final String EJB_CONTENT_FOLDER = "ejbContent"; //$NON-NLS-1$
 	public static final String APP_CLIENT_CONTENT_FOLDER = "appClientContent"; //$NON-NLS-1$
 	public static final String JCA_CONTENT_FOLDER = "jcaContent"; //$NON-NLS-1$
