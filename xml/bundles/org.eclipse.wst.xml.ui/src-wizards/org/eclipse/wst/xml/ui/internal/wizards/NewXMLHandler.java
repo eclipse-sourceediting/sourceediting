@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2008, 2021 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,13 +13,13 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.wizards;
 
-import java.util.Iterator;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Adapters;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -27,9 +27,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 public class NewXMLHandler extends AbstractHandler implements IHandler {
 
-	/**
-	 * 
-	 */
 	public NewXMLHandler() {
 		super();
 	}
@@ -41,7 +38,12 @@ public class NewXMLHandler extends AbstractHandler implements IHandler {
 		IWorkbenchWindow workbenchWindow = 	HandlerUtil.getActiveWorkbenchWindow(event);
 		ISelection selection = workbenchWindow.getSelectionService().getSelection();
 		Object selectedObject = getSelection(selection);
-
+		if (selectedObject instanceof IAdaptable) {
+			IFile file = Adapters.adapt(selectedObject, IFile.class);
+			if (file != null) {
+				selectedObject = file;
+			}
+		}
 		if ((selectedObject instanceof IFile) && (selection instanceof IStructuredSelection)) {
 			IFile file = (IFile) selectedObject;
 			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
@@ -61,12 +63,8 @@ public class NewXMLHandler extends AbstractHandler implements IHandler {
 		} 
 
 		Object result = null;
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection es = (IStructuredSelection) selection;
-			Iterator i = es.iterator();
-			if (i.hasNext()) {
-				result = i.next();
-			}
+		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
+			result = ((IStructuredSelection) selection).getFirstElement();
 		}
 		return result;
 	}
