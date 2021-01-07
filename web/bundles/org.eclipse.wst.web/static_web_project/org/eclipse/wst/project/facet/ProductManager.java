@@ -30,10 +30,8 @@ public class ProductManager {
 	 * Default values for WTP level product
 	 */
 	private static final String APPLICATION_CONTENT_FOLDER = "EarContent"; //$NON-NLS-1$
-//	private static final String WEB_CONTENT_FOLDER = "src/main/webapp"; //$NON-NLS-1$
-//	private static final String STATIC_WEB_CONTENT_FOLDER = "static"; //$NON-NLS-1$
-	private static final String WEB_CONTENT_FOLDER = "WebContent"; //$NON-NLS-1$
-	private static final String STATIC_WEB_CONTENT_FOLDER = "WebContent"; //$NON-NLS-1$
+	private static final String WEB_CONTENT_FOLDER = "src/main/webapp"; //$NON-NLS-1$
+	private static final String STATIC_WEB_CONTENT_FOLDER = "public"; //$NON-NLS-1$
 	private static final String EJB_CONTENT_FOLDER = "ejbModule"; //$NON-NLS-1$
 	private static final String APP_CLIENT_CONTENT_FOLDER = "appClientModule"; //$NON-NLS-1$
 	private static final String JCA_CONTENT_FOLDER = "connectorModule"; //$NON-NLS-1$
