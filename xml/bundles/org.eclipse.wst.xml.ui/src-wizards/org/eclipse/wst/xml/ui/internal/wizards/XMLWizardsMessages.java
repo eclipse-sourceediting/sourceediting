@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2010 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2021 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License 2.0 which accompanies this distribution, and is
  * available at https://www.eclipse.org/legal/epl-2.0/
@@ -16,11 +16,10 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * Strings used by XML Wizards
- * 
- * @plannedfor 1.0
  */
 public class XMLWizardsMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.xml.ui.internal.wizards.wizardResource";//$NON-NLS-1$
+
 
 	public static String _UI_DIALOG_NEW_TITLE;
 	public static String _UI_DIALOG_TITLE_INVALID_GRAMMAR;
@@ -28,6 +27,7 @@ public class XMLWizardsMessages extends NLS {
 	public static String _UI_WIZARD_CREATE_NEW_TITLE;
 	public static String _UI_RADIO_XML_FROM_DTD;
 	public static String _UI_RADIO_XML_FROM_SCHEMA;
+	public static String _UI_RADIO_XML_FROM_DTD_OR_SCHEMA;
 	public static String _UI_RADIO_XML_FROM_SCRATCH;
 	public static String _UI_WIZARD_CREATE_XML_HEADING;
 	public static String _UI_WIZARD_CREATE_XML_EXPL;
@@ -37,6 +37,8 @@ public class XMLWizardsMessages extends NLS {
 	public static String _UI_WIZARD_SELECT_DTD_FILE_TITLE;
 	public static String _UI_WIZARD_SELECT_XSD_FILE_DESC;
 	public static String _UI_WIZARD_SELECT_XSD_FILE_TITLE;
+	public static String _UI_WIZARD_SELECT_GRAMMAR_FILE_DESC;
+	public static String _UI_WIZARD_SELECT_GRAMMAR_FILE_TITLE;
 	public static String _UI_WIZARD_SELECT_ROOT_HEADING;
 	public static String _UI_WIZARD_SELECT_ROOT_EXPL;
 	public static String _UI_LABEL_ROOT_ELEMENT;

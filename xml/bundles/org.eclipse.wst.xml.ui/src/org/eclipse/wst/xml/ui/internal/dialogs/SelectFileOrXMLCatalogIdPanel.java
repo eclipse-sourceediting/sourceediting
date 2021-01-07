@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -104,7 +104,7 @@ public class SelectFileOrXMLCatalogIdPanel extends Composite implements Selectio
 
 		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		selectXMLCatalogIdPanel = new SelectXMLCatalogIdPanel(pageBook, xmlCatalog);
-		selectXMLCatalogIdPanel.getTableViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+		selectXMLCatalogIdPanel.getCatalogViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				updateCompletionStateChange();
 			}
@@ -151,10 +151,8 @@ public class SelectFileOrXMLCatalogIdPanel extends Composite implements Selectio
 	}
 
 	public void setFilterExtensions(String[] filterExtensions) {
-		selectSingleFileView.resetFilters();
-		selectSingleFileView.addFilterExtensions(filterExtensions);
-
-		selectXMLCatalogIdPanel.getTableViewer().setFilterExtensions(filterExtensions);
+		selectSingleFileView.setFilterExtensions(filterExtensions);
+		selectXMLCatalogIdPanel.setFilterExtensions(filterExtensions);
 	}
 
 	public void setListener(Listener listener) {

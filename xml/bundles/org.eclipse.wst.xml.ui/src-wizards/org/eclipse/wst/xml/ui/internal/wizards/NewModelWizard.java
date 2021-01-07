@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -32,16 +32,21 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 
@@ -122,11 +127,21 @@ public class NewModelWizard extends Wizard implements INewWizard {
 		protected int selectedButton;
 		protected String[] radioButtonLabel;
 		protected Button[] radioButton;
+		private String preferenceMessage;
+		private String[] preferencePageIds;
 
 		public StartPage(String pageName, String[] radioButtonLabel) {
 			super(pageName);
 			this.radioButtonLabel = radioButtonLabel;
 			radioButton = new Button[radioButtonLabel.length];
+		}
+
+		public StartPage(String pageName, String[] radioButtonLabel, String[] preferencePageIds, String message) {
+			super(pageName);
+			this.radioButtonLabel = radioButtonLabel;
+			radioButton = new Button[radioButtonLabel.length];
+			this.preferencePageIds = preferencePageIds;
+			this.preferenceMessage = message;
 		}
 
 		public Button getRadioButtonAtIndex(int i) {
@@ -148,7 +163,7 @@ public class NewModelWizard extends Wizard implements INewWizard {
 		}
 
 		public void createControl(Composite parent) {
-			Composite base = new Composite(parent, SWT.NONE);
+			final Composite base = new Composite(parent, SWT.NONE);
 			base.setLayout(new GridLayout());
 
 			// radio buttons' container
@@ -159,8 +174,7 @@ public class NewModelWizard extends Wizard implements INewWizard {
 			layout.marginWidth = 0;
 
 			radioButtonsGroup.setLayout(layout);
-			GridData gd = new GridData(GridData.FILL_BOTH);
-			gd.heightHint = 300;
+			GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 			gd.widthHint = 400;
 			radioButtonsGroup.setLayoutData(gd);
 
@@ -169,6 +183,16 @@ public class NewModelWizard extends Wizard implements INewWizard {
 				radioButton[i].setText(radioButtonLabel[i]);
 				radioButton[i].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 				// radioButton[i].addListener(SWT.Modify, this);
+			}
+			if (preferenceMessage != null && preferencePageIds != null) {
+				new Label(base, SWT.NONE).setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+				Link link = new Link(base, SWT.NONE);
+				link.setText(preferenceMessage);
+				link.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent e) {
+						PreferencesUtil.createPreferenceDialogOn(null, preferencePageIds[0], preferencePageIds, null).open();
+					}
+				});
 			}
 			setControl(base);
 			setPageComplete(isPageComplete());

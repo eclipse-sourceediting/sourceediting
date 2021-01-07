@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2020 IBM Corporation and others.
+ * Copyright (c) 2001, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -81,15 +81,13 @@ import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesDialog;
 import com.ibm.icu.text.Collator;
 
 public class NewXMLWizard extends NewModelWizard {
-	protected static final int CREATE_FROM_DTD = 0;
-	protected static final int CREATE_FROM_XSD = 1;
-	protected static final int CREATE_FROM_SCRATCH = 2;
+	protected static final int CREATE_FROM_GRAMMAR = 0;
+	protected static final int CREATE_FROM_SCRATCH = 1;
 
-	protected static final String[] createFromRadioButtonLabel = {XMLWizardsMessages._UI_RADIO_XML_FROM_DTD, XMLWizardsMessages._UI_RADIO_XML_FROM_SCHEMA, XMLWizardsMessages._UI_RADIO_XML_FROM_SCRATCH};
+	protected static final String[] createFromRadioButtonLabel = {XMLWizardsMessages._UI_RADIO_XML_FROM_DTD_OR_SCHEMA, XMLWizardsMessages._UI_RADIO_XML_FROM_SCRATCH};
 
 	protected static final String[] filePageFilterExtensions = {".xml"}; //$NON-NLS-1$
-	protected static final String[] browseXSDFilterExtensions = {".xsd"}; //$NON-NLS-1$
-	protected static final String[] browseDTDFilterExtensions = {".dtd"}; //$NON-NLS-1$
+	protected static String[] browseGrammarFilterExtensions = {".xsd", ".dtd", ".ent", ".mod"}; //$NON-NLS-1$
 	
 	protected static final int OPTIONAL_ELEMENT_DEPTH_LIMIT_DEFAULT_VALUE = 2;
 	
@@ -163,7 +161,7 @@ public class NewXMLWizard extends NewModelWizard {
 
 		if (grammarURI == null) {
 			// create xml from page
-			fCreateXMLFromWizardPage = new StartPage("StartPage", createFromRadioButtonLabel) //$NON-NLS-1$
+			fCreateXMLFromWizardPage = new StartPage("StartPage", createFromRadioButtonLabel, new String[]{"org.eclipse.wst.sse.ui.preferences.xml.templates"}, XMLWizardsMessages.NewXMLTemplatesWizardPage_6) //$NON-NLS-1$
 			{
 				public void createControl(Composite parent) {
 					super.createControl(parent);
@@ -175,9 +173,8 @@ public class NewXMLWizard extends NewModelWizard {
 					getRadioButtonAtIndex(getCreateMode()).setFocus();
 
 					// Set the help context for each button
-					PlatformUI.getWorkbench().getHelpSystem().setHelp(fCreateXMLFromWizardPage.getRadioButtonAtIndex(0), IXMLWizardHelpContextIds.XML_NEWWIZARD_CREATEXML1_HELPID);
-					PlatformUI.getWorkbench().getHelpSystem().setHelp(fCreateXMLFromWizardPage.getRadioButtonAtIndex(1), IXMLWizardHelpContextIds.XML_NEWWIZARD_CREATEXML2_HELPID);
-					PlatformUI.getWorkbench().getHelpSystem().setHelp(fCreateXMLFromWizardPage.getRadioButtonAtIndex(2), IXMLWizardHelpContextIds.XML_NEWWIZARD_CREATEXML3_HELPID);
+					PlatformUI.getWorkbench().getHelpSystem().setHelp(fCreateXMLFromWizardPage.getRadioButtonAtIndex(0), IXMLWizardHelpContextIds.XML_NEWWIZARD_CREATEXML2_HELPID);
+					PlatformUI.getWorkbench().getHelpSystem().setHelp(fCreateXMLFromWizardPage.getRadioButtonAtIndex(1), IXMLWizardHelpContextIds.XML_NEWWIZARD_CREATEXML3_HELPID);
 				}
 			};
 
@@ -220,14 +217,7 @@ public class NewXMLWizard extends NewModelWizard {
 
 		int result = CREATE_FROM_SCRATCH;
 		if (grammarURI != null) {
-			if (grammarURI.endsWith(".dtd")) //$NON-NLS-1$
-			{
-				result = CREATE_FROM_DTD;
-			}
-			else if (grammarURI.endsWith(".xsd")) //$NON-NLS-1$
-			{
-				result = CREATE_FROM_XSD;
-			}
+			result = CREATE_FROM_GRAMMAR;
 		}
 		else if (fCreateXMLFromWizardPage != null) {
 			int selectedIndex = fCreateXMLFromWizardPage.getSelectedRadioButtonIndex();
@@ -251,7 +241,8 @@ public class NewXMLWizard extends NewModelWizard {
 				nextPage = selectRootElementPage;
 		}
 		else if (currentPage == fCreateXMLFromWizardPage) {
-			if (getCreateMode() == CREATE_FROM_SCRATCH) {
+			int createMode = getCreateMode();
+			if (createMode == CREATE_FROM_SCRATCH) {
 				nextPage = fNewXMLTemplatesWizardPage;
 			}
 			else if (generator.getGrammarURI() == null) {
@@ -416,15 +407,10 @@ public class NewXMLWizard extends NewModelWizard {
 		public void setVisible(boolean visible) {
 			super.setVisible(visible);
 			if (visible) {
-				if (getCreateMode() == CREATE_FROM_DTD) {
-					setTitle(XMLWizardsMessages._UI_WIZARD_SELECT_DTD_FILE_TITLE);
-					setDescription(XMLWizardsMessages._UI_WIZARD_SELECT_DTD_FILE_DESC);
-					panel.setFilterExtensions(browseDTDFilterExtensions);
-				}
-				else {
-					setTitle(XMLWizardsMessages._UI_WIZARD_SELECT_XSD_FILE_TITLE);
-					setDescription(XMLWizardsMessages._UI_WIZARD_SELECT_XSD_FILE_DESC);
-					panel.setFilterExtensions(browseXSDFilterExtensions);
+				if (getCreateMode() == CREATE_FROM_GRAMMAR) {
+					setTitle(XMLWizardsMessages._UI_WIZARD_SELECT_GRAMMAR_FILE_TITLE);
+					setDescription(XMLWizardsMessages._UI_WIZARD_SELECT_GRAMMAR_FILE_DESC);
+					panel.setFilterExtensions(browseGrammarFilterExtensions);
 				}
 				generator.setGrammarURI(null);
 				generator.setCMDocument(null);

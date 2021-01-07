@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-
 
 package org.eclipse.wst.xml.ui.internal.dialogs;
 
@@ -51,7 +50,7 @@ public class SelectXMLCatalogIdDialog extends Dialog {
 
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == IDialogConstants.OK_ID) {
-			ISelection selection = panel.getTableViewer().getSelection();
+			ISelection selection = panel.getCatalogViewer().getSelection();
 			Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
 
 			if (selectedObject instanceof ICatalogEntry) {
@@ -91,8 +90,8 @@ public class SelectXMLCatalogIdDialog extends Dialog {
 				updateButtonState();
 			}
 		};
-		panel.getTableViewer().setFilterExtensions(extensions);
-		panel.getTableViewer().addSelectionChangedListener(listener);
+		panel.setFilterExtensions(extensions);
+		panel.getCatalogViewer().addSelectionChangedListener(listener);
 		return dialogArea;
 	}
 
@@ -107,7 +106,7 @@ public class SelectXMLCatalogIdDialog extends Dialog {
 	}
 
 	protected void updateButtonState() {
-		ISelection selection = panel.getTableViewer().getSelection();
+		ISelection selection = panel.getCatalogViewer().getSelection();
 		okButton.setEnabled(!selection.isEmpty());
 	}
 }
