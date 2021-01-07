@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ package org.eclipse.wst.xml.core.internal.catalog;
 import java.io.IOException;
 import java.net.URL;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
@@ -91,12 +92,11 @@ public class CatalogContributorRegistryReader
 	URL resolvedURL = null;
     if (fileLocation.startsWith("platform:/plugin")) //$NON-NLS-1$
     {
-      // this is the speclial case, where the resource is located relative 
-      // to another plugin (not the one that declares the extension point)
-      //
+      /* This is the special case, where the resource is located relative 
+         to another plug-in (not the one that declares the extension point) */
 		try
 		{
-			resolvedURL = Platform.resolve(new URL(fileLocation));
+			resolvedURL = FileLocator.resolve(new URL(fileLocation));
 		} catch (IOException e)
 		{
 			// do nothing
@@ -104,7 +104,7 @@ public class CatalogContributorRegistryReader
     }
     else{
     	 // this is the typical case, where the resource is located relative
-        // to the plugin that declares the extension point
+        // to the plug-in that declares the extension point
     	 try {
     	     	resolvedURL = new URL(Platform.resolve(platformURL), fileLocation);
     	 } catch (IOException e) {
