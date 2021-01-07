@@ -44,6 +44,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/application_8.xsd"
                 uri="dtdsAndSchemas/application_8.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/application_9.xsd"
+                uri="https://jakarta.ee/xml/ns/jakartaee/application_9.xsd" />
 
 
             <public
@@ -78,6 +81,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/application-client_8.xsd"
                 uri="dtdsAndSchemas/application-client_8.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/application-client_9.xsd"
+                uri="https://jakarta.ee/xml/ns/jakartaee/application-client_9.xsd" />
 
 		    <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/batchXML_1_0.xsd"
@@ -85,6 +91,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/jobXML_1_0.xsd"
                 uri="dtdsAndSchemas/jobXML_1_0.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/jobXML_2_0.xsd"
+                uri="https://jakarta.ee/xml/ns/jakartaee/jobXML_2_0.xsd" />
 
            <uri
                name="http://java.sun.com/xml/ns/javaee/beans_1_0.xsd"
@@ -98,6 +107,10 @@
            <uri
                name="http://xmlns.jcp.org/xml/ns/javaee/beans_2_0.xsd"
                uri="dtdsAndSchemas/beans_2_0.xsd"/>
+           <uri
+               name="https://jakarta.ee/xml/ns/jakartaee/beans_3_0.xsd"
+               uri="https://jakarta.ee/xml/ns/jakartaee/beans_3_0.xsd"/>
+
 
            <uri
                name="http://java.sun.com/xml/ns/jaxb/bindingschema_2_0.xsd"
@@ -105,6 +118,9 @@
            <uri
                name="http://xmlns.jcp.org/xml/ns/jaxb/bindingschema_2_0.xsd"
                uri="dtdsAndSchemas/bindingschema_2_0.xsd"/>
+           <uri
+               name="https://jakarta.ee/xml/ns/jaxb/bindingschema_3_0.xsd"
+               uri="https://jakarta.ee/xml/ns/jaxb/bindingschema_3_0.xsd"/>
 
 
             <public
@@ -126,6 +142,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/connector_1_7.xsd"
                 uri="dtdsAndSchemas/connector_1_7.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/connector_2_0.xsd"
+                uri="https://jakarta.ee/xml/ns/jakartaee/connector_2_0.xsd" />
 
 
             <public
@@ -157,6 +176,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd"
                 uri="dtdsAndSchemas/ejb-jar_3_2.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd"
+                uri="https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd" />
 
 
             <uri
@@ -186,6 +208,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/javaee_8.xsd"
                 uri="dtdsAndSchemas/javaee_8.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/jakartaee_9.xsd"
+                uri="platform:/plugin/jakarta.servlet/jakarta/servlet/resources/jakartaee_9.xsd" />
 
             <uri
                 name="http://www.ibm.com/webservices/xsd/j2ee_jaxrpc_mapping_1_1.xsd"
@@ -222,7 +247,10 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/javaee_web_services_1_4.xsd"
                 uri="dtdsAndSchemas/javaee_web_services_1_4.xsd" />
-                
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/jakartaee_web_services_2_0.xsd"
+                uri="platform:/plugin/jakarta.servlet/jakarta/servlet/resources/jakartaee_web_services_2_0.xsd" />
+
 
             <uri
                 name="http://www.ibm.com/webservices/xsd/j2ee_web_services_client_1_1.xsd"
@@ -248,7 +276,10 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/javaee_web_services_client_1_4.xsd"
                 uri="dtdsAndSchemas/javaee_web_services_client_1_4.xsd" />
-                
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/jakartaee_web_services_client_2_0.xsd"
+                uri="platform:/plugin/jakarta.servlet/jakarta/servlet/resources/jakartaee_web_services_client_2_0.xsd" />
+
 
             <uri
                 name="http://java.sun.com/xml/ns/j2ee/jsp_2_0.xsd"
@@ -271,10 +302,17 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/jsp_2_3.xsd"
                 uri="dtdsAndSchemas/jsp_2_3.xsd" />
-                
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/jsp_3_0.xsd"
+                uri="platform:/plugin/jakarta.servlet/jakarta/servlet/resources/jsp_3_0.xsd" />
+
+
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/permissions_7.xsd"
                 uri="dtdsAndSchemas/permissions_7.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/permissions_9.xsd"
+                uri="https://jakarta.ee/xml/ns/jakartaee/permissions_9.xsd" />
 
 
             <uri
@@ -295,6 +333,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd"
                 uri="dtdsAndSchemas/orm_2_2.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/persistence/orm_3_0.xsd"
+                uri="https://jakarta.ee/xml/ns/persistence/orm_3_0.xsd" />
 
 
             <uri
@@ -315,6 +356,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
                 uri="dtdsAndSchemas/persistence_2_2.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+                uri="https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd" />
 
 
             <uri
@@ -327,6 +371,9 @@
                 name="http://xmlns.jcp.org/xml/ns/validation/configuration/validation-configuration-2.0.xsd"
                 uri="dtdsAndSchemas/validation-configuration-2.0.xsd"/>
             <uri
+                name="https://jakarta.ee/xml/ns/validation/validation-configuration-3.0.xsd"
+                uri="https://jakarta.ee/xml/ns/validation/validation-configuration-3.0.xsd"/>
+            <uri
                 name="http://www.jboss.org/xml/ns/javax/validation/mapping/validation-mapping-1.0.xsd"
                 uri="dtdsAndSchemas/validation-mapping-1.0.xsd"/>
             <uri
@@ -335,6 +382,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/validation/mapping/validation-mapping-2.0.xsd"
                 uri="dtdsAndSchemas/validation-mapping-2.0.xsd"/>
+            <uri
+                name="https://jakarta.ee/xml/ns/validation/validation-mapping-3.0.xsd"
+                uri="https://jakarta.ee/xml/ns/validation/validation-mapping-3.0.xsd"/>
 
 
             <public
@@ -369,6 +419,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
                 uri="dtdsAndSchemas/web-app_4_0.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+                uri="platform:/plugin/jakarta.servlet/jakarta/servlet/resources/web-app_5_0.xsd" />
                 
             <uri
                 name="http://java.sun.com/xml/ns/javaee/web-common_3_0.xsd"
@@ -382,6 +435,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-common_4_0.xsd"
                 uri="dtdsAndSchemas/web-common_4_0.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/web-common_5_0.xsd"
+                uri="platform:/plugin/jakarta.servlet/jakarta/servlet/resources/web-common_5_0.xsd" />
 
             <public
                 publicId="-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
@@ -398,6 +454,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-facelettaglibrary_2_3.xsd"
                 uri="dtdsAndSchemas/web-facelettaglibrary_2_3.xsd"/>  
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/web-facelettaglibrary_3_0.xsd"
+                uri="https://jakarta.ee/xml/ns/jakartaee/web-facelettaglibrary_3_0.xsd"/>
                 
             <public
                 publicId="-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.0//EN"
@@ -420,11 +479,17 @@
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_0.xsd"
                 uri="dtdsAndSchemas/web-facesconfig_2_0.xsd"/>
             <uri
+                name="http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_1.xsd"
+                uri="http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_1.xsd"/>
+            <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
                 uri="dtdsAndSchemas/web-facesconfig_2_2.xsd"/>
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
                 uri="dtdsAndSchemas/web-facesconfig_2_3.xsd"/>
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_3_0.xsd"
+                uri="https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_3_0.xsd"/>
 
 
             <uri
@@ -447,6 +512,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-fragment_4_0.xsd"
                 uri="dtdsAndSchemas/web-fragment_4_0.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/web-fragment_5_0.xsd"
+                uri="platform:/plugin/jakarta.servlet/jakarta/servlet/resources/web-fragment_5_0.xsd" />
 
 
             <public
@@ -469,6 +537,9 @@
             <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
                 uri="dtdsAndSchemas/web-jsptaglibrary_2_1.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/web-jsptaglibrary_3_0.xsd"
+                uri="platform:/plugin/jakarta.servlet/jakarta/servlet/resources/web-jsptaglibrary_3_0.xsd" />
 
 
             <uri
