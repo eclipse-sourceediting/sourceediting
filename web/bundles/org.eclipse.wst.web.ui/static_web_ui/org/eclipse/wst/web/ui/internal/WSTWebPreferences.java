@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2005 IBM Corporation and others.
+ * Copyright (c) 2003, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,7 @@ public class WSTWebPreferences {
 		final static String STATIC_WEB_CONTENT = "org.eclipse.jst.j2ee.preference.staticWebContentName"; //$NON-NLS-1$
 	}
 	public interface Values {
-		final static String STATIC_WEB_CONTENT = "WebContent"; //$NON-NLS-1$
+		final static String STATIC_WEB_CONTENT = "public"; //$NON-NLS-1$
 	}
 	public interface Defaults {
 		final static String STATIC_WEB_CONTENT = Values.STATIC_WEB_CONTENT;
