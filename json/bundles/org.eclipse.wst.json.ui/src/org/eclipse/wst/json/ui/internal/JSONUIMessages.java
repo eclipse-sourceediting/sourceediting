@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2016 Angelo ZERR.
+ *  Copyright (c) 2013-2021 Angelo ZERR. and others
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License 2.0
  *  which accompanies this distribution, and is available at
@@ -118,6 +118,11 @@ public class JSONUIMessages extends NLS {
 	public static String PrefsLabel_WrappingWithoutAttr;
 	public static String PrefsLabel_WrappingInsertLineBreak;
 	public static String PrefsLabel_SelectorWhitespace;
+
+	public static String Automatically_close;
+	public static String Close_braces;
+	public static String Close_brackets;
+	public static String Close_strings;
 
 	public static String Creating_files_encoding;
 

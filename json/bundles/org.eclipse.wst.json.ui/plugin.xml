@@ -37,10 +37,12 @@
 		<documentationTextHover
         	class="org.eclipse.wst.json.ui.internal.text.hover.JSONHoverProcessor"
         	target="org.eclipse.wst.json.JSON" />
-		<!--<provisionalConfiguration
+		<!--
+		<provisionalConfiguration
 			type="characterpairmatcher"
 			class="org.eclipse.wst.json.ui.internal.text.JSONDocumentRegionEdgeMatcher"
-			target="org.eclipse.wst.json.core.jsonsource" />-->
+			target="org.eclipse.wst.json.core.jsonsource" />
+		-->
 		<provisionalConfiguration
 			type="foldingstrategy"
 			class="org.eclipse.wst.json.ui.internal.projection.JSONFoldingStrategy"
@@ -151,13 +153,12 @@
 			id="org.eclipse.wst.json.ui.internal.preferences.JSONCatalogPreferencePage">
 			<keywordReference id="org.eclipse.wst.json.ui.jsoncatalog"/>
 		</page>
-		<!--
 		<page
 			name="%JSON_Typing"
 			category="org.eclipse.wst.sse.ui.preferences.json.source"
 			class="org.eclipse.wst.json.ui.internal.preferences.JSONTypingPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.json.typing">
-		</page>-->
+		</page>
     	<page
             name="%JSON_Validator.name"
             category="org.eclipse.wst.json.ui.preferences.json.json"

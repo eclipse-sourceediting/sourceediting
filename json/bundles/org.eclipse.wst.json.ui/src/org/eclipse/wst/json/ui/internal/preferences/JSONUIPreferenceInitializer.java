@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2020 IBM Corporation and others.
+ * Copyright (c) 2006, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -112,6 +112,10 @@ public class JSONUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		PreferenceConverter.setDefault(store, AppearancePreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND, ColorHelper.findRGB(registry, AppearancePreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND, new RGB(0, 0, 0)));
 		PreferenceConverter.setDefault(store, AppearancePreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND, ColorHelper.findRGB(registry, AppearancePreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND, new RGB(255, 255, 255)));
 		PreferenceConverter.setDefault(store, AppearancePreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND, ColorHelper.findRGB(registry, AppearancePreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND, new RGB(0, 0, 0)));
+
+		store.setDefault(JSONUIPreferenceNames.TYPING_CLOSE_BRACES, true);
+		store.setDefault(JSONUIPreferenceNames.TYPING_CLOSE_BRACKETS, false);
+		store.setDefault(JSONUIPreferenceNames.TYPING_CLOSE_STRINGS, true);
 
 		// hover help preferences are not part of base text editor preference
 		String mod2Name = Action.findModifierString(SWT.MOD2);

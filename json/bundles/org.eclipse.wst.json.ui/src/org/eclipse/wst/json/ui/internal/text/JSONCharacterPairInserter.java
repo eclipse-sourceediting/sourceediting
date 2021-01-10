@@ -12,20 +12,30 @@
  */
 package org.eclipse.wst.json.ui.internal.text;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.link.ILinkedModeListener;
 import org.eclipse.jface.text.link.LinkedModeModel;
 import org.eclipse.jface.text.link.LinkedModeUI.ExitFlags;
 import org.eclipse.jface.text.link.LinkedModeUI.IExitPolicy;
+import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.wst.json.ui.internal.JSONUIPlugin;
+import org.eclipse.wst.json.ui.internal.preferences.JSONUIPreferenceNames;
 import org.eclipse.wst.sse.ui.typing.AbstractCharacterPairInserter;
 
 /**
- * Character pair insrter for JSON to auto close JSON character like '{', '['.
+ * Character pair inserter for JSON to auto close JSON character like '{', '['.
  *
  */
-public class JSONCharacterPairInserter extends AbstractCharacterPairInserter {
+public class JSONCharacterPairInserter extends AbstractCharacterPairInserter implements IPropertyChangeListener {
+
+	private boolean fCloseStrings;
+	private boolean fCloseBrackets;
+	private boolean fCloseBraces;
 
 	public boolean hasPair(char c) {
 		switch (c) {
@@ -37,6 +47,15 @@ public class JSONCharacterPairInserter extends AbstractCharacterPairInserter {
 		default:
 			return false;
 		}
+	}
+
+	@Override
+	public void initialize() {
+		IPreferenceStore store = JSONUIPlugin.getDefault().getPreferenceStore();
+		fCloseStrings = store.getBoolean(JSONUIPreferenceNames.TYPING_CLOSE_STRINGS);
+		fCloseBraces = store.getBoolean(JSONUIPreferenceNames.TYPING_CLOSE_BRACES);
+		fCloseBrackets = store.getBoolean(JSONUIPreferenceNames.TYPING_CLOSE_BRACKETS);
+		store.addPropertyChangeListener(this);
 	}
 
 	protected char getPair(char c) {
@@ -97,5 +116,29 @@ public class JSONCharacterPairInserter extends AbstractCharacterPairInserter {
 	protected IExitPolicy getExitPolicy(char exit, char escape,
 			IDocument document) {
 		return new ExitPolicy(exit, escape, document);
+	}
+	public void propertyChange(PropertyChangeEvent event) {
+		if (JSONUIPreferenceNames.TYPING_CLOSE_BRACKETS.equals(event.getProperty()))
+			fCloseBrackets = ((Boolean) event.getNewValue()).booleanValue();
+		else if (JSONUIPreferenceNames.TYPING_CLOSE_BRACES.equals(event.getProperty()))
+			fCloseBraces = ((Boolean) event.getNewValue()).booleanValue();
+		else if (JSONUIPreferenceNames.TYPING_CLOSE_STRINGS.equals(event.getProperty()))
+			fCloseStrings = ((Boolean) event.getNewValue()).booleanValue();
+	}
+
+	@Override
+	protected boolean shouldPair(ISourceViewer viewer, char c) {
+		switch (c) {
+			case '\'' :
+			case '"' :
+				return fCloseStrings;
+			case '[' :
+			case '(' :
+				return fCloseBrackets;
+			case '{' :
+				return fCloseBraces;
+			default :
+				return false;
+		}
 	}
 }

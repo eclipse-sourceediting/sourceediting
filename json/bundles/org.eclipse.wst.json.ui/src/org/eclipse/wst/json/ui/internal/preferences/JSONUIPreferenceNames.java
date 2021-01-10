@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2016 IBM Corporation and others.
+ * Copyright (c) 2005, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -144,4 +144,30 @@ public class JSONUIPreferenceNames {
 	 */
 	public static final String INSERT_SINGLE_SUGGESTION = "insertSingleSuggestion"; //$NON-NLS-1$
 
+	/**
+	 * The key to store the option for auto-completing strings (" and ') while
+	 * typing.
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String TYPING_CLOSE_STRINGS = "closeStrings"; //$NON-NLS-1$
+
+	/**
+	 * The key to store the option for auto-completing braces ({) while
+	 * typing.
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String TYPING_CLOSE_BRACES = "closeBraces"; //$NON-NLS-1$
+
+	/**
+	 * The key to store the option for auto-completing brackets ([ and () while
+	 * typing.
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String TYPING_CLOSE_BRACKETS = "closeBrackets"; //$NON-NLS-1$
 }
