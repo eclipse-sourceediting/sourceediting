@@ -75,7 +75,9 @@ public class XMLCatalogTreeViewerBuilder extends Object {
 	}
 	
 	public TreeViewer create() {
-		fTree = new FilteredTree(fParent, SWT.MULTI, new PatternFilter(), true, false);
+		PatternFilter filter = new PatternFilter();
+		filter.setIncludeLeadingWildcard(true);
+		fTree = new FilteredTree(fParent, SWT.MULTI, filter, true, false);
 		fTreeViewer = fTree.getViewer();
 
 		fTreeViewer.setContentProvider(new CatalogEntryContentProvider());

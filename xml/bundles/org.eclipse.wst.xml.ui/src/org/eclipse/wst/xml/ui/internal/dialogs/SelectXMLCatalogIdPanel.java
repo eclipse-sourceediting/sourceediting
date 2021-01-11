@@ -93,12 +93,12 @@ public class SelectXMLCatalogIdPanel extends Composite {
 		columnProperties[1] = XMLUIMessages._UI_LABEL_URI;
 
 		FilteredTree viewerCreator = new FilteredTree(parent, SWT.FULL_SELECTION | SWT.BORDER, new PatternFilter(), true, true);
+		viewerCreator.getPatternFilter().setIncludeLeadingWildcard(true);
 		viewerCreator.getViewer().setContentProvider(new XMLCatalogEntryContentProvider());
 		viewerCreator.getViewer().setLabelProvider(new XMLCatalogEntryLabelProvider());
 
 		viewerCreator.getViewer().getTree().setLinesVisible(true);
 		viewerCreator.getViewer().getTree().setHeaderVisible(true);
-		viewerCreator.getViewer().getTree().setLinesVisible(true);
 
 		TableLayout layout = new TableLayout();
 		for (int i = 0; i < columnProperties.length; i++) {
