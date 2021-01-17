@@ -22,6 +22,8 @@ Export-Package: org.eclipse.jst.jsp.core.tests,
  org.eclipse.jst.jsp.css.core.tests.source,
  org.eclipse.jst.jsp.css.core.tests.testfiles,
  org.eclipse.jst.jsp.css.core.tests.testfiles.results
+Import-Package: org.w3c.dom.css,
+ org.w3c.dom.stylesheets
 Require-Bundle: javax.servlet,
  javax.servlet.jsp,
  org.junit;bundle-version="[3.8.2,5.0.0)",
@@ -45,3 +47,4 @@ Require-Bundle: javax.servlet,
 Eclipse-LazyStart: true
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Automatic-Module-Name: org.eclipse.jst.jsp.core.tests

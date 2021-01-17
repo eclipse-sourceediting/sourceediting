@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.css.core.tests;singleton:=true
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.1.100.qualifier
 Bundle-Activator: org.eclipse.wst.css.core.tests.CSSCoreTestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
@@ -14,10 +14,13 @@ Export-Package: org.eclipse.wst.css.core.tests,
  org.eclipse.wst.css.core.tests.testfiles,
  org.eclipse.wst.css.core.tests.testfiles.results,
  org.eclipse.wst.css.core.tests.util
+Import-Package: org.w3c.dom.css,
+ org.w3c.dom.stylesheets
 Require-Bundle: org.eclipse.wst.css.core,
  org.eclipse.wst.sse.core,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.junit;bundle-version=3.8.2
 Eclipse-LazyStart: true
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: org.eclipse.wst.css.core.tests

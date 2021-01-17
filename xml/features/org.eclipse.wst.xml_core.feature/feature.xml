@@ -56,7 +56,7 @@
          id="org.apache.xerces"
          download-size="1200"
          install-size="1200"
-         version="2.9.0.qualifier"
+         version="2.12.1.qualifier"
          unpack="false"/>
 
    <plugin
