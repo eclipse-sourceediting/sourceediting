@@ -115,7 +115,7 @@ public final class DeploymentDescriptorPropertyCache {
 						group.setPageEncoding(getContainedText(node));
 					}
 					else if (URL_PATTERN.equals(name)) {
-						group.setUrlPattern(getContainedText(node));
+						group.addUrlPattern(getContainedText(node));
 					}
 				}
 
@@ -133,10 +133,10 @@ public final class DeploymentDescriptorPropertyCache {
 
 		private IPath[] include_prelude = new IPath[0];
 		private boolean is_xml;
-		private StringMatcher matcher;
+		private StringMatcher[] urlMatchers;
 		private String page_encoding;
 		private boolean scripting_invalid;
-		String url_pattern;
+		String[] url_patterns;
 		private IPath webxmlPath;
 
 		int number;
@@ -147,7 +147,7 @@ public final class DeploymentDescriptorPropertyCache {
 			this.number = number;
 		}
 
-		private void addCoda(String containedText) {
+		void addCoda(String containedText) {
 			if (containedText.length() > 0) {
 				IPath[] codas = new IPath[include_coda.length + 1];
 				System.arraycopy(include_coda, 0, codas, 0, include_coda.length);
@@ -156,13 +156,35 @@ public final class DeploymentDescriptorPropertyCache {
 			}
 		}
 
-		private void addPrelude(String containedText) {
+		void addPrelude(String containedText) {
 			if (containedText.length() > 0) {
 				IPath[] preludes = new IPath[include_prelude.length + 1];
 				System.arraycopy(include_prelude, 0, preludes, 0, include_prelude.length);
 				preludes[include_prelude.length] = webxmlPath.removeLastSegments(2).append(containedText);
 				include_prelude = preludes;
 			}
+		}
+
+
+		void addUrlPattern(String pattern) {
+			if (url_patterns == null) {
+				url_patterns = new String[1];
+			}
+			else {
+				String[] patterns = new String[url_patterns.length + 1];
+				System.arraycopy(url_patterns, 0, patterns, 0, url_patterns.length);
+				url_patterns = patterns;
+			}
+			url_patterns[url_patterns.length - 1] = pattern;
+
+			if (urlMatchers == null) {
+				urlMatchers = new StringMatcher[1];
+			}
+			else {
+				StringMatcher[] matchers = new StringMatcher[urlMatchers.length + 1];
+				System.arraycopy(urlMatchers, 0, matchers, 0, urlMatchers.length);
+			}
+			urlMatchers[urlMatchers.length - 1] = new StringMatcher(pattern);
 		}
 
 		public String getId() {
@@ -181,8 +203,8 @@ public final class DeploymentDescriptorPropertyCache {
 			return page_encoding;
 		}
 
-		public String getUrlPattern() {
-			return url_pattern;
+		public String[] getUrlPatterns() {
+			return url_patterns;
 		}
 
 		public boolean isELignored() {
@@ -198,40 +220,49 @@ public final class DeploymentDescriptorPropertyCache {
 		}
 
 		boolean matches(String pattern, boolean optimistic) {
-			if (matcher == null)
+			if (urlMatchers == null) {
 				return optimistic;
-			return matcher.match(pattern);
+			}
+			for (int i = 0; i < urlMatchers.length; i++) {
+				if (urlMatchers[i].match(pattern)) {
+					return true;
+				}
+			}
+			return false;
 		}
 
-		private void setElignored(String el_ignored) {
+		 void setElignored(String el_ignored) {
 			this.el_ignored = Boolean.valueOf(el_ignored).booleanValue();
 		}
 
-		private void setId(String id) {
+		 void setId(String id) {
 			this.id = id;
 		}
 
-		private void setIsXML(String is_xml) {
+		 void setIsXML(String is_xml) {
 			this.is_xml = Boolean.valueOf(is_xml).booleanValue();
 		}
 
-		private void setPageEncoding(String page_encoding) {
+		 void setPageEncoding(String page_encoding) {
 			this.page_encoding = page_encoding;
 		}
 
-		private void setScriptingInvalid(String scripting_invalid) {
+		 void setScriptingInvalid(String scripting_invalid) {
 			this.scripting_invalid = Boolean.valueOf(scripting_invalid).booleanValue();
 		}
 
-		private void setUrlPattern(String url_pattern) {
-			this.url_pattern = url_pattern;
-			if (url_pattern != null && url_pattern.length() > 0) {
-				this.matcher = new StringMatcher(url_pattern);
+		void setUrlPatterns(String[] url_patterns) {
+			this.url_patterns = url_patterns;
+			if (url_patterns != null && url_patterns.length > 0) {
+				this.urlMatchers = new StringMatcher[url_patterns.length];
+				for (int i = 0; i < url_patterns.length; i++) {
+					this.urlMatchers[i] = new StringMatcher(url_patterns[i]);
+				}
 			}
 		}
 
 		public String toString() {
-			return number + ":" + url_pattern; //$NON-NLS-1$
+			return number + ":" + url_patterns; //$NON-NLS-1$
 		}
 	}
 
