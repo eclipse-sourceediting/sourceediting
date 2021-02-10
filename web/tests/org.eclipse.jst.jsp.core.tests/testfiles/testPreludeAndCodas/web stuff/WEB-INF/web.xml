@@ -11,6 +11,7 @@
 	</welcome-file-list>
 	<jsp-config>
 		<jsp-property-group>
+		<url-pattern>/prelude-user-multiple-mapping/*.jsp</url-pattern>
 		<url-pattern>/prelude-user/*.jsp</url-pattern>
 		<include-prelude>/common/prelude0.jspf</include-prelude>
 		<include-prelude>/common/prelude1.jspf</include-prelude>
