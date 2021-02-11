@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2018 IBM Corporation and others.
+ * Copyright (c) 2006, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -176,9 +176,9 @@ public class TestReconcilerXML extends TestCase {
 			while (iter.hasNext()) {
 				Annotation anno = (Annotation) iter.next();
 				String annoType = anno.getType();
-				buffer.append("\n");
-				buffer.append(anno.getText());
 				if ((annotationAccess.isSubtype(annoType, ANNOTATION_ERROR)) || (annotationAccess.isSubtype(annoType, ANNOTATION_WARNING))) {
+					buffer.append("\n");
+					buffer.append(anno.getText());
 					errorFound = true;
 				}
 			}
@@ -213,9 +213,9 @@ public class TestReconcilerXML extends TestCase {
 			while (iter.hasNext()) {
 				Annotation anno = (Annotation) iter.next();
 				String annoType = anno.getType();
-				buffer.append("\n");
-				buffer.append(anno.getText());
 				if ((annotationAccess.isSubtype(annoType, ANNOTATION_ERROR)) || (annotationAccess.isSubtype(annoType, ANNOTATION_WARNING))) {
+					buffer.append("\n");
+					buffer.append(anno.getText());
 					errorFound = true;
 				}
 			}
