@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2018 IBM Corporation and others.
+ * Copyright (c) 2005, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -667,7 +667,7 @@ class ProjectDescription {
 	 * Lookups/enumerations will be redirected to the corresponding
 	 * ProjectDescription instances
 	 */
-	Set fClasspathProjects = null;
+	Set<IProject> fClasspathProjects = null;
 
 	/** Holds references by URI to JARs */
 	Hashtable fClasspathReferences;
@@ -770,7 +770,7 @@ class ProjectDescription {
 				references.put(key, urlRecord);
 			}
 		}
-		IProject[] buildpathProjects = (IProject[]) fClasspathProjects.toArray(new IProject[fClasspathProjects.size()]);
+		IProject[] buildpathProjects = fClasspathProjects.toArray(new IProject[fClasspathProjects.size()]);
 		for (int i = 0; i < buildpathProjects.length; i++) {
 			if (!projectsProcessed.contains(buildpathProjects[i]) && buildpathProjects[i].isAccessible()) {
 				projectsProcessed.add(buildpathProjects[i]);
@@ -1178,9 +1178,9 @@ class ProjectDescription {
 		return info;
 	}
 
-	List getAvailableTaglibRecords(IPath path) {
+	List<ITaglibRecord> getAvailableTaglibRecords(IPath path) {
 		ensureUpTodate();
-		Collection records = null;
+		Collection<ITaglibRecord> records = null;
 		try {
 			float jspVersion = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(path);
 			LOCK.acquire();
@@ -2194,7 +2194,7 @@ class ProjectDescription {
 			writer.write(BUILDPATH_ENTRIES + "|" + fBuildPathEntryCount); //$NON-NLS-1$
 			writer.write('\n'); //$NON-NLS-1$
 
-			IProject[] projects = (IProject[]) fClasspathProjects.toArray(new IProject[0]);
+			IProject[] projects = fClasspathProjects.toArray(new IProject[0]);
 			for (int i = 0; i < projects.length; i++) {
 				writer.write(BUILDPATH_PROJECT);
 				writer.write("|"); //$NON-NLS-1$

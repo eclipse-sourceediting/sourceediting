@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -68,11 +68,11 @@ public interface TLDElementDeclaration extends CMElementDeclaration {
 
 	/**
 	 * Zero or more extensions that provide extra information about this tag,
-	 * for tool consumption
+	 * for tool consumption (must be some other tool)
 	 * 
 	 * @see JSP 2.0
 	 */
-	List getExtensions();
+	List<String> getExtensions();
 
 	/**
 	 * Optional tag-specific information
@@ -131,5 +131,5 @@ public interface TLDElementDeclaration extends CMElementDeclaration {
 	 * @see JSP 1.2
 	 * @return List of TLDVariables
 	 */
-	List getVariables();
+	List<TLDVariable> getVariables();
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
@@ -124,7 +125,7 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 
 				DocumentInfo info = null;
 				synchronized (_instance.fDocumentMap) {
-					info = (DocumentInfo) _instance.fDocumentMap.get(document);
+					info = _instance.fDocumentMap.get(document);
 				}
 				if (info != null) {
 					// remember the buffer now
@@ -162,26 +163,25 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 						return;
 				}
 			}
-			DocumentInfo info = null;
+
 			synchronized (fDocumentMap) {
-				Map.Entry[] entries = (Map.Entry[]) fDocumentMap.entrySet().toArray(new Map.Entry[fDocumentMap.size()]);
-				for (int i = 0; i < entries.length; i++) {
-					info = (DocumentInfo) entries[i].getValue();
+				Iterator<Entry<IDocument, DocumentInfo>> infos = fDocumentMap.entrySet().iterator();
+				while(infos.hasNext()) {
+					Entry<IDocument, DocumentInfo> entry = infos.next();
 					/**
 					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=222137
 					 * 
 					 * Might be null if setup() has been called but
 					 * bufferCreated() has not, yet.
 					 */
-					if (info != null && info.textFileBuffer != null && info.textFileBuffer.equals(buffer)) {
-						fDocumentMap.remove(entries[i].getKey());
+					DocumentInfo info = entry.getValue();
+					if (info.textFileBuffer != null && info.textFileBuffer.equals(buffer)) {
+						info.tldDocumentManager.clearCache();
+						TaglibIndex.removeTaglibIndexListener(info);
+						infos.remove();
 						break;
 					}
 				}
-			}
-			if (info != null) {
-				info.tldDocumentManager.clearCache();
-				TaglibIndex.removeTaglibIndexListener(info);
 			}
 		}
 
@@ -244,7 +244,7 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 
 	public static IPath getLocation(IDocument document) {
 		synchronized (_instance.fDocumentMap) {
-			DocumentInfo info = (DocumentInfo) _instance.fDocumentMap.get(document);
+			DocumentInfo info = _instance.fDocumentMap.get(document);
 			if (info != null)
 				return info.location;
 			return null;
@@ -262,9 +262,9 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 
 		IPath location = null;
 		synchronized (_instance.fDocumentMap) {
-			Iterator docInfos = _instance.fDocumentMap.values().iterator();
+			Iterator<DocumentInfo> docInfos = _instance.fDocumentMap.values().iterator();
 			while (docInfos.hasNext() && location == null) {
-				DocumentInfo info = (DocumentInfo) docInfos.next();
+				DocumentInfo info = docInfos.next();
 				if (info.tldDocumentManager.equals(manager))
 					location = info.location;
 			}
@@ -277,7 +277,7 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 		if (_instance == null)
 			return null;
 		synchronized (_instance.fDocumentMap) {
-			DocumentInfo info = (DocumentInfo) _instance.fDocumentMap.get(document);
+			DocumentInfo info = _instance.fDocumentMap.get(document);
 			if (info != null)
 				return info.tldDocumentManager;
 			return null;
@@ -309,9 +309,9 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 
 	IFileBufferListener fBufferListener;
 
-	Map fDocumentMap;
+	Map<IDocument, DocumentInfo> fDocumentMap;
 
-	List fJSPdocuments;
+	List<IDocument> fJSPdocuments;
 
 	/*
 	 * This constructor is only to be called as part of the FileBuffer
@@ -320,8 +320,8 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 	public TaglibController() {
 		super();
 		fBufferListener = new FileBufferListener();
-		fJSPdocuments = new ArrayList(1);
-		fDocumentMap = new HashMap(1);
+		fJSPdocuments = new ArrayList<>(1);
+		fDocumentMap = new HashMap<>(1);
 	}
 
 

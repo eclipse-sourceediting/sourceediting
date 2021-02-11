@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2014 IBM Corporation and others.
+ * Copyright (c) 2005, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -69,7 +69,7 @@ import org.osgi.service.event.Event;
  */
 public final class TaglibIndex {
 	class ClasspathChangeListener implements IElementChangedListener {
-		List projectsIndexed = new ArrayList(1);
+		List<IProject> projectsIndexed = new ArrayList<>(1);
 
 		public void elementChanged(ElementChangedEvent event) {
 			if (!isIndexAvailable())
@@ -113,7 +113,7 @@ public final class TaglibIndex {
 							runner.run(new Runnable() {
 								public void run() {
 									IJavaProject proj = (IJavaProject) element;
-									ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(proj.getProject());
+									ProjectDescription description = fProjectDescriptions.remove(proj.getProject());
 									if (description != null) {
 										if (_debugIndexCreation) {
 											Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
@@ -189,7 +189,7 @@ public final class TaglibIndex {
 						description = getDescription((IProject) resource);
 					}
 					if (description != null && !frameworkIsShuttingDown()) {
-						projectsIndexed.add(resource);
+						projectsIndexed.add((IProject) resource);
 						description.queueElementChanged(delta);
 					}
 				}
@@ -271,7 +271,7 @@ public final class TaglibIndex {
 										if (_debugIndexCreation) {
 											Logger.log(Logger.INFO, "TaglibIndex noticed " + projects[i].getName() + " is about to be deleted/closed"); //$NON-NLS-1$ //$NON-NLS-2$
 										}
-										ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
+										ProjectDescription description = fProjectDescriptions.remove(projects[i]);
 										if (description != null) {
 											if (_debugIndexCreation) {
 												Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
@@ -334,7 +334,7 @@ public final class TaglibIndex {
 												if (_debugIndexCreation) {
 													Logger.log(Logger.INFO, "TaglibIndex noticed " + projects[i].getName() + " was removed or is no longer accessible"); //$NON-NLS-1$ //$NON-NLS-2$
 												}
-												ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
+												ProjectDescription description = fProjectDescriptions.remove(projects[i]);
 												if (description != null) {
 													if (_debugIndexCreation) {
 														Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
@@ -452,8 +452,9 @@ public final class TaglibIndex {
 				}
 			}
 		}
+
 		synchronized (TLDCMDocumentManager.getSharedDocumentCache()) {
-			Iterator values = TLDCMDocumentManager.getSharedDocumentCache().values().iterator();
+			Iterator<?> values = TLDCMDocumentManager.getSharedDocumentCache().values().iterator();
 			while (values.hasNext()) {
 				Object o = values.next();
 				if (o instanceof Reference) {
@@ -639,7 +640,7 @@ public final class TaglibIndex {
 
 	private TaglibIndexDelta fCurrentTopLevelDelta = null;
 
-	Map fProjectDescriptions = null;
+	Map<IProject, ProjectDescription> fProjectDescriptions = null;
 
 	private ResourceChangeListener fResourceChangeListener;
 
@@ -684,7 +685,7 @@ public final class TaglibIndex {
 					removeIndexes(false);
 				}
 
-				fProjectDescriptions = new Hashtable();
+				fProjectDescriptions = new Hashtable<>();
 				fResourceChangeListener = new ResourceChangeListener();
 				fClasspathChangeListener = new ClasspathChangeListener();
 				fMemoryListener = new MemoryListener();
@@ -745,7 +746,7 @@ public final class TaglibIndex {
 		ProjectDescription description = null;
 		try {
 			LOCK.acquire();
-			description = (ProjectDescription) fProjectDescriptions.get(project);
+			description = fProjectDescriptions.get(project);
 			if (description == null) {
 				// Once we've started indexing, we're dirty again
 				if (fProjectDescriptions.isEmpty()) {
@@ -810,7 +811,7 @@ public final class TaglibIndex {
 	ProjectDescription getDescription(IProject project) {
 		ProjectDescription description = null;
 		if (isInitialized()) {
-			description = (ProjectDescription) fProjectDescriptions.get(project);
+			description = fProjectDescriptions.get(project);
 		}
 		return description;
 	}
@@ -837,11 +838,11 @@ public final class TaglibIndex {
 				fTaglibIndexListeners = new ITaglibIndexListener[]{listener};
 			}
 			else {
-				List listeners = new ArrayList(Arrays.asList(fTaglibIndexListeners));
+				List<ITaglibIndexListener> listeners = new ArrayList<>(Arrays.asList(fTaglibIndexListeners));
 				if (!listeners.contains(listener)) {
 					listeners.add(listener);
 				}
-				fTaglibIndexListeners = (ITaglibIndexListener[]) listeners.toArray(new ITaglibIndexListener[0]);
+				fTaglibIndexListeners = listeners.toArray(new ITaglibIndexListener[0]);
 			}
 		}
 		finally {
@@ -855,7 +856,7 @@ public final class TaglibIndex {
 			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
 			if (project.isAccessible()) {
 				ProjectDescription description = createDescription(project);
-				List availableRecords = description.getAvailableTaglibRecords(path);
+				List<ITaglibRecord> availableRecords = description.getAvailableTaglibRecords(path);
 
 				// check web fragments, if there are any
 				IProject[] projects = FacetModuleCoreSupport.getReferenced(project);
@@ -868,7 +869,7 @@ public final class TaglibIndex {
 					}
 				}
 
-				records = (ITaglibRecord[]) availableRecords.toArray(records);
+				records = availableRecords.toArray(records);
 			}
 		}
 		return records;
@@ -893,9 +894,9 @@ public final class TaglibIndex {
 		try {
 			LOCK.acquire();
 			if (fTaglibIndexListeners != null) {
-				List listeners = new ArrayList(Arrays.asList(fTaglibIndexListeners));
+				List<ITaglibIndexListener> listeners = new ArrayList<>(Arrays.asList(fTaglibIndexListeners));
 				listeners.remove(listener);
-				fTaglibIndexListeners = (ITaglibIndexListener[]) listeners.toArray(new ITaglibIndexListener[0]);
+				fTaglibIndexListeners = listeners.toArray(new ITaglibIndexListener[0]);
 			}
 		}
 		finally {
@@ -988,7 +989,7 @@ public final class TaglibIndex {
 
 		// remove any extraneous index files
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-		List indexNames = new ArrayList(projects.length);
+		List<String> indexNames = new ArrayList<>(projects.length);
 		if (staleOnly) {
 			for (int i = 0; i < projects.length; i++) {
 				if (projects[i].isAccessible()) {
@@ -1065,9 +1066,9 @@ public final class TaglibIndex {
 	void clearProjectDescriptions() {
 		try {
 			LOCK.acquire();
-			Iterator i = fProjectDescriptions.values().iterator();
+			Iterator<ProjectDescription> i = fProjectDescriptions.values().iterator();
 			while (i.hasNext()) {
-				ProjectDescription description = (ProjectDescription) i.next();
+				ProjectDescription description = i.next();
 				description.saveReferences();
 			}
 

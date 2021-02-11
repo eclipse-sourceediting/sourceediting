@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,6 @@
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.parser;
-
-
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -40,7 +38,6 @@ import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
-
 /**
  * Takes input from the HTMLTokenizer and creates a tag list
  */
@@ -59,7 +56,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	// protected List fRegions = null;
 	// protected Object fInput = null;
 	protected String fStringInput = null;
-	protected List fStructuredDocumentRegionHandlers;
+	protected List<StructuredDocumentRegionHandler> fStructuredDocumentRegionHandlers;
 
 	protected BlockTokenizer fTokenizer = null;
 	protected long startTime;
@@ -70,7 +67,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	 */
 	public XMLSourceParser() {
 		super();
-		fStructuredDocumentRegionHandlers = new ArrayList();
+		fStructuredDocumentRegionHandlers = new ArrayList<>();
 	}
 
 	/**
@@ -92,8 +89,9 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	}
 
 	public synchronized void addStructuredDocumentRegionHandler(StructuredDocumentRegionHandler handler) {
-		if (fStructuredDocumentRegionHandlers == null)
-			fStructuredDocumentRegionHandlers = new ArrayList();
+		if (fStructuredDocumentRegionHandlers == null) {
+			fStructuredDocumentRegionHandlers = new ArrayList<>();
+		}
 		synchronized (fStructuredDocumentRegionHandlers) {
 			fStructuredDocumentRegionHandlers.add(handler);
 		}
@@ -159,7 +157,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 		return null;
 	}
 
-	public List getBlockMarkers() {
+	public List<BlockMarker> getBlockMarkers() {
 		return getTokenizer().getBlockMarkers();
 	}
 
@@ -209,7 +207,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	 * Return the full list of known regions. Typically getNodes should be
 	 * used instead of this method.
 	 */
-	public List getRegions() {
+	public List<ITextRegion> getRegions() {
 		IStructuredDocumentRegion headNode = null;
 		if (!getTokenizer().isEOF()) {
 			headNode = getDocumentRegions();
@@ -220,7 +218,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 		// memory consuming objects
 		// but the new "getRegions" method is then more expensive.
 		// I don't think its used much, though.
-		List localRegionsList = getRegions(headNode);
+		List<ITextRegion> localRegionsList = getRegions(headNode);
 		primReset();
 		return localRegionsList;
 	}
@@ -231,8 +229,8 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	 * @param headNode
 	 * @return List
 	 */
-	protected List getRegions(IStructuredDocumentRegion headNode) {
-		List allRegions = new ArrayList();
+	protected List<ITextRegion> getRegions(IStructuredDocumentRegion headNode) {
+		List<ITextRegion> allRegions = new ArrayList<>();
 		IStructuredDocumentRegion currentNode = headNode;
 		while (currentNode != null) {
 			ITextRegionList nodeRegions = currentNode.getRegions();
@@ -248,9 +246,9 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	 * @deprecated - use the add/remove methods instead
 	 * @return java.util.List
 	 */
-	public List getStructuredDocumentRegionHandlers() {
+	public List<StructuredDocumentRegionHandler> getStructuredDocumentRegionHandlers() {
 		if (fStructuredDocumentRegionHandlers == null) {
-			fStructuredDocumentRegionHandlers = new ArrayList(0);
+			fStructuredDocumentRegionHandlers = new ArrayList<>(0);
 		}
 		return fStructuredDocumentRegionHandlers;
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2010 IBM Corporation and others.
+ * Copyright (c) 2004, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNa
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDDocument;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariable;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
@@ -52,7 +53,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	private String fPath = null;
 
-	private List fTagExtensions = new ArrayList(0);
+	private List<String> fTagExtensions = new ArrayList<>(0);
 	/**
 	 * since JSP 1.2
 	 */
@@ -80,7 +81,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	/**
 	 * since JSP 1.2
 	 */
-	private List variables;
+	private List<TLDVariable> variables;
 
 	/**
 	 * since JSP 2.0
@@ -198,7 +199,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	/**
 	 * @return Returns the extensions.
 	 */
-	public List getExtensions() {
+	public List<String> getExtensions() {
 		return fTagExtensions;
 	}
 
@@ -391,9 +392,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	 * 
 	 * @return Returns a List
 	 */
-	public List getVariables() {
+	public List<TLDVariable> getVariables() {
 		if (variables == null) {
-			variables = new ArrayList();
+			variables = new ArrayList<>();
 		}
 		return variables;
 	}
@@ -504,7 +505,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	 * @param variables
 	 *            The variables to set
 	 */
-	public void setVariables(List variables) {
+	public void setVariables(List<TLDVariable> variables) {
 		this.variables = variables;
 	}
 

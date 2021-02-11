@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2017 IBM Corporation and others.
+ * Copyright (c) 2004, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -385,7 +385,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 					ed.setPath(getContainedText(child));
 				}
 				else if (nodeName.equals(JSP20TLDNames.TAG_EXTENSION)) {
-					ed.getExtensions().add(child);
+					ed.getExtensions().add(getContainedText(child));
 				}
 			}
 			child = child.getNextSibling();
@@ -483,7 +483,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 					ed.setSmallIcon(getContainedText(child));
 				}
 				else if (nodeName.equals(JSP20TLDNames.TAG_EXTENSION) && child.getNodeType() == Node.ELEMENT_NODE) {
-					ed.getExtensions().add(child);
+					ed.getExtensions().add(getContainedText(child));
 				}
 				else if (nodeName.equals(JSP20TLDNames.DYNAMIC_ATTRIBUTES) && child.hasChildNodes()) {
 					ed.setDynamicAttributes(getContainedText(child));

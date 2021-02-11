@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2012 IBM Corporation and others.
+ * Copyright (c) 2004, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -240,7 +240,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					if (getIncludes().isEmpty())
 						filePath = FacetModuleCoreSupport.resolve(modelBaseLocation, includedFile);
 					else
-						filePath = FacetModuleCoreSupport.resolve((IPath) getIncludes().peek(), includedFile);
+						filePath = FacetModuleCoreSupport.resolve(getIncludes().peek(), includedFile);
 				}
 
 				// check for "loops"
@@ -298,9 +298,9 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					}
 					else {
 						// Add from that saved list of uris/prefixes/documents
-						List references = (List) fTLDCMReferencesMap.get(filePath);
+						List<TLDCMDocumentReference> references = fTLDCMReferencesMap.get(filePath);
 						for (int i = 0; references != null && i < references.size(); i++) {
-							TLDCMDocumentReference reference = (TLDCMDocumentReference) references.get(i);
+							TLDCMDocumentReference reference = references.get(i);
 							/*
 							 * The uri might not be resolved properly if
 							 * relative to the JSP fragment.
@@ -537,7 +537,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				fLocalParser.addBlockMarker(new BlockMarker(marker.getTagName(), null, marker.getContext(), marker.isCaseSensitive()));
 			}
 			if (fParentParser instanceof JSPCapableParser && fLocalParser instanceof JSPCapableParser) {
-				TagMarker[] knownPrefixes = (TagMarker[]) ((JSPCapableParser) fParentParser).getNestablePrefixes().toArray(new TagMarker[0]);
+				TagMarker[] knownPrefixes = ((JSPCapableParser) fParentParser).getNestablePrefixes().toArray(new TagMarker[0]);
 				for (int i = 0; i < knownPrefixes.length; i++) {
 					((JSPCapableParser) fLocalParser).addNestablePrefix(new TagMarker(knownPrefixes[i].getTagName(), null));
 				}
@@ -584,9 +584,13 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	static final boolean _debugCache = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/tldcmdocument/cache")); //$NON-NLS-1$ //$NON-NLS-2$
 	// will hold the prefixes banned by the specification; taglibs may not use
 	// them
-	protected static List bannedPrefixes = null;
+	protected static List<String> bannedPrefixes = null;
 
-	private static Hashtable fCache = null;
+	/**
+	 * Map of either TLDCacheEntrys or WeakReferences to TLD
+	 * CMDocuments, depending on the known open files referring to them
+	 */
+	private static Map<Object, ?> fSharedCache = null;
 	final String XMLNS = "xmlns:"; //$NON-NLS-1$ 
 	final String URN_TAGDIR = "urn:jsptagdir:";
 	final String URN_TLD = "urn:jsptld:";
@@ -596,7 +600,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	final int URN_TLD_LENGTH = URN_TLD.length();
 
 	static {
-		bannedPrefixes = new ArrayList(7);
+		bannedPrefixes = new ArrayList<>(7);
 		bannedPrefixes.add("jsp"); //$NON-NLS-1$
 		bannedPrefixes.add("jspx"); //$NON-NLS-1$
 		bannedPrefixes.add("java"); //$NON-NLS-1$
@@ -609,14 +613,14 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	/**
 	 * Gets all of the known documents.
 	 * 
-	 * @return Returns a Hashtable of either TLDCacheEntrys or WeakReferences
+	 * @return Returns a map of either TLDCacheEntrys or WeakReferences
 	 *         to TLD CMDocuments
 	 */
-	public static Hashtable getSharedDocumentCache() {
-		if (fCache == null) {
-			fCache = new Hashtable();
+	public static Map getSharedDocumentCache() {
+		if (fSharedCache == null) {
+			fSharedCache = new HashMap<>();
 		}
-		return fCache;
+		return fSharedCache;
 	}
 
 
@@ -659,20 +663,20 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	/**
 	 * The locally-know list of CMDocuments
 	 */
-	private Hashtable fDocuments = null;
+	private Hashtable<Object, CMDocument> fDocuments = null;
 
 	// timestamp cache to prevent excessive reparsing
 	// of included files
 	// IPath (filepath) > Long (modification stamp)
 	HashMap fInclude2TimestampMap = new HashMap();
 
-	private Stack fIncludes = null;
+	private Stack<IPath> fIncludes = null;
 
 	private XMLSourceParser fParser = null;
 
 	private List fTaglibTrackers = null;
 
-	Map fTLDCMReferencesMap = new HashMap();
+	Map<IPath, List<TLDCMDocumentReference>> fTLDCMReferencesMap = new HashMap<>();
 	boolean fProcessIncludes = true;
 	boolean preludesHandled = false;
 
@@ -872,8 +876,8 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		return fCMDocumentBuilder;
 	}
 
-	public List getCMDocumentTrackers(int offset) {
-		List validDocs = new ArrayList();
+	public List<TaglibTracker> getCMDocumentTrackers(int offset) {
+		List<TaglibTracker> validDocs = new ArrayList<>();
 		Object[] alldocs = getTaglibTrackers().toArray();
 		for (int i = 0; i < alldocs.length; i++) {
 			TaglibTracker aTracker = (TaglibTracker) alldocs[i];
@@ -884,8 +888,8 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		return validDocs;
 	}
 
-	public List getCMDocumentTrackers(String prefix, int offset) {
-		List validDocs = new ArrayList();
+	public List<TaglibTracker> getCMDocumentTrackers(String prefix, int offset) {
+		List<TaglibTracker> validDocs = new ArrayList<>();
 		Object[] alldocs = getTaglibTrackers().toArray();
 		for (int i = 0; i < alldocs.length; i++) {
 			TaglibTracker aTracker = (TaglibTracker) alldocs[i];
@@ -929,7 +933,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	IPath getCurrentParserPath() {
 		IPath path = null;
 		if (!getIncludes().isEmpty()) {
-			path = (IPath) getIncludes().peek();
+			path = getIncludes().peek();
 		}
 		else {
 			path = TaglibController.getLocation(this);
@@ -951,7 +955,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	 */
 	public Hashtable getDocuments() {
 		if (fDocuments == null)
-			fDocuments = new Hashtable();
+			fDocuments = new Hashtable<>();
 		return fDocuments;
 	}
 
@@ -960,9 +964,9 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	 * 
 	 * @return Returns a Stack
 	 */
-	protected Stack getIncludes() {
+	protected Stack<IPath> getIncludes() {
 		if (fIncludes == null)
-			fIncludes = new Stack();
+			fIncludes = new Stack<>();
 		return fIncludes;
 	}
 
@@ -1003,17 +1007,18 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 						if (getParser() != null) {
 							IncludeHelper includeHelper = new IncludeHelper(anchor, getParser());
 							includeHelper.parse(preludes[i]);
-							List references = includeHelper.taglibReferences;
+							List<TLDCMDocumentReference> references = includeHelper.taglibReferences;
 							fTLDCMReferencesMap.put(preludes[i], references);
 							if (getParser() instanceof JSPCapableParser) {
 								for (int j = 0; j < references.size(); j++) {
-									TLDCMDocumentReference reference = (TLDCMDocumentReference) references.get(j);
+									TLDCMDocumentReference reference = references.get(j);
 									((JSPCapableParser) getParser()).addNestablePrefix(new TagMarker(reference.prefix + ":")); //$NON-NLS-1$
 								}
 							}
 						}
-						else
+						else {
 							Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
+						}
 						getIncludes().pop();
 					}
 				}
@@ -1129,10 +1134,12 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	}
 
 	public void setSourceParser(XMLSourceParser parser) {
-		if (fParser != null)
+		if (fParser != null) {
 			fParser.removeStructuredDocumentRegionHandler(getStructuredDocumentRegionHandler());
+		}
 		fParser = parser;
-		if (fParser != null)
+		if (fParser != null) {
 			fParser.addStructuredDocumentRegionHandler(getStructuredDocumentRegionHandler());
+		}
 	}
 }
