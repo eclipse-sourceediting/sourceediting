@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2020 IBM Corporation and others.
+ * Copyright (c) 2001, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.dtd.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
@@ -37,6 +38,8 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DeclHandler;
@@ -57,7 +60,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 	// private Vector declElements;
 	private String comment = null;
 	private ErrorMessage errorMessage = null;
-	private List errorMessages = new ArrayList();
+	private List<ErrorMessage> errorMessages = new ArrayList();
 	private DeclNode previousDeclNode = null;
 	private DeclNode currentDeclNode = null;
 	private BaseNode lastBaseNode = null;
@@ -66,15 +69,15 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 	private int lineNumber;
 
 	private DTD currentDTD = null;
-	private Vector dtdList = new Vector();
+	private Vector<DTD> dtdList = new Vector();
 
-	private Stack dtdStack = new Stack();
-	private Stack peRefStack = new Stack();
-	private Stack parsingPERefStack = new Stack();
+	private Stack<DTD> dtdStack = new Stack();
+	private Stack<String> peRefStack = new Stack();
+	private Stack<Boolean> parsingPERefStack = new Stack();
 
 	private EntityPool entityPool = new EntityPool();
 	private String expandedEntityValue = null;
-	private Hashtable elementPool = new Hashtable();
+	private Hashtable<String, BaseNode> elementPool = new Hashtable<>();
 
 	boolean parsingExternalPEReference = false;
 	protected boolean expandEntityReferences = true;
@@ -100,6 +103,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 		this.canonical = canonical;
 		try {
+//			SAXParser sparser = SAXParserFactory.newInstance("org.apache.xerces.jaxp.SAXParserFactoryImpl", null).newSAXParser();
 			SAXParser sparser = SAXParserFactory.newInstance().newSAXParser();
 			reader = sparser.getXMLReader();
 			reader.setProperty("http://xml.org/sax/properties/declaration-handler", this); //$NON-NLS-1$
@@ -141,6 +145,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 				currentDTD.setIsExceptionDuringParse(true);
 		}
 		catch (Exception e) {
+			Logger.logException(e);
 			if (currentDTD != null)
 				currentDTD.setIsExceptionDuringParse(true);
 		}
@@ -151,7 +156,19 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 	 * @deprecated Entity references are always expanded.
 	 */
 	public void setExpandEntityReferences(boolean expandEntityReferences) {
-		this.expandEntityReferences = true;
+		try {
+			this.expandEntityReferences = expandEntityReferences;
+			reader.setFeature("http://xml.org/sax/features/external-general-entities", expandEntityReferences); //$NON-NLS-1$
+			reader.setFeature("http://xml.org/sax/features/external-parameter-entities", expandEntityReferences); //$NON-NLS-1$
+		}
+		catch (SAXNotRecognizedException | SAXNotSupportedException se) {
+			if (currentDTD != null)
+				currentDTD.setIsExceptionDuringParse(false);
+		}
+		catch (Exception e) {
+			if (currentDTD != null)
+				currentDTD.setIsExceptionDuringParse(false);
+		}
 	}
 
 	/*
@@ -414,13 +431,13 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	protected boolean parseExternalPEReference(String name) {
 		if (!peRefStack.empty()) {
-			if (((String) peRefStack.peek()).equals(name)) {
+			if (peRefStack.peek().equals(name)) {
 				peRefStack.pop();
 				if (parsingExternalPEReference) {
-					currentDTD = (DTD) dtdStack.pop();
+					currentDTD = dtdStack.pop();
 					addPEReferenceNode(name);
 				}
-				parsingExternalPEReference = ((Boolean) parsingPERefStack.pop()).booleanValue();
+				parsingExternalPEReference = parsingPERefStack.pop().booleanValue();
 				return true;
 			}
 		}
@@ -561,8 +578,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 					break;
 				}
 				case DeclNode.EXTERNAL_ENTITY : {
-					boolean resolveExternalEntities = InstanceScope.INSTANCE.getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName()).getBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false);
-					if (!resolveExternalEntities) {
+					if (!this.expandEntityReferences) {
 						break;
 					}
 				}

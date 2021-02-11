@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2018 IBM Corporation and others.
+ * Copyright (c) 2010, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -53,7 +53,8 @@ public class TestJSPContentAssistComputers extends TestCase {
 	/** The name of the project that all of these tests will use */
 	private static final String PROJECT_NAME = "TestJSPContentAssistComputers";
 	
-	private static final String CONTENT_DIR = "WebContent";
+	// org.eclipse.wst.project.facet.ProductManager.WEB_CONTENT_FOLDER, except, these test projects are static
+	private static final String CONTENT_DIR = "WebContent"; //$NON-NLS-1$
 	
 	/** The project that all of the tests use */
 	private static IProject fProject;
@@ -62,7 +63,7 @@ public class TestJSPContentAssistComputers extends TestCase {
 	 * Used to keep track of the already open editors so that the tests don't go through
 	 * the trouble of opening the same editors over and over again
 	 */
-	private static Map fFileToEditorMap = new HashMap();
+	private static Map<IFile, IEditorPart> fFileToEditorMap = new HashMap<>();
 	
 	/**
 	 * <p>Default constructor<p>
@@ -436,9 +437,9 @@ public class TestJSPContentAssistComputers extends TestCase {
 		 */
 		public void tearDown() throws Exception {
 			//close out the editors
-			Iterator iter = fFileToEditorMap.values().iterator();
+			Iterator<IEditorPart> iter = fFileToEditorMap.values().iterator();
 			while(iter.hasNext()) {
-				StructuredTextEditor editor = (StructuredTextEditor)iter.next();
+				IEditorPart editor = iter.next();
 				editor.getSite().getPage().saveEditor(editor, false);
 				editor.getSite().getPage().closeEditor(editor, false);
 			}

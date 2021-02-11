@@ -21,7 +21,7 @@
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.wst.dtd.core</artifactId>
-  <version>1.2.100-SNAPSHOT</version>
+  <version>1.2.200-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 
   <build>
