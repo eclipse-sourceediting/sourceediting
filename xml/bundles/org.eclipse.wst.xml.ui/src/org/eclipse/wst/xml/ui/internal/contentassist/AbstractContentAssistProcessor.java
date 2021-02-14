@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -588,7 +588,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				// |
 				if (needsEndTag(xmlEndTagOpen)) {
 					String tagName = getTagName(xmlEndTagOpen);
-					xmlEndTagOpen.getTextEndOffset();
+					replaceBegin = xmlEndTagOpen.getTextEndOffset();
 					replaceLength = 0;
 					replaceText = "</" + tagName + ">"; //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
 					// replaceText = "</" + node.getNodeName() + ">";
