@@ -145,7 +145,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 				currentDTD.setIsExceptionDuringParse(true);
 		}
 		catch (Exception e) {
-			Logger.logException(e);
+			Logger.log(Logger.ERROR_DEBUG, e.getMessage(), e);
 			if (currentDTD != null)
 				currentDTD.setIsExceptionDuringParse(true);
 		}
@@ -169,6 +169,15 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 			if (currentDTD != null)
 				currentDTD.setIsExceptionDuringParse(false);
 		}
+	}
+
+	/**
+	 * Affects the resolution of external entities by asserting that the parser
+	 * started with a trusted/known DTD
+	 * @param nowTrusted
+	 */
+	public void setIsTrustedBase(boolean nowTrusted) {
+		this.isTrustedBase = nowTrusted;
 	}
 
 	/*
@@ -248,6 +257,12 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 	}
 
 	protected String attributeString = ""; //$NON-NLS-1$
+
+	/**
+	 * Is this a trusted (known) URI, or what that was referenced by a
+	 * known/trusted URI?
+	 */
+	boolean isTrustedBase;
 
 	public void attributeDecl(String eName, String aName, String type, String valueDefault, String value) throws SAXException {
 		startDeclaration(DeclNode.ATTLIST);
@@ -578,8 +593,14 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 					break;
 				}
 				case DeclNode.EXTERNAL_ENTITY : {
-					if (!this.expandEntityReferences) {
-						break;
+					if (!this.isTrustedBase) {
+						if (!this.expandEntityReferences) {
+							break;
+						}
+						boolean resolveExternalEntities = InstanceScope.INSTANCE.getNode(XMLCorePlugin.getDefault().getBundle().getSymbolicName()).getBoolean(XMLCorePreferenceNames.RESOLVE_EXTERNAL_ENTITIES, false);
+						if (!resolveExternalEntities) {
+							break;
+						}
 					}
 				}
 				case DeclNode.INTERNAL_ENTITY : {

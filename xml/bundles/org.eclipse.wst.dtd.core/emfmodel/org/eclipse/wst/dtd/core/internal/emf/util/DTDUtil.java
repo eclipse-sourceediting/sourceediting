@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,7 @@ public class DTDUtil {
 	private DTDParser parser;
 
 	private Vector errorMsgs = new Vector();
+	private boolean isTrustedBase;
 
 	private static Hashtable utilCache = new Hashtable();
 
@@ -101,6 +102,7 @@ public class DTDUtil {
 			if (expandEntityReferences) {
 				parser.setExpandEntityReferences(expandEntityReferences);
 			}
+			parser.setIsTrustedBase(isTrustedBase);
 			parser.parse(filename);
 		}
 		catch (IOException ex) {
@@ -151,6 +153,10 @@ public class DTDUtil {
 
 	public void setexpandEntityReferences(boolean expandEntityReferences) {
 		this.expandEntityReferences = expandEntityReferences;
+	}
+
+	public void setIsTrustedBase(boolean trusted) {
+		this.isTrustedBase = trusted;
 	}
 
 	public boolean getExpandEntityReferences() {

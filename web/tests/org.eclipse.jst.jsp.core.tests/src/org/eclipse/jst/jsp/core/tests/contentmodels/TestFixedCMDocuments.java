@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2020 IBM Corporation and others.
+ * Copyright (c) 2007, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,16 +12,27 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.tests.contentmodels;
 
+import java.io.IOException;
+
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.contentmodel.JSPCMDocumentFactory;
+import org.eclipse.jst.jsp.core.tests.ProjectUtil;
 import org.eclipse.wst.html.core.internal.contentmodel.JSP11Namespace;
 import org.eclipse.wst.html.core.internal.contentmodel.JSP20Namespace;
 import org.eclipse.wst.html.core.internal.contentmodel.JSP21Namespace;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.w3c.dom.Element;
 
 import junit.framework.TestCase;
 
@@ -272,6 +283,22 @@ public class TestFixedCMDocuments extends TestCase {
 		checkDocument(CMDocType.TAG20_DOC_TYPE);
 	}
 	
+	public void testXmlJsp() throws IOException, CoreException {
+		ProjectUtil.createProject("testxmljsp", null, null);
+		ProjectUtil.copyBundleEntriesIntoWorkspace("testfiles/testxmljsp", "testxmljsp");
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager().getModelForRead(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("testxmljsp/test.jsp")));
+			Element body = (Element) ((IDOMModel) model).getDocument().getElementsByTagName("body").item(0);
+			assertNotNull("XHTML Transitional DTD did not load for JSP document (check if trusted according to DTDCorePlugin)", ModelQueryUtil.getModelQuery(model).getCMElementDeclaration(body));
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
+		}
+	}
+
 	private void verifyAttributeDeclaration(CMElementDeclaration elemDecl, CMNode attr) {
 		assertTrue(attr.getNodeType() == CMNode.ATTRIBUTE_DECLARATION);
 		assertNotNull("no name on an attribute declaration", attr.getNodeName());

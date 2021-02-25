@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -18,12 +18,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import com.ibm.icu.util.StringTokenizer;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.emf.DTDAnyContent;
 import org.eclipse.wst.dtd.core.internal.emf.DTDAttribute;
 import org.eclipse.wst.dtd.core.internal.emf.DTDBasicType;
@@ -66,6 +67,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNodeListImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDescriptionBuilder;
 
+import com.ibm.icu.util.StringTokenizer;
 
 public class DTDImpl {
 	static {
@@ -87,6 +89,7 @@ public class DTDImpl {
 	public static DTDFile buildDTDModel(String uri) {
 		DTDUtil dtdUtil = new DTDUtil();
 		dtdUtil.setexpandEntityReferences(true);
+		dtdUtil.setIsTrustedBase(isKnownURI(uri));
 		dtdUtil.parse(new ResourceSetImpl(), uri);
 		return dtdUtil.getDTDFile();
 	}
@@ -109,6 +112,54 @@ public class DTDImpl {
 		int occurence = content.getOccurrence().getValue();
 		boolean isMulti = (occurence == DTDOccurrenceType.ONE_OR_MORE || occurence == DTDOccurrenceType.ZERO_OR_MORE);
 		return isMulti ? -1 : 1;
+	}
+
+	/**
+	 * A URI is considered known if one of its fragments begins with the name
+	 * of a known contributor and the uri ends with one of its contributed URI
+	 * values. The fuzzy matching is needed to account for runtime differences
+	 * during development and production.
+	 *
+	 * @param dtdURI
+	 * @return
+	 */
+	static boolean isKnownURI(String dtdURI) {
+		/* nothing in the current workspace should be trusted */
+		if (dtdURI.contains(ResourcesPlugin.getWorkspace().getRoot().getLocation().toString())) {
+			return false;
+		}
+
+		String[] parts = dtdURI.split("/");
+		if (parts.length < 5) {
+			return false;
+		}
+		/* nothing remote should be trusted */
+		if (!parts[0].endsWith("file:")) {
+			return false;
+		}
+
+		String[] activeContributors = DTDCorePlugin.KNOWN_URIS.keySet().toArray(new String[0]);
+		/*
+		 * The last part at least must be the file name, and the first part
+		 * part of the installation location, so skip them
+		 */
+		for (int i = parts.length - 2; i > 0; i--) {
+			String part = parts[i];
+			for (int j = 0; j < activeContributors.length; j++) {
+				if (part.startsWith(activeContributors[j])) {
+					part = activeContributors[j];
+					String[] contributedUris = null;
+					if ((contributedUris = DTDCorePlugin.KNOWN_URIS.get(part)) != null) {
+						for (int k = 0; k < contributedUris.length; k++) {
+							if (dtdURI.endsWith(contributedUris[k])) {
+								return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	public static class DTDAdapterFactoryImpl extends AdapterFactoryImpl {
