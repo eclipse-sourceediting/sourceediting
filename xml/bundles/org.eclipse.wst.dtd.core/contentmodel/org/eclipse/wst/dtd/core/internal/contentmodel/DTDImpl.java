@@ -138,7 +138,7 @@ public class DTDImpl {
 			return false;
 		}
 
-		String[] activeContributors = DTDCorePlugin.KNOWN_URIS.keySet().toArray(new String[0]);
+		String[] activeContributors = DTDCorePlugin.getInstance().getKnownURIs().keySet().toArray(new String[0]);
 		/*
 		 * The last part at least must be the file name, and the first part
 		 * part of the installation location, so skip them
@@ -149,7 +149,7 @@ public class DTDImpl {
 				if (part.startsWith(activeContributors[j])) {
 					part = activeContributors[j];
 					String[] contributedUris = null;
-					if ((contributedUris = DTDCorePlugin.KNOWN_URIS.get(part)) != null) {
+					if ((contributedUris = DTDCorePlugin.getInstance().getKnownURIs().get(part)) != null) {
 						for (int k = 0; k < contributedUris.length; k++) {
 							if (dtdURI.endsWith(contributedUris[k])) {
 								return true;
