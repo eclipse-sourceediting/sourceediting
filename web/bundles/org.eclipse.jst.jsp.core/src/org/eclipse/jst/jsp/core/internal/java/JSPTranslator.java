@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2020 IBM Corporation and others.
+ * Copyright (c) 2004, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -383,6 +383,8 @@ public class JSPTranslator implements Externalizable {
 		fServletAPIDescriptor = DeploymentDescriptorPropertyCache.getInstance().getServletAPIVersion(ResourcesPlugin.getWorkspace().getRoot().getProject(new Path(baseLocation).segment(0)));
 		fSuperclass = fServletAPIDescriptor.getRootPackage() + ".http.HttpServlet"; //$NON-NLS-1$
 
+		init();
+
 		String className = createClassname(node);
 		if (className.length() > 0) {
 			setClassname(className);
@@ -408,6 +410,8 @@ public class JSPTranslator implements Externalizable {
 
 		fServletAPIDescriptor = DeploymentDescriptorPropertyCache.getInstance().getServletAPIVersion(jspFile.getProject());
 		fSuperclass = fServletAPIDescriptor.getRootPackage() + ".http.HttpServlet"; //$NON-NLS-1$
+
+		init();
 
 		String className = createClassname(jspFile);
 		if (className.length() > 0) {
@@ -1307,22 +1311,24 @@ public class JSPTranslator implements Externalizable {
 	}
 
 	protected void init() {
+		String rootPackage = fServletAPIDescriptor.getRootPackage();
+
 		fClassname = "_JSPServlet"; //$NON-NLS-1$
 		fClassHeader = "public class " + fClassname + " extends "; //$NON-NLS-1$ //$NON-NLS-2$
-		
-		fImplicitImports = "import " + fServletAPIDescriptor.getRootPackage() + ".*;" + ENDL + //$NON-NLS-1$
-					"import "+ fServletAPIDescriptor.getRootPackage() + ".http.*;" + ENDL + //$NON-NLS-1$
-					"import " + fServletAPIDescriptor.getRootPackage() + ".jsp.*;" + ENDL + ENDL; //$NON-NLS-1$
 
-		fServiceHeader = "public void _jspService(" + fServletAPIDescriptor.getRootPackage() + ".http.HttpServletRequest request," + //$NON-NLS-1$
-					" " + fServletAPIDescriptor.getRootPackage() + ".http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
-					"\t\tthrows java.io.IOException, " + fServletAPIDescriptor.getRootPackage() + ".ServletException {" + ENDL + //$NON-NLS-1$
-					fServletAPIDescriptor.getRootPackage() + ".jsp.PageContext pageContext = JspFactory.getDefaultFactory().getPageContext(this, request, response, null, true, JspWriter.DEFAULT_BUFFER, true);" + ENDL + //$NON-NLS-1$
-					fServletAPIDescriptor.getRootPackage() + ".ServletContext application = pageContext.getServletContext();" + ENDL + //$NON-NLS-1$
-					fServletAPIDescriptor.getRootPackage() + ".ServletConfig config = pageContext.getServletConfig();" + ENDL + //$NON-NLS-1$ 
-					fServletAPIDescriptor.getRootPackage() + ".jsp.JspWriter out = pageContext.getOut();" + ENDL + //$NON-NLS-1$
+		fImplicitImports = "import " + rootPackage + ".*;" + ENDL + //$NON-NLS-1$
+					"import "+ rootPackage + ".http.*;" + ENDL + //$NON-NLS-1$
+					"import " + rootPackage + ".jsp.*;" + ENDL + ENDL; //$NON-NLS-1$
+
+		fServiceHeader = "public void _jspService(" + rootPackage + ".http.HttpServletRequest request," + //$NON-NLS-1$
+					" " + rootPackage + ".http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
+					"\t\tthrows java.io.IOException, " + rootPackage + ".ServletException {" + ENDL + //$NON-NLS-1$
+					rootPackage + ".jsp.PageContext pageContext = JspFactory.getDefaultFactory().getPageContext(this, request, response, null, true, JspWriter.DEFAULT_BUFFER, true);" + ENDL + //$NON-NLS-1$
+					rootPackage + ".ServletContext application = pageContext.getServletContext();" + ENDL + //$NON-NLS-1$
+					rootPackage + ".ServletConfig config = pageContext.getServletConfig();" + ENDL + //$NON-NLS-1$ 
+					rootPackage + ".jsp.JspWriter out = pageContext.getOut();" + ENDL + //$NON-NLS-1$
 					"Object page = this;" + ENDL; //$NON-NLS-1$
-		fSuperclass = fServletAPIDescriptor.getRootPackage() + ".http.HttpServlet"; //$NON-NLS-1$
+		fSuperclass = rootPackage + ".http.HttpServlet"; //$NON-NLS-1$
 		fContext = "pageContext"; //$NON-NLS-1$
 		fSession = fContext+".getSession();"; //$NON-NLS-1$
 	}
