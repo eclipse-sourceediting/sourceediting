@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2017 IBM Corporation and others.
+ * Copyright (c) 2004, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,13 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.tests.contentmodel;
 
+import java.util.Map;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.equinox.app.IApplication;
+import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ModelQueryImpl;
@@ -27,7 +30,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
-public class CMVisitorTest implements IPlatformRunnable {
+public class CMVisitorTest implements IApplication {
 	public Object run(Object a) {
 		String args[] = (String[]) a;
 		if (args.length > 0) {
@@ -99,5 +102,17 @@ public class CMVisitorTest implements IPlatformRunnable {
 			System.out.print(" "); //$NON-NLS-1$
 		}
 		System.out.println(string);
+	}
+
+	@Override
+	public Object start(IApplicationContext context) throws Exception {
+		context.applicationRunning();
+		@SuppressWarnings("unchecked")
+		Map<String, Object> contextArguments = context.getArguments();
+		return run(contextArguments.get(IApplicationContext.APPLICATION_ARGS));
+	}
+
+	@Override
+	public void stop() {
 	}
 }
