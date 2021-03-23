@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -14,16 +14,12 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.extension;
 
-
-
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IPluginRegistry;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.util.Sorter;
-
 
 /**
  * Template implementation of a registry reader that creates objects
@@ -147,19 +143,6 @@ public abstract class RegistryReader {
 	 */
 	protected void readExtension(IExtension extension) {
 		readElements(extension.getConfigurationElements());
-	}
-
-	/**
-	 * @deprecated use readRegistry(IExtensionRegistry registry, String pluginId, String extensionPoint)
-	 */
-	protected void readRegistry(IPluginRegistry registry, String pluginId, String extensionPoint) {
-		IExtensionPoint point = registry.getExtensionPoint(pluginId, extensionPoint);
-		if (point != null) {
-			IExtension[] extensions = point.getExtensions();
-			extensions = orderExtensions(extensions);
-			for (int i = 0; i < extensions.length; i++)
-				readExtension(extensions[i]);
-		}
 	}
 	
 	/**
