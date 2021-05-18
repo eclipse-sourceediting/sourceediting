@@ -843,9 +843,9 @@
                             <content>%doublequote.content</content>
                         </item>
                         <item
-                                label="%doublequote.label"
+                                label="%singlequote.label"
                                 id="org.eclipse.wst.html.ui.apos">
-                            <content>%doublequote.content</content>
+                            <content>%singlequote.content</content>
                         </item>
                         <item
                                 label="%dl.label"
