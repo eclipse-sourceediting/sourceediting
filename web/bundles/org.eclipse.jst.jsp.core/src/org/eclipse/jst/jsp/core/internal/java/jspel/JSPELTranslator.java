@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2010 BEA Systems and others.
+ * Copyright (c) 2005, 2021 BEA Systems and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -50,12 +50,12 @@ public class JSPELTranslator implements IJSPELTranslator {
 	 */
 	private JSPELParser elParser = null;
 	
-	public List translateEL(String elText, String delim,
+	public List<ELProblem> translateEL(String elText, String delim,
 			IStructuredDocumentRegion currentNode, int contentStart,
 			int contentLength, StringBuffer fUserELExpressions,
 			HashMap fUserELRanges, IStructuredDocument document) {
 		
-		ArrayList elProblems = new ArrayList();
+		List<ELProblem> elProblems = new ArrayList<>();
 		
 		try {
 			synchronized(this) {
@@ -67,7 +67,7 @@ public class JSPELTranslator implements IJSPELTranslator {
 			
 				ASTExpression expression = elParser.Expression();
 				ELGenerator gen = new ELGenerator();
-				List generatorELProblems = gen.generate(expression, currentNode, fUserELExpressions, fUserELRanges, document, currentNode, contentStart, contentLength);
+				List<ELProblem> generatorELProblems = gen.generate(expression, currentNode, fUserELExpressions, fUserELRanges, document, currentNode, contentStart, contentLength);
 				elProblems.addAll(generatorELProblems);
 			}
 		} catch (ParseException e) {

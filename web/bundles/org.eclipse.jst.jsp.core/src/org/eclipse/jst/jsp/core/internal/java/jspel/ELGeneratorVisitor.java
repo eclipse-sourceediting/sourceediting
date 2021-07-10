@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2011 BEA Systems and others.
+ * Copyright (c) 2005, 2021 BEA Systems and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.ITextFileBufferManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -47,10 +49,13 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentImpl;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDFunction;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
+import org.eclipse.jst.jsp.core.internal.contenttype.ServletAPIDescriptor;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.jspel.ELProblem;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
+import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
@@ -63,35 +68,9 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	private static final String ENDL = "\n"; //$NON-NLS-1$
 	
 	private static final String fExpressionHeader1 = "public String _elExpression"; //$NON-NLS-1$
-	private static final String fExpressionHeader2 = "()" + ENDL + //$NON-NLS-1$
-	"\t\tthrows java.io.IOException, javax.servlet.ServletException, javax.servlet.jsp.JspException {" + ENDL + //$NON-NLS-1$
-	"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map param = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map paramValues = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map header = null;" + ENDL + //$NON-NLS-1$ 
-	"java.util.Map headerValues = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map cookie = null;" + ENDL + //$NON-NLS-1$ 
-	"java.util.Map initParam = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map pageScope = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map requestScope = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map sessionScope = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map applicationScope = null;" + ENDL + //$NON-NLS-1$
-	"return \"\"+( "; //$NON-NLS-1$
 
-	private static final String fExpressionHeader2_param = "()" + ENDL + //$NON-NLS-1$
-	"\t\tthrows java.io.IOException, javax.servlet.ServletException, javax.servlet.jsp.JspException {" + ENDL + //$NON-NLS-1$
-	"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<String, String> param = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<String, String[]> paramValues = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<String, String> header = null;" + ENDL + //$NON-NLS-1$ 
-	"java.util.Map<String, String[]> headerValues = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<String, javax.servlet.http.Cookie> cookie = null;" + ENDL + //$NON-NLS-1$ 
-	"java.util.Map<String, String> initParam = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<String, Object> pageScope = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<String, Object> requestScope = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<String, Object> sessionScope = null;" + ENDL + //$NON-NLS-1$
-	"java.util.Map<String, Object> applicationScope = null;" + ENDL + //$NON-NLS-1$
-	"return \"\"+( "; //$NON-NLS-1$
+	private String fExpressionHeader2 = null;
+	private String fExpressionHeader2_param = null;
 	
 	private static final String fJspImplicitObjects[] = { "pageContext" }; //$NON-NLS-1$
 	
@@ -138,11 +117,11 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 
 	private boolean fUseParameterizedTypes;
 
-	private List fELProblems;
+	private List<ELProblem> fELProblems;
 	private IScopeContext[] fScopeContexts = null;
 
 	/**
-	 * Tranlsation of XML-style operators to java
+	 * Translation of XML-style operators to java
 	 */
 	static {
 		fOperatorMap = new HashMap();
@@ -176,8 +155,9 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		fCurrentNode = currentNode;
 		fGeneratedFunctionStart = -1; //set when generating function definition
 		fUseParameterizedTypes = compilerSupportsParameterizedTypes();
-		fELProblems = new ArrayList();
+		fELProblems = new ArrayList<>();
 		fScopeContexts = getScopeContexts();
+		initForAPIContext(document);
 	}
 
 	/**
@@ -229,6 +209,55 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		fOffsetInUserCode += newText.length();
 	}
 	
+
+	ServletAPIDescriptor initForAPIContext(IStructuredDocument document) {
+		ServletAPIDescriptor apiContext = ServletAPIDescriptor.DEFAULT;
+		ITextFileBufferManager textFileBufferManager = FileBuffers.getTextFileBufferManager();
+		if (textFileBufferManager != null) {
+			ITextFileBuffer textFileBuffer = textFileBufferManager.getTextFileBuffer(document);
+			if (textFileBuffer != null) {
+				IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(textFileBuffer.getLocation().segment(0));
+				apiContext = DeploymentDescriptorPropertyCache.getInstance().getServletAPIVersion(project);
+			}
+			else {
+				Logger.log(Logger.ERROR, "No file buffer for document " + document);
+			}
+		}
+		else {
+			Logger.log(Logger.ERROR, "Missing text file buffer manager");
+		}
+		fExpressionHeader2 = "()" + ENDL + //$NON-NLS-1$
+			"\t\tthrows java.io.IOException, "+apiContext.getRootPackage()+".ServletException, "+apiContext.getRootPackage()+".jsp.JspException {" + ENDL + //$NON-NLS-1$
+			apiContext.getRootPackage()+".jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map param = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map paramValues = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map header = null;" + ENDL + //$NON-NLS-1$ 
+			"java.util.Map headerValues = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map cookie = null;" + ENDL + //$NON-NLS-1$ 
+			"java.util.Map initParam = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map pageScope = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map requestScope = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map sessionScope = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map applicationScope = null;" + ENDL + //$NON-NLS-1$
+			"return \"\"+( "; //$NON-NLS-1$
+
+		fExpressionHeader2_param = "()" + ENDL + //$NON-NLS-1$
+			"\t\tthrows java.io.IOException, "+apiContext.getRootPackage()+".ServletException, "+apiContext.getRootPackage()+".jsp.JspException {" + ENDL + //$NON-NLS-1$
+			apiContext.getRootPackage()+".jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map<String, String> param = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map<String, String[]> paramValues = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map<String, String> header = null;" + ENDL + //$NON-NLS-1$ 
+			"java.util.Map<String, String[]> headerValues = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map<String, "+apiContext.getRootPackage()+".http.Cookie> cookie = null;" + ENDL + //$NON-NLS-1$ 
+			"java.util.Map<String, String> initParam = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map<String, Object> pageScope = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map<String, Object> requestScope = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map<String, Object> sessionScope = null;" + ENDL + //$NON-NLS-1$
+			"java.util.Map<String, Object> applicationScope = null;" + ENDL + //$NON-NLS-1$
+			"return \"\"+( "; //$NON-NLS-1$
+		return apiContext;
+	}
+
 	/**
 	 * Generate a function invocation.
 	 * 
@@ -243,9 +272,9 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		if (docMgr == null)
 			return null;
 		
-		Iterator taglibs = docMgr.getCMDocumentTrackers(fCurrentNode.getStartOffset()).iterator();
+		Iterator<TaglibTracker> taglibs = docMgr.getCMDocumentTrackers(fCurrentNode.getStartOffset()).iterator();
 		while (taglibs.hasNext()) {
-			TaglibTracker tracker = (TaglibTracker)taglibs.next();
+			TaglibTracker tracker = taglibs.next();
 			if(tracker.getPrefix().equals(prefix)) {
 				CMDocumentImpl doc = (CMDocumentImpl)tracker.getDocument();
 				
@@ -606,7 +635,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	/**
 	 * @return the {@link ELProblem}s found by this visitor
 	 */
-	public List getELProblems() {
+	public List<ELProblem> getELProblems() {
 		return fELProblems;
 	}
 

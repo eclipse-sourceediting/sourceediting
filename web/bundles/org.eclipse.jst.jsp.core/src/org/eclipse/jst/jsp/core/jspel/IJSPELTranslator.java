@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 BEA Systems and others.
+ * Copyright (c) 2005, 2021 BEA Systems and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ public interface IJSPELTranslator {
 	 * @param document The structured document.
 	 * @return A list of ELProblems that describes any syntactic issues found.
 	 */
-	public List translateEL(String elText,
+	public List<ELProblem> translateEL(String elText,
 			String delim,
 			IStructuredDocumentRegion currentNode, 
 			int contentStart,

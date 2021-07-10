@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -687,7 +688,7 @@ public final class DeploymentDescriptorPropertyCache {
 	/**
 	 * Map of project names to a structure representing the available Servlet API.
 	 */
-	Map<String, ServletAPIDescriptor> apiVersions = new HashMap<>();
+	Map<String, Reference<ServletAPIDescriptor>> apiVersions = new HashMap<>();
 
 	final static Object LOCK = new Object();
 
@@ -1040,14 +1041,15 @@ public final class DeploymentDescriptorPropertyCache {
 	 *         Build Path, <code>null</code> if none was discoverable.
 	 */
 	public ServletAPIDescriptor getServletAPIVersion(IProject project) {
-		ServletAPIDescriptor descriptor = apiVersions.get(project.getName());
+		Reference<ServletAPIDescriptor> ref = apiVersions.get(project.getName());
+		ServletAPIDescriptor descriptor = ref != null ? ref.get() : null;
 		if (descriptor == null) {
 			descriptor = discoverServletAPIVersion(project);
 			if (descriptor != null) {
-				apiVersions.put(project.getName(), descriptor);
+				apiVersions.put(project.getName(), new SoftReference<>(descriptor));
 			}
 			else {
-				apiVersions.put(project.getName(), ServletAPIDescriptor.DEFAULT);
+				apiVersions.put(project.getName(), new WeakReference<>(ServletAPIDescriptor.DEFAULT));
 				descriptor = ServletAPIDescriptor.DEFAULT;
 			}
 		}

@@ -130,7 +130,7 @@ public class JSPTranslator implements Externalizable {
 	 * @see #writeRanges(ObjectOutput, HashMap)
 	 * @see #readRanges(ObjectInput)
 	 */
-	private static final long serialVersionUID = 3L;
+	private static final long serialVersionUID = 4L;
 	
 	/** for debugging */
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping")).booleanValue(); //$NON-NLS-1$
@@ -1335,7 +1335,7 @@ public class JSPTranslator implements Externalizable {
 
 	/**
 	 * 
-	 * @return the status of the translator's progrss monitor, false if the
+	 * @return the status of the translator's progress monitor, false if the
 	 *         monitor is null
 	 */
 	private boolean isCanceled() {
@@ -1908,7 +1908,7 @@ public class JSPTranslator implements Externalizable {
 			// id
 
 			// Iterate over all declared extensions of this extension point.
-			// A single plugin may extend the extension point more than once,
+			// A single plug-in may extend the extension point more than once,
 			// although it's not recommended.
 			IConfigurationElement bestTranslator = null;
 			IExtension[] extensions = extensionPoint.getExtensions();

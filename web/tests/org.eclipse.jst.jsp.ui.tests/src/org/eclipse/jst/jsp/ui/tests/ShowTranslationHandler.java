@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2017 IBM Corporation and others.
+ * Copyright (c) 2008, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -25,11 +25,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jst.jsp.core.internal.java.IJSPProblem;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
@@ -44,9 +43,10 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.texteditor.AnnotationTypeLookup;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 
 /**
@@ -72,63 +72,83 @@ public class ShowTranslationHandler extends AbstractHandler {
 	 * .ExecutionEvent)
 	 */
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		ISelection selection = HandlerUtil.getCurrentSelection(event);
-		if (selection instanceof IStructuredSelection) {
-			List list = ((IStructuredSelection) selection).toList();
-			if (!list.isEmpty()) {
-				if (list.get(0) instanceof IDOMNode) {
-					final IDOMModel model = ((IDOMNode) list.get(0)).getModel();
-					INodeAdapter adapter = model.getDocument().getAdapterFor(IJSPTranslation.class);
-					if (adapter != null) {
-						Job opener = new UIJob("Opening JSP Java Translation") {
-							public IStatus runInUIThread(IProgressMonitor monitor) {
-								JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
-								final JSPTranslationExtension translation = translationAdapter.getJSPTranslation();
+		IEditorPart activeEditor = HandlerUtil.getActiveEditor(event);
+		if (activeEditor != null) {
+			ITextEditor textEditor = activeEditor.getAdapter(ITextEditor.class);
+			if (textEditor != null) {
+				IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+				IStructuredModel baseModel = null;
+				try {
+					baseModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+					if (baseModel instanceof IDOMModel) {
+						final IDOMModel model = (IDOMModel) baseModel;
+						INodeAdapter adapter = model.getDocument().getAdapterFor(IJSPTranslation.class);
+						if (adapter != null) {
+							Job opener = new UIJob("Opening JSP Java Translation") {
+								public IStatus runInUIThread(IProgressMonitor monitor) {
+									JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
+									final JSPTranslationExtension translation = translationAdapter.getJSPTranslation();
 
-								// create an IEditorInput for the Java editor
-								final IStorageEditorInput input = new JSPTranslationEditorInput(model);
-								try {
-									IEditorPart editor = IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), input, JavaUI.ID_CU_EDITOR, true);
-									// Now add the problems we found
-									if (editor instanceof ITextEditor) {
-										IAnnotationModel annotationModel = ((ITextEditor) editor).getDocumentProvider().getAnnotationModel(input);
-										translation.reconcileCompilationUnit();
-										List problemsList = translation.getProblems();
-										IProblem[] problems = (IProblem[]) problemsList.toArray(new IProblem[problemsList.size()]);
-										AnnotationTypeLookup lookup = new AnnotationTypeLookup();
-										for (int i = 0; i < problems.length; i++) {
-											if (problems[i] instanceof IJSPProblem)
-												continue;
-											int length = problems[i].getSourceEnd() - problems[i].getSourceStart() + 1;
-											Position position = new Position(problems[i].getSourceStart(), length);
-											Annotation annotation = null;
-											String type = lookup.getAnnotationType(IMarker.PROBLEM, IMarker.SEVERITY_INFO);
-											if (problems[i].isError()) {
-												type = lookup.getAnnotationType(IMarker.PROBLEM, IMarker.SEVERITY_ERROR);
-											}
-											else if (problems[i].isWarning()) {
-												type = lookup.getAnnotationType(IMarker.PROBLEM, IMarker.SEVERITY_WARNING);
-											}
-											annotation = new Annotation(type, false, problems[i].getMessage());
-											if (annotation != null) {
-												annotationModel.addAnnotation(annotation, position);
+									// create an IEditorInput for the Java
+									// editor
+									final IStorageEditorInput input = new JSPTranslationEditorInput(model);
+									try {
+										IEditorPart editor = IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), input, JavaUI.ID_CU_EDITOR, true);
+										// Now add the problems we found
+										if (editor instanceof ITextEditor) {
+											IAnnotationModel annotationModel = ((ITextEditor) editor).getDocumentProvider().getAnnotationModel(input);
+											translation.reconcileCompilationUnit();
+											List problemsList = translation.getProblems();
+											IProblem[] problems = (IProblem[]) problemsList.toArray(new IProblem[problemsList.size()]);
+											AnnotationTypeLookup lookup = new AnnotationTypeLookup();
+											for (int i = 0; i < problems.length; i++) {
+												if (problems[i] instanceof IJSPProblem)
+													continue;
+												int length = problems[i].getSourceEnd() - problems[i].getSourceStart() + 1;
+												Position position = new Position(problems[i].getSourceStart(), length);
+												Annotation annotation = null;
+												String type = lookup.getAnnotationType(IMarker.PROBLEM, IMarker.SEVERITY_INFO);
+												if (problems[i].isError()) {
+													type = lookup.getAnnotationType(IMarker.PROBLEM, IMarker.SEVERITY_ERROR);
+												}
+												else if (problems[i].isWarning()) {
+													type = lookup.getAnnotationType(IMarker.PROBLEM, IMarker.SEVERITY_WARNING);
+												}
+												annotation = new Annotation(type, false, problems[i].getMessage());
+												if (annotation != null) {
+													annotationModel.addAnnotation(annotation, position);
+												}
 											}
 										}
 									}
+									catch (PartInitException e) {
+										e.printStackTrace();
+										Display.getCurrent().beep();
+									}
+									return Status.OK_STATUS;
 								}
-								catch (PartInitException e) {
-									e.printStackTrace();
-									Display.getCurrent().beep();
-								}
-								return Status.OK_STATUS;
-							}
-						};
-						opener.setSystem(false);
-						opener.setUser(true);
-						opener.schedule();
+							};
+							opener.setSystem(false);
+							opener.setUser(true);
+							opener.schedule();
+						}
+					}
+					else {
+						Logger.log(Logger.ERROR, "Not an IDOMModel");
+					}
+				}
+				finally {
+					if (baseModel != null) {
+						baseModel.releaseFromRead();
 					}
 				}
 			}
+			else {
+				Logger.log(Logger.ERROR, "No text editor found");
+			}
+		}
+		else {
+			Logger.log(Logger.ERROR, "No active editor found");
 		}
 		return null;
 	}

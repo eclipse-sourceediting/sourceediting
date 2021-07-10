@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020 IBM Corporation and others.
+ * Copyright (c) 2020, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,7 @@ package org.eclipse.jst.jsp.core.internal.contenttype;
  * project. Typically this will have been discovered against actual libraries.
  */
 public class ServletAPIDescriptor {
-	public static ServletAPIDescriptor DEFAULT = new ServletAPIDescriptor("javax.servlet", 4);
+	public static ServletAPIDescriptor DEFAULT = new ServletAPIDescriptor("jakarta.servlet", 5);
 
 	public ServletAPIDescriptor(String rootPackage, float apiVersion) {
 		super();
