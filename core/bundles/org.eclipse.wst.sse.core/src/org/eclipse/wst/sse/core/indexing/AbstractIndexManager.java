@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2018 IBM Corporation and others.
+ * Copyright (c) 2010, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
@@ -142,6 +143,9 @@ public abstract class AbstractIndexManager {
 
 	/** A {@link Job} to search the workspace for all files */
 	private Job fWorkspaceVisitorJob;
+
+	private static final boolean DEBUG = Platform.getDebugBoolean("org.eclipse.wst.sse.core/index");
+	private static final boolean DEBUG_LIFECYCLE = Platform.getDebugBoolean("org.eclipse.wst.sse.core/index/lifecycle");
 
 	/**
 	 * <p>
@@ -291,7 +295,9 @@ public abstract class AbstractIndexManager {
 						}
 					}
 					else {
-						Logger.log(Logger.INFO_DEBUG, "Fully reindexing for " + getClass().getName());
+						if (DEBUG_LIFECYCLE && DEBUG) {
+							Logger.log(Logger.INFO_DEBUG, "Fully reindexing for " + getClass().getName());
+						}
 					}
 					progress.worked(1);
 
@@ -1196,7 +1202,9 @@ public abstract class AbstractIndexManager {
 					}// end is file
 					else if (resource.getType() == IResource.PROJECT) {
 						if ((delta.getFlags() & IResourceDelta.OPEN) != 0 && ((IProject) resource).isOpen()) {
-							Logger.log(Logger.INFO_DEBUG, "Indexing project " + resource.getName() + " for " + AbstractIndexManager.this.getName());
+							if (DEBUG_LIFECYCLE && DEBUG) {
+								Logger.log(Logger.INFO_DEBUG, "Indexing project " + resource.getName() + " for " + AbstractIndexManager.this.getName());
+							}
 							new ResourceVisitorJob(delta.getResource()).schedule();
 						}
 					}
