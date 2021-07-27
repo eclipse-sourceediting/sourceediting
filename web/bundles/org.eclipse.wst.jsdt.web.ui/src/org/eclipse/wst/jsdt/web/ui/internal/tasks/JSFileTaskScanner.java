@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020 IBM Corporation and others.
+ * Copyright (c) 2020, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -122,6 +122,9 @@ public class JSFileTaskScanner implements IFileTaskScanner {
 							if ((lowerText.indexOf(lowerTags[j])) >= 0) {
 								while (start < lineInfo.getOffset() + lineInfo.getLength() && Character.isWhitespace(text.charAt(start - partitions[i].getOffset() - openingLength))) {
 									start++;
+								}
+								if (text.length() > 500) {
+									text = text.substring(0,500);
 								}
 								Map<String, Object> attributesForNewTaskMarker = createInitialMarkerAttributes(text.trim(), document.getLineOfOffset(partitions[i].getOffset()), start, lineInfo.getOffset() + lineInfo.getLength() - start, taskTags[j].getPriority());
 								newMarkers.add(attributesForNewTaskMarker);

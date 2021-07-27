@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2018 IBM Corporation and others.
+ * Copyright (c) 2001, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -157,6 +157,9 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IEx
 						int tagIndex = comparisonText.indexOf(taskTags[i].getTag().toLowerCase(Locale.ENGLISH));
 						if (tagIndex >= 0) {
 							String markerDescription = commentedText.substring(tagIndex);
+							if (markerDescription.length() > 500) {
+								markerDescription = markerDescription.substring(0,500);
+							}
 							int markerOffset = begin + tagIndex;
 							int markerLength = end - markerOffset;
 							fNewMarkerAttributeMaps.add(createInitialMarkerAttributes(markerDescription, lineNumber, markerOffset, markerLength, taskTags[i].getPriority()));
