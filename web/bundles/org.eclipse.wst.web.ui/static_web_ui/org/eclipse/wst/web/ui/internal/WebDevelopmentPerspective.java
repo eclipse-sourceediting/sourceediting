@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2018 IBM Corporation and others.
+ * Copyright (c) 2006, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.progress.IProgressConstants;
+import org.eclipse.ui.views.IViewDescriptor;
 import org.eclipse.wst.project.facet.IProductConstants;
 import org.eclipse.wst.project.facet.ProductManager;
 
@@ -36,6 +37,7 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 	protected static String ID_PROJECT_EXPLORER = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-1$
 	protected static final String ID_SERVER = "org.eclipse.wst.server.ui.ServersView"; //$NON-NLS-1$
 	protected static String ID_WST_SNIPPETS_VIEW = "org.eclipse.wst.common.snippets.internal.ui.SnippetsView"; //$NON-NLS-1$
+	private static final String ID_TERMINAL_VIEW = "org.eclipse.tm.terminal.view.ui.TerminalsView"; //$NON-NLS-1$
 
 	public WebDevelopmentPerspective() {
 		super();
@@ -46,6 +48,16 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 			if (PlatformUI.getWorkbench().getViewRegistry().find(viewerID) != null){
 				ID_PROJECT_EXPLORER = viewerID;
 			}
+		}
+	}
+
+	private void addViewIfPresent(IFolderLayout layout, String viewID) {
+		IViewDescriptor descriptor = PlatformUI.getWorkbench().getViewRegistry().find(viewID);
+		if (descriptor != null) {
+			layout.addView(viewID);
+		}
+		else {
+			layout.addPlaceholder(viewID);
 		}
 	}
 
@@ -77,7 +89,7 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 		IFolderLayout topRight = layout.createFolder(TOP_RIGHT_LOCATION,
 				IPageLayout.RIGHT, 0.80f, editorArea);
 		topRight.addView(IPageLayout.ID_OUTLINE);
-		topRight.addView(ID_WST_SNIPPETS_VIEW);
+		topRight.addPlaceholder(IPageLayout.ID_MINIMAP_VIEW);
 
 		// BOTTOM Area (Problems, Server, Properties)
 		IFolderLayout bottom = layout.createFolder(BOTTOM_LOCATION,
@@ -85,11 +97,13 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		bottom.addView(ID_SERVER);
 		bottom.addView(IPageLayout.ID_PROP_SHEET);
+		bottom.addView(ID_WST_SNIPPETS_VIEW);
 		bottom.addPlaceholder(NewSearchUI.SEARCH_VIEW_ID);
 		bottom.addPlaceholder(IConsoleConstants.ID_CONSOLE_VIEW);
 		bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 		bottom.addPlaceholder(IProgressConstants.PROGRESS_VIEW_ID);
 		bottom.addPlaceholder(IPageLayout.ID_TASK_LIST);
+		addViewIfPresent(bottom, ID_TERMINAL_VIEW);
 	}
 
 }
