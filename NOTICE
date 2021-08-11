@@ -1,0 +1,236 @@
+# Notices for Eclipse WTP Source Editing
+
+This content is produced and maintained by the Eclipse WTP Source Editing
+project.
+
+* Project home: https://projects.eclipse.org/projects/webtools.sourceediting
+
+## Trademarks
+
+Eclipse WTP Source Editing, and WTP Source Editing are trademarks of the Eclipse
+Foundation.
+
+## Copyright
+
+All content is the property of the respective authors or their employers. For
+more information regarding authorship of content, please consult the listed
+source code repository logs.
+
+## Declared Project Licenses
+
+This program and the accompanying materials are made available under the terms
+of the Eclipse Public License v. 2.0 which is available at
+https://www.eclipse.org/legal/epl-2.0.
+
+SPDX-License-Identifier: EPL-2.0
+
+## Source Code
+
+The project maintains the following source code repositories:
+
+* http://git.eclipse.org/c/sourceediting/webtools.sourceediting
+
+## Third-party Content
+
+This project leverages the following third party content.
+
+Apache Commons Logging (1.0.4)
+
+* License: Apache License, 2.0
+
+Apache Struts Framework (1.1)
+
+* License: Apache Software License 1.1
+
+Apache Xerces (2.7.0)
+
+* License: Apache License, 2.0
+
+Apache Xerces (2.8)
+
+* License: Apache License, 2.0
+
+Apache Xerces (2.8.1)
+
+* License: Apache License, 2.0, W3C License
+
+BCEL.Jar (5.2)
+
+* License: Apache License, 2.0
+
+datatypes.dtd (versions 1.1, (1.3)
+
+* License: W3C License
+
+DOM Interfaces Version: Level 3 (n/a)
+
+* License: W3C License
+
+Facelet Taglib (1.0)
+
+* License: Common Development and Distribution License
+
+html dtds (4.0.1)
+
+* License: W3C License
+* Project: http://www.w3.org/
+* Source: http://www.w3.org/TR/html4/loose.dtd
+
+http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd (n/a)
+
+* License: W3C-19980720
+
+Ispell English Word Lists (a zip file with word lists): (3.1.20)
+
+* License: iSpell Open Source License (based on Apache 1.1)
+
+Java EE 6 XML Schemas Version: 6 (n/a)
+
+* License: Common Development and Distribution License
+
+java_cup runtime Version: 10k (n/a)
+
+* License: Java Cup License  (MIT Style)
+
+JSF 2.0 XML Schemas Version (2.0)
+
+* License: Common Development and Distribution License
+
+OASIS xml catalog 1.1 XSD (1.1)
+
+* License: OASIS license
+* Project:
+   http://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html
+* Source:
+   http://www.oasis-open.org/committees/download.php/14809/xml-catalogs.html#a.w3cxmlschema
+
+Resolver.Jar (1.1)
+
+* License: Apache Software License 1.1
+
+resolver.jar (1.2)
+
+* License: Apache License, 2.0
+
+schema-for-xslt20.xsd (2.0)
+
+* License: W3C License
+
+schemastore.org JSON Schemas Version June 30 2016 (n/a)
+
+* License: Apache License, 2.0
+
+serializer.jar (2.7.1)
+
+* License: Apache License, 2.0
+
+URLUTF8Encoder (n/a)
+
+* License: W3C License
+* Project: http://www.w3.org/International/O-URL-code.html
+* Source: http://www.w3.org/International/URLUTF8Encoder.java
+
+W3C DOM Level 1 Test Suite Version: 20040405 (n/a)
+
+* License: W3C License
+* Project: http://www.w3.org/DOM/Test/
+* Source: http://www.w3.org/DOM/Test/
+
+WAP/OMA DTD's (1.0)
+
+* License: OMA Use Agreement
+
+web-facesconfig_2_1.xsd (n/a)
+
+* License: CDDL-1.1 OR GPL-2.0-WITH-classpath-exception
+
+xalan 2.7.1 top level jar (2.7.1)
+
+* License: Apache License, 2.0
+
+xalan 2.7.1 top level jar (2.7.1)
+
+* License: Apache License, 2.0
+
+xalan 2.7.1 top level jar (2.7.1)
+
+* License: Apache License, 2.0
+
+xalan.jar (2.7.0)
+
+* License: Apache License, 2.0
+
+Xerces (2.9.0)
+
+* License: Apache License, 2.0
+
+Xerces (2.9.0)
+
+* License: Apache License, 2.0
+
+xerces 2.9.1 (2.9.1)
+
+* License: Apache License, 2.0
+* Project: http://xerces.apache.org/xerces2-j/
+* Source: http://www.apache.org/dist/xerces/j/Xerces-J-src.2.9.1.zip
+
+Xerces Impl.Jar (2.8.1)
+
+* License: Apache License, 2.0
+
+Xerces Samples Jar (2.8.1)
+
+* License: Apache License, 2.0
+
+xercesSamples.jar (2.9)
+
+* License: Apache License, 2.0
+
+XHTML DTD's (1.0)
+
+* License: W3C License
+
+xinclude schema (1.0)
+
+* License: W3C License
+
+XML Catalog Test Suite (1.0)
+
+* License: Eclipse Public License
+
+xml-apis.jar (1.3.03)
+
+* License: Apache License, 2.0, Public Domain, W3C
+
+xml-apis.jar (1.3.04)
+
+* License: Apache License, 2.0, Public Domain, W3C
+
+xml.xsd (n/a)
+
+* License: W3C License
+
+XMLSchema.dtd (1.31)
+
+* License: W3C License
+
+XMLSchema.xsd (n/a)
+
+* License: W3C License
+
+XMLUnit (1.2)
+
+* License: New BSD license
+
+xslt.xsd (1.0)
+
+* License: W3C license
+
+## Cryptography
+
+Content may contain encryption software. The country in which you are currently
+may have restrictions on the import, possession, and use, and/or re-export to
+another country, of encryption software. BEFORE using any encryption software,
+please check the country's laws, regulations and policies concerning the import,
+possession, or use, and re-export of encryption software, to see if this is
+permitted.
