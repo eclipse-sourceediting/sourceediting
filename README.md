@@ -1,16 +1,17 @@
-# Contributing to Eclipse WTP Source Editing
+# Eclipse WTP Source Editing
 
-Thanks for your interest in this project. Check the [contributing](CONTRIBUTING.md) document for more information.
+Thanks for your interest in this project. Check the [contributing](CONTRIBUTING.md) document for information on that.
 
 ## Project description
 
-The Eclipse Source Editing project provides source editing support for typical
+The Eclipse Web Tools Platform Source Editing project provides source editing support for typical
 "web" languages and the mixing of them, with a focus on making the editors
 extensible and easily reusable. Here you will find tools for working with XML,
 XML Schema, XSL, HTML, CSS, JSON, DTD, and JSP resources, as well as an XML
 Perspective.
 
 * https://projects.eclipse.org/projects/webtools.sourceediting
+* Announcements and reminders for periodic meetings are sent out using the [wtp-dev](https://accounts.eclipse.org/mailing-list/wtp-dev) mailing list. You do not need to be a Committer to participate in either.
 
 ## Developer resources
 
@@ -19,9 +20,11 @@ more.
 
 * https://projects.eclipse.org/projects/webtools.sourceediting/developer
 
-The project maintains the following source code repositories
+The project maintains the following source code repository (this is not a cloning URL):
 
 * http://git.eclipse.org/c/sourceediting/webtools.sourceediting
+
+The 5 other similarly named repositories have been merged into the main for some time.
 
 This project uses Bugzilla to track ongoing development and issues.
 
