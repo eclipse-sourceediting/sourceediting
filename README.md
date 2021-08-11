@@ -1,6 +1,6 @@
 # Contributing to Eclipse WTP Source Editing
 
-Thanks for your interest in this project.
+Thanks for your interest in this project. Check the [contributing](CONTRIBUTING.md) document for more information.
 
 ## Project description
 
@@ -25,8 +25,8 @@ The project maintains the following source code repositories
 
 This project uses Bugzilla to track ongoing development and issues.
 
-* Search for issues: https://bugs.eclipse.org/bugs/buglist.cgi?product=WTP Source Editing
-* Create a new report: https://bugs.eclipse.org/bugs/enter_bug.cgi?product=WTP Source Editing
+* Search for issues: https://bugs.eclipse.org/bugs/buglist.cgi?product=WTP+Source+Editing
+* Create a new report: https://bugs.eclipse.org/bugs/enter_bug.cgi?product=WTP+Source+Editing
 
 Be sure to search for existing bugs before you create another one. Remember that
 contributions are always welcome!
