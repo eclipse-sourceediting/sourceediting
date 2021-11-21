@@ -21,6 +21,6 @@
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.jst.jsp.core</artifactId>
-  <version>1.4.100-SNAPSHOT</version>
+  <version>1.4.200-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>

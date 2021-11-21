@@ -40,6 +40,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -71,12 +72,14 @@ import org.xml.sax.SAXParseException;
  */
 public final class DeploymentDescriptorPropertyCache {
 	private static final PropertyGroup[] NO_PROPERTY_GROUPS = new PropertyGroup[0];
+	private static final String JAKARTA_SERVLET = "jakarta.servlet";
+	private static final String JAVAX_SERVLET = "javax.servlet";
 
 	static class DeploymentDescriptor {
 		PropertyGroup[] groups;
 		long modificationStamp;
 		StringMatcher[] urlPatterns;
-		Float version = new Float(DEFAULT_WEBAPP_VERSION);
+		Float version = Float.valueOf(DEFAULT_WEBAPP_VERSION);
 	}
 
 	/**
@@ -322,7 +325,7 @@ public final class DeploymentDescriptorPropertyCache {
 
 		public void error(SAXParseException exception) throws SAXException {
 			if (fDoLogExceptions)
-				Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (error) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (error) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$// $NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		public void fatalError(SAXParseException exception) throws SAXException {
@@ -718,19 +721,19 @@ public final class DeploymentDescriptorPropertyCache {
 					String schemaLocations = webapp.getAttribute(SCHEMA_LOCATION);
 					if (schemaLocations != null && schemaLocations.length() > 0) {
 						if (schemaLocations.contains("/web-app_5_0.xsd")) {
-							version[0] = new Float(5);
+							version[0] = Float.valueOf(5);
 						}
 						/**
 						 * Technically there's a 4.0.3, but treat it the same
 						 */
-						else if (schemaLocations.contains("/web-app_4_0.xsd")) {
-							version[0] = new Float(4);
+						else if (schemaLocations.contains("/web-app_4_0.xsd")) { //$NON-NLS-1$
+							version[0] = Float.valueOf(4);
 						}
-						else if (schemaLocations.contains("/web-app_3_1.xsd")) {
-							version[0] = new Float(3.1);
+						else if (schemaLocations.contains("/web-app_3_1.xsd")) { //$NON-NLS-1$
+							version[0] = Float.valueOf(3.1f);
 						}
-						else if (schemaLocations.contains("/web-app_3_0.xsd")) {
-							version[0] = new Float(3);
+						else if (schemaLocations.contains("/web-app_3_0.xsd")) { //$NON-NLS-1$
+							version[0] = Float.valueOf(3);
 						}
 					}
 				}
@@ -740,21 +743,21 @@ public final class DeploymentDescriptorPropertyCache {
 					if (doctype != null) {
 						String systemId = doctype.getSystemId();
 						String publicId = doctype.getPublicId();
-						if ((systemId != null && systemId.endsWith("web-app_2_3.dtd")) || (publicId != null && publicId.indexOf("Web Application 2.3") > 0)) { //$NON-NLS-1$ //$NON-NLS-2$
-							version[0] = new Float(2.3);
+						if ((systemId != null && systemId.endsWith("web-app_2_3.dtd")) || (publicId != null && publicId.indexOf("Web Application 2.3") > 0)) { //$NON-NLS-1$//$NON-NLS-2$
+							version[0] = Float.valueOf(2.3f);
 						}
-						else if ((systemId != null && systemId.endsWith("web-app_2_2.dtd")) || (publicId != null && publicId.indexOf("Web Application 2.2") > 0)) { //$NON-NLS-1$ //$NON-NLS-2$
-							version[0] = new Float(2.2);
+						else if ((systemId != null && systemId.endsWith("web-app_2_2.dtd")) || (publicId != null && publicId.indexOf("Web Application 2.2") > 0)) { //$NON-NLS-1$//$NON-NLS-2$
+							version[0] = Float.valueOf(2.2f);
 						}
-						else if ((systemId != null && systemId.endsWith("web-app_2_1.dtd")) || (publicId != null && publicId.indexOf("Web Application 2.1") > 0)) { //$NON-NLS-1$ //$NON-NLS-2$
-							version[0] = new Float(2.1);
+						else if ((systemId != null && systemId.endsWith("web-app_2_1.dtd")) || (publicId != null && publicId.indexOf("Web Application 2.1") > 0)) { //$NON-NLS-1$//$NON-NLS-2$
+							version[0] = Float.valueOf(2.1f);
 						}
 					}
 				}
 			}
 		}
 		if (version[0] == null) {
-			version[0] = new Float(DEFAULT_WEBAPP_VERSION);
+			version[0] = Float.valueOf(DEFAULT_WEBAPP_VERSION);
 		}
 
 		NodeList propertyGroupElements = document.getElementsByTagName(JSP_PROPERTY_GROUP);
@@ -826,32 +829,42 @@ public final class DeploymentDescriptorPropertyCache {
 			return null;
 		}
 		try {
-			if (javaProject.findType("jakarta.servlet.GenericFilter") != null) {
-				return new ServletAPIDescriptor("jakarta.servlet", 5);
+			if (javaProject.findType("jakarta.servlet.GenericFilter") != null) { //$NON-NLS-1$
+				return new ServletAPIDescriptor(JAKARTA_SERVLET, 5);
 			}
-			if (javaProject.findType("javax.servlet.GenericFilter") != null) {
-				return new ServletAPIDescriptor("javax.servlet", 4);
+			if (javaProject.findType("javax.servlet.GenericFilter") != null) { //$NON-NLS-1$
+				return new ServletAPIDescriptor(JAVAX_SERVLET, 4);
 			}
-			if (javaProject.findType("javax.servlet.ReadListener") != null) {
-				return new ServletAPIDescriptor("javax.servlet", 3.1f);
+			if (javaProject.findType("javax.servlet.ReadListener") != null) { //$NON-NLS-1$
+				return new ServletAPIDescriptor(JAVAX_SERVLET, 3.1f);
 			}
-			if (javaProject.findType("javax.servlet.SessionCookieConfig") != null) {
-				return new ServletAPIDescriptor("javax.servlet", 3);
+			if (javaProject.findType("javax.servlet.SessionCookieConfig") != null) { //$NON-NLS-1$
+				return new ServletAPIDescriptor(JAVAX_SERVLET, 3);
 			}
-			IType servletRequestType = javaProject.findType("javax.servlet.http.HttpServletRequest");
+			IType servletRequestType = javaProject.findType("javax.servlet.http.HttpServletRequest"); //$NON-NLS-1$
 			if (servletRequestType != null) {
 				IMethod[] methods = servletRequestType.getMethods();
 				for (int i = 0; i < methods.length; i++) {
 					if ("getContextPath".equals(methods[i].getElementName())) {
-						return new ServletAPIDescriptor("javax.servlet", 2.5f);
+						return new ServletAPIDescriptor(JAVAX_SERVLET, 2.5f);
 					}
 				}
 			}
-			if (javaProject.findType("javax.servlet.ServletRequestAttributeEvent") != null) {
-				return new ServletAPIDescriptor("javax.servlet", 2.4f);
+			if (javaProject.findType("javax.servlet.ServletRequestAttributeEvent") != null) { //$NON-NLS-1$
+				return new ServletAPIDescriptor(JAVAX_SERVLET, 2.4f);
 			}
-			if (javaProject.findType("javax.servlet.Filter") != null) {
-				return new ServletAPIDescriptor("javax.servlet", 2.3f);
+			if (javaProject.findType("javax.servlet.Filter") != null) { //$NON-NLS-1$
+				return new ServletAPIDescriptor(JAVAX_SERVLET, 2.3f);
+			}
+			if (javaProject.findType("javax.servlet.http.HttpServletResponse") != null) { //$NON-NLS-1$
+				if (servletRequestType != null) {
+					IField[] fields = servletRequestType.getFields();
+					for (int i = 0; i < fields.length; i++) {
+						if ("SC_REQUESTED_RANGE_NOT_SATISFIABLE".equals(fields[i].getElementName())) { //$NON-NLS-1$
+							return new ServletAPIDescriptor(JAVAX_SERVLET, 2.2f);
+						}
+					}
+				}
 			}
 		}
 		catch (JavaModelException e) {
@@ -1093,12 +1106,12 @@ public final class DeploymentDescriptorPropertyCache {
 		}
 		if (resolved != null) {
 			if (_debugResolutionCache) {
-				System.out.println("DeploymentDescriptorPropertyCache resolution cache hit for " + fullPath); //$NON-NLS-1$ 
+				System.out.println("DeploymentDescriptorPropertyCache resolution cache hit for " + fullPath); //$NON-NLS-1$
 			}
 		}
 		else {
 			if (_debugResolutionCache) {
-				System.out.println("DeploymentDescriptorPropertyCache resolution cache miss for " + fullPath); //$NON-NLS-1$ 
+				System.out.println("DeploymentDescriptorPropertyCache resolution cache miss for " + fullPath); //$NON-NLS-1$
 			}
 			resolved = FacetModuleCoreSupport.resolve(fullPath, SLASH_WEB_INF_WEB_XML);
 			mapForProject.put(fullPath, resolved);
