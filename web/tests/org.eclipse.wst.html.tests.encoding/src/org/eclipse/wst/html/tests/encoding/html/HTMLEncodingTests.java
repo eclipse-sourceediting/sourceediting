@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2017 IBM Corporation and others.
+ * Copyright (c) 2004, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ import org.eclipse.wst.html.core.internal.contenttype.HTMLResourceEncodingDetect
 import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestsPlugin;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
+import org.eclipse.wst.sse.core.internal.encoding.NonContentBasedEncodingRules;
 
 public class HTMLEncodingTests extends TestCase {
 
@@ -184,6 +185,11 @@ public class HTMLEncodingTests extends TestCase {
 	public void testUTF16BOM() throws IOException {
 		String filename = this.fileLocation + "utf16BOM.html";
 		doTestFileStream(filename, "UTF-16", new HTMLResourceEncodingDetector());
+	}
+
+	public void testDynamicCharset() throws IOException {
+		String filename = this.fileLocation + "dynamic.html";
+		doTestFileStream(filename, NonContentBasedEncodingRules.useDefaultNameRules(null), new HTMLResourceEncodingDetector());
 	}
 
 }

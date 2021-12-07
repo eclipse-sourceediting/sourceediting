@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2017 IBM Corporation and others.
+ * Copyright (c) 2004, 2021 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -262,6 +262,7 @@ BeginAttributeValueUTF = {S_UTF}* \= {S_UTF}*
 //	"http-equiv" {S}* \= {S}* \"? "Content-Type" \"? {S}+ "content" {BeginAttribeValue}  {pushCurrentState(); yybegin(QuotedAttributeValue); foundContentTypeValue=true; return HTMLHeadTokenizerConstants.MetaTagContentType;}
 	{Z}h{Z}t{Z}t{Z}p{Z}-{Z}e{Z}q{Z}u{Z}i{Z}v{Z} {S_UTF}* \= {S_UTF}* {Z}\"?{Z} ({Z}C{Z}o{Z}n{Z}t{Z}e{Z}n{Z}t{Z}-{Z}T{Z}y{Z}p{Z}e{Z}) \"?{Z} ({S_UTF})+ ({Z}c{Z}o{Z}n{Z}t{Z}e{Z}n{Z}t{Z}) {BeginAttributeValueUTF}  {pushCurrentState(); yybegin(QuotedAttributeValue); foundContentTypeValue=true; return HTMLHeadTokenizerConstants.MetaTagContentType;}
 	{Z}c{Z}h{Z}a{Z}r{Z}s{Z}e{Z}t{Z} {BeginAttributeValueUTF} {pushCurrentState(); yybegin(QuotedAttributeValue); foundContentTypeValue=true; hasCharsetAttr=true; return HTMLHeadTokenizerConstants.MetaTagContentType;}
+	:{Z}c{Z}h{Z}a{Z}r{Z}s{Z}e{Z}t{Z} {BeginAttributeValueUTF} {pushCurrentState(); yybegin(QuotedAttributeValue); return HTMLHeadTokenizerConstants.UNDEFINED;}
 	{Z}>{Z}    { yybegin(YYINITIAL);  if (foundContentTypeValue) hasMore = false; return HTMLHeadTokenizerConstants.MetaTagEnd;}
 	{Z}\/{Z}>{Z}    { yybegin(YYINITIAL); if (foundContentTypeValue) hasMore = false; return HTMLHeadTokenizerConstants.MetaTagEnd;}
 }
