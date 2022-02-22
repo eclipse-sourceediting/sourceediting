@@ -26,7 +26,7 @@
 	<extension point="org.eclipse.wst.xsl.jaxp.launching.invoke">
 		<invoker id="org.eclipse.wst.xsl.launching.jaxp.invoke"
 			class="org.eclipse.wst.xsl.jaxp.debug.invoker.internal.JAXPSAXProcessorInvoker"
-			classpath="${eclipse_orbit:org.eclipse.wst.xsl.jaxp.debug};${eclipse_orbit:org.apache.commons.logging};${eclipse_orbit:org.apache.log4j}" />
+			classpath="${eclipse_orbit:org.eclipse.wst.xsl.jaxp.debug};${eclipse_orbit:org.apache.commons.logging}" />
 	</extension>
 
   	<extension

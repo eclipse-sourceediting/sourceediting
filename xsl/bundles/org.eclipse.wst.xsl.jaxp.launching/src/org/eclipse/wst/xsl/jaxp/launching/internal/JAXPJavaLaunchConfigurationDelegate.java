@@ -436,24 +436,9 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate
 			String tfactory = getTransformerFactory(install);
 			if (tfactory != null)
 				vmargs += " -Djavax.xml.transform.TransformerFactory=" + tfactory; //$NON-NLS-1$
-
-			// if (ILaunchManager.DEBUG_MODE.equals(mode))
-			// {
-			// // in debug mode, set the logging to ERROR. This prevents the
-			// console from popping up on top of the result view!
-			// try
-			// {
-			// URL url =
-			// FileLocator.resolve(FileLocator.find(Platform.getBundle(JAXPLaunchingPlugin.PLUGIN_ID),
-			// new Path("/log4j.debug.properties"), null));
-			//					vmargs += " -Dlog4j.configuration=\""+url.toExternalForm()+"\""; //$NON-NLS-1$
-			// }
-			// catch (IOException e)
-			// {
-			// JAXPLaunchingPlugin.log(e);
-			// }
-			// }
 		}
+
+		vmargs += " -Djava.util.logging.config.class=org.eclipse.wst.xsl.jaxp.debug.invoker.internal.LoggingConfig"; //$NON-NLS-1$
 		return vmargs;
 	}
 

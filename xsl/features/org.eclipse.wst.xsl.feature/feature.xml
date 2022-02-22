@@ -41,7 +41,6 @@
       <import plugin="org.apache.xml.serializer" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.apache.bcel" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="java_cup.runtime" version="0.0.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.log4j" version="0.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
