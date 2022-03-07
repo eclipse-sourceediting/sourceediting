@@ -350,7 +350,10 @@ public abstract class AbstractStructuredFoldingStrategy
 		public FoldingAnnotation(IndexedRegion region, boolean isCollapsed) {
 			super(isCollapsed);
 			
-			fIsVisible = false;
+			// assume visible until proven otherwise because it must be possible
+			// to programmatically collapse multi-line annotations that have
+			// never been painted, e.g. from "Collapse All"
+			fIsVisible = true;
 			fRegion = region;
 		}
 		
@@ -378,9 +381,9 @@ public abstract class AbstractStructuredFoldingStrategy
 		public void paint(GC gc, Canvas canvas, Rectangle rectangle) {
 			/* workaround for BUG85874 */
 			/*
-			 * only need to check annotations that are expanded because hidden
-			 * annotations should never have been given the chance to
-			 * collapse.
+			 * only need to check annotations that are expanded because
+			 * collapsed annotations by definition always only occupy one line
+			 * and would be wrongly hidden when containing multiple lines.
 			 */
 			if (!isCollapsed()) {
 				// working with rectangle, so line height
