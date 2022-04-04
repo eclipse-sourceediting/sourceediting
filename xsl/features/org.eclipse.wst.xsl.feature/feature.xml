@@ -15,7 +15,7 @@
 <feature
       id="org.eclipse.wst.xsl.feature"
       label="%featureName"
-      version="1.3.1000.qualifier"
+      version="1.3.1100.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.wst.xsl"
       license-feature="org.eclipse.license"
@@ -40,7 +40,7 @@
       <import plugin="org.apache.commons.logging" version="1.0.4" match="greaterOrEqual"/>
       <import plugin="org.apache.xml.serializer" version="0.0.0" match="greaterOrEqual"/>
       <import plugin="org.apache.bcel" version="0.0.0" match="greaterOrEqual"/>
-      <import plugin="java_cup.runtime" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="java_cup-runtime" version="0.0.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin

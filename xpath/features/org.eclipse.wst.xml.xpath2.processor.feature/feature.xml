@@ -15,7 +15,7 @@
 <feature
       id="org.eclipse.wst.xml.xpath2.processor.feature"
       label="%featureName"
-      version="2.0.302.qualifier"
+      version="2.0.400.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.wst.xml.xpath2"
       license-feature="org.eclipse.license"
@@ -34,7 +34,7 @@
    </license>
 
    <requires>
-          <import plugin="java_cup.runtime" version="0.0.0" match="greaterOrEqual"/>
+          <import plugin="java_cup-runtime" version="0.0.0" match="greaterOrEqual"/>
           <import plugin="org.apache.xerces" version="0.0.0" match="greaterOrEqual"/>
    </requires>
 

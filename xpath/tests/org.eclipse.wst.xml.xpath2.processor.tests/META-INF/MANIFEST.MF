@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.eclipse.wst.xml.xpath2.processor.tests;singleton:=true
-Bundle-Version: 2.2.0.qualifier
+Bundle-Version: 2.2.100.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
@@ -11,7 +11,7 @@ Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
  org.junit;bundle-version="3.8.2",
  org.w3c.xqts.testsuite;bundle-version="1.0.2",
  org.eclipse.core.resources;bundle-version="[3.13.0,4.0.0)",
- java_cup.runtime;bundle-version="0.10.0",
+ java_cup-runtime;bundle-version="0.11.0",
  com.ibm.icu
 Export-Package: org.custommonkey.xmlunit,
  org.custommonkey.xmlunit.examples,

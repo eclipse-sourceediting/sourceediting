@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xml.xpath2.processor
-Bundle-Version: 2.1.101.qualifier
+Bundle-Version: 2.1.200.qualifier
 Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
- java_cup.runtime;bundle-version="0.10.0"
+ java_cup-runtime;bundle-version="0.11.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.xml.xpath2.api,
  org.eclipse.wst.xml.xpath2.api.typesystem,
