@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2019 IBM Corporation and others.
+ * Copyright (c) 2001, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 public class ToggleBreakpointsTarget implements IToggleBreakpointsTarget {
 	static final IToggleBreakpointsTarget instance = new ToggleBreakpointsTarget();
@@ -54,7 +55,7 @@ public class ToggleBreakpointsTarget implements IToggleBreakpointsTarget {
 	 */
 	public boolean canToggleLineBreakpoints(IWorkbenchPart part, ISelection selection) {
 		ITextEditor editor = part.getAdapter(ITextEditor.class);
-		if (selection instanceof ITextSelection) {
+		if (editor != null && selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
 			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
 			if (document != null && textSelection.getOffset() > -1) {
@@ -63,6 +64,7 @@ public class ToggleBreakpointsTarget implements IToggleBreakpointsTarget {
 					lineNumber = document.getLineOfOffset(textSelection.getOffset());
 				}
 				catch (BadLocationException e) {
+					Logger.logException(e);
 				}
 				if (lineNumber >= 0) {
 					ToggleBreakpointAction toggler = new ToggleBreakpointAction(editor, null);
