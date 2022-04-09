@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2021 IBM Corporation and others.
+ * Copyright (c) 2007, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -845,7 +845,7 @@ public final class DeploymentDescriptorPropertyCache {
 			if (servletRequestType != null) {
 				IMethod[] methods = servletRequestType.getMethods();
 				for (int i = 0; i < methods.length; i++) {
-					if ("getContextPath".equals(methods[i].getElementName())) {
+					if ("getContextPath".equals(methods[i].getElementName())) { //$NON-NLS-1$
 						return new ServletAPIDescriptor(JAVAX_SERVLET, 2.5f);
 					}
 				}
