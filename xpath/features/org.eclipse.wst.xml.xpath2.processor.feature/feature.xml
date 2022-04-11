@@ -34,7 +34,6 @@
    </license>
 
    <requires>
-          <import plugin="java_cup.runtime" version="0.0.0" match="greaterOrEqual"/>
           <import plugin="org.apache.xerces" version="0.0.0" match="greaterOrEqual"/>
    </requires>
 
@@ -54,6 +53,12 @@
 
    <plugin
          id="org.eclipse.wst.xml.xpath2"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="java_cup-runtime"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
