@@ -735,7 +735,7 @@ public class JSPTranslator implements Externalizable {
 		List errorTypeNames = new ArrayList(2);
 		if (!isTypeFound(decodeType(fSuperclass), errorTypeNames)) {
 			for (int i = 0; i < errorTypeNames.size(); i++) {
-				Object problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPDirectiveValidator_8, new String[]{errorTypeNames.get(i).toString()}), 0,1);
+				Object problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPDirectiveValidator_8, new String[]{errorTypeNames.get(i).toString()}), 0, 1);
 				fTranslationProblems.add(problem);
 			}
 		}

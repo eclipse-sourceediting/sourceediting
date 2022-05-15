@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2020 IBM Corporation and others.
+ * Copyright (c) 2007, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -58,9 +58,10 @@ final class FacetModuleCoreSupportDelegate {
 	 * @see org.eclipse.wst.common.componentcore.internal.util.IModuleConstants.JST_WEBFRAGMENT_MODULE
 	 */
 	private final static String JST_WEBFRAGMENT_MODULE = "jst.webfragment"; //$NON-NLS-1$
+
 	/**
 	 * @param project
-	 * @return the version of the JST Web facet, a default otherwise
+	 * @return the version of the JST Web facet, a default version otherwise
 	 * @throws CoreException
 	 */
 	static float getDynamicWebProjectVersion(IProject project) {

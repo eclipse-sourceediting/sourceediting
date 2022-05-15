@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2020 IBM Corporation and others.
+ * Copyright (c) 2007, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,7 @@ public final class FacetModuleCoreSupport {
 	static final String META_INF_RESOURCES = "META-INF/resources/"; //$NON-NLS-1$
 	static final IPath META_INF_RESOURCES_PATH = new Path(META_INF_RESOURCES);
 
-	static final float DEFAULT_SERVLET_VERSION = 4.0f;
+	static final float DEFAULT_SERVLET_VERSION = 5.0f;
 
 	/**
 	 * @param project
@@ -69,7 +69,7 @@ public final class FacetModuleCoreSupport {
 
 	/**
 	 * @param project
-	 * @return the version of the JST Web facet installed on the project, -1 otherwise
+	 * @return the version of the JST Web facet installed on the project, a default otherwise
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
 	public static float getDynamicWebProjectVersion(IProject project) {

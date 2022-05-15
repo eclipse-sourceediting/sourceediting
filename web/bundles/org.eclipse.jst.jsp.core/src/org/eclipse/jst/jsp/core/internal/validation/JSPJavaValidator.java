@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2020 IBM Corporation and others.
+ * Copyright (c) 2006, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -366,26 +366,26 @@ public class JSPJavaValidator extends JSPValidator {
 								// add new Java task marker
 								try {
 									IMarker task = f.createMarker(JAVA_TASK_MARKER_TYPE);
-									task.setAttribute(IMarker.LINE_NUMBER, new Integer(m.getLineNumber()));
-									task.setAttribute(IMarker.CHAR_START, new Integer(m.getOffset()));
-									task.setAttribute(IMarker.CHAR_END, new Integer(m.getOffset() + m.getLength()));
+									task.setAttribute(IMarker.LINE_NUMBER, Integer.valueOf(m.getLineNumber()));
+									task.setAttribute(IMarker.CHAR_START, Integer.valueOf(m.getOffset()));
+									task.setAttribute(IMarker.CHAR_END, Integer.valueOf(m.getOffset() + m.getLength()));
 									task.setAttribute(IMarker.MESSAGE, m.getText());
 									task.setAttribute(IMarker.USER_EDITABLE, Boolean.FALSE);
 
 									switch (m.getSeverity()) {
 										case IMessage.HIGH_SEVERITY: {
-											task.setAttribute(IMarker.PRIORITY, new Integer(IMarker.PRIORITY_HIGH));
-											task.setAttribute(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
+											task.setAttribute(IMarker.PRIORITY, Integer.valueOf(IMarker.PRIORITY_HIGH));
+											task.setAttribute(IMarker.SEVERITY, Integer.valueOf(IMarker.SEVERITY_ERROR));
 										}
 											break;
 										case IMessage.LOW_SEVERITY : {
-											task.setAttribute(IMarker.PRIORITY, new Integer(IMarker.PRIORITY_LOW));
-											task.setAttribute(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_INFO));
+											task.setAttribute(IMarker.PRIORITY, Integer.valueOf(IMarker.PRIORITY_LOW));
+											task.setAttribute(IMarker.SEVERITY, Integer.valueOf(IMarker.SEVERITY_INFO));
 										}
 											break;
 										default : {
-											task.setAttribute(IMarker.PRIORITY, new Integer(IMarker.PRIORITY_NORMAL));
-											task.setAttribute(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_WARNING));
+											task.setAttribute(IMarker.PRIORITY, Integer.valueOf(IMarker.PRIORITY_NORMAL));
+											task.setAttribute(IMarker.SEVERITY, Integer.valueOf(IMarker.SEVERITY_WARNING));
 										}
 									}
 								}

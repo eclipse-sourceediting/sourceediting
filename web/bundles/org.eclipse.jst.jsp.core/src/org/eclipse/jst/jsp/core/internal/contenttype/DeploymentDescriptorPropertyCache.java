@@ -72,8 +72,8 @@ import org.xml.sax.SAXParseException;
  */
 public final class DeploymentDescriptorPropertyCache {
 	private static final PropertyGroup[] NO_PROPERTY_GROUPS = new PropertyGroup[0];
-	private static final String JAKARTA_SERVLET = "jakarta.servlet";
-	private static final String JAVAX_SERVLET = "javax.servlet";
+	private static final String JAKARTA_SERVLET = "jakarta.servlet"; //$NON-NLS-1$
+	private static final String JAVAX_SERVLET = "javax.servlet"; //$NON-NLS-1$
 
 	static class DeploymentDescriptor {
 		PropertyGroup[] groups;
@@ -282,6 +282,11 @@ public final class DeploymentDescriptorPropertyCache {
 				if (segmentCount > 1 && path.lastSegment().equals(WEB_XML) && path.segment(segmentCount - 2).equals(WEB_INF)) {
 					getInstance().deploymentDescriptorChanged(path);
 				}
+				if ("org.eclipse.wst.common.project.facet.core.xml".equalsIgnoreCase(path.lastSegment())) { //$NON-NLS-1$
+					synchronized (LOCK) {
+						getInstance().invalidate(path.segment(0));
+					}
+				}
 			}
 			else if (resource.getType() == IResource.PROJECT && (delta.getKind() == IResourceDelta.ADDED || delta.getKind() == IResourceDelta.REMOVED)) {
 				String name = resource.getName();
@@ -325,7 +330,7 @@ public final class DeploymentDescriptorPropertyCache {
 
 		public void error(SAXParseException exception) throws SAXException {
 			if (fDoLogExceptions)
-				Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (error) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$// $NON-NLS-2$ //$NON-NLS-3$
+				Logger.log(Logger.WARNING, "SAXParseException with " + fPath + " (error) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$// $NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		public void fatalError(SAXParseException exception) throws SAXException {
@@ -720,7 +725,7 @@ public final class DeploymentDescriptorPropertyCache {
 					// try determining from schema declarations
 					String schemaLocations = webapp.getAttribute(SCHEMA_LOCATION);
 					if (schemaLocations != null && schemaLocations.length() > 0) {
-						if (schemaLocations.contains("/web-app_5_0.xsd")) {
+						if (schemaLocations.contains("/web-app_5_0.xsd")) { //$NON-NLS-1$
 							version[0] = Float.valueOf(5);
 						}
 						/**
@@ -824,44 +829,55 @@ public final class DeploymentDescriptorPropertyCache {
 	 *         Build Path, <code>null</code> if none was discoverable.
 	 */
 	private ServletAPIDescriptor discoverServletAPIVersion(IProject project) {
+		if (FacetModuleCoreSupport.isDynamicWebProject(project) || FacetModuleCoreSupport.isWebFragmentProject(project)) {
+			float version = FacetModuleCoreSupport.getDynamicWebProjectVersion(project);
+			if (version >= 5) {
+				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAKARTA_SERVLET, version));
+			}
+			if (version > 0) {
+				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, version));
+			}
+		}
+
 		IJavaProject javaProject = JavaCore.create(project);
 		if (!javaProject.exists()) {
 			return null;
 		}
+
 		try {
 			if (javaProject.findType("jakarta.servlet.GenericFilter") != null) { //$NON-NLS-1$
-				return new ServletAPIDescriptor(JAKARTA_SERVLET, 5);
+				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAKARTA_SERVLET, 5));
 			}
 			if (javaProject.findType("javax.servlet.GenericFilter") != null) { //$NON-NLS-1$
-				return new ServletAPIDescriptor(JAVAX_SERVLET, 4);
+				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 4));
 			}
 			if (javaProject.findType("javax.servlet.ReadListener") != null) { //$NON-NLS-1$
-				return new ServletAPIDescriptor(JAVAX_SERVLET, 3.1f);
+				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 3.1f));
 			}
 			if (javaProject.findType("javax.servlet.SessionCookieConfig") != null) { //$NON-NLS-1$
-				return new ServletAPIDescriptor(JAVAX_SERVLET, 3);
+				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 3));
 			}
 			IType servletRequestType = javaProject.findType("javax.servlet.http.HttpServletRequest"); //$NON-NLS-1$
 			if (servletRequestType != null) {
 				IMethod[] methods = servletRequestType.getMethods();
 				for (int i = 0; i < methods.length; i++) {
 					if ("getContextPath".equals(methods[i].getElementName())) { //$NON-NLS-1$
-						return new ServletAPIDescriptor(JAVAX_SERVLET, 2.5f);
+						return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 2.5f));
 					}
 				}
 			}
 			if (javaProject.findType("javax.servlet.ServletRequestAttributeEvent") != null) { //$NON-NLS-1$
-				return new ServletAPIDescriptor(JAVAX_SERVLET, 2.4f);
+				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 2.4f));
 			}
 			if (javaProject.findType("javax.servlet.Filter") != null) { //$NON-NLS-1$
-				return new ServletAPIDescriptor(JAVAX_SERVLET, 2.3f);
+				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 2.3f));
 			}
 			if (javaProject.findType("javax.servlet.http.HttpServletResponse") != null) { //$NON-NLS-1$
 				if (servletRequestType != null) {
 					IField[] fields = servletRequestType.getFields();
 					for (int i = 0; i < fields.length; i++) {
 						if ("SC_REQUESTED_RANGE_NOT_SATISFIABLE".equals(fields[i].getElementName())) { //$NON-NLS-1$
-							return new ServletAPIDescriptor(JAVAX_SERVLET, 2.2f);
+							return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 2.2f));
 						}
 					}
 				}
@@ -871,6 +887,12 @@ public final class DeploymentDescriptorPropertyCache {
 			Logger.logException(e);
 		}
 		return null;
+	}
+
+	private ServletAPIDescriptor doCacheDescriptor(String projectName, ServletAPIDescriptor descriptor) {
+		Reference<ServletAPIDescriptor> reference = new SoftReference<>(descriptor);
+		apiVersions.put(projectName, reference);
+		return descriptor;
 	}
 
 	/**
