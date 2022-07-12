@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.dtd.core; singleton:=true
-Bundle-Version: 1.2.200.qualifier
+Bundle-Version: 1.2.300.qualifier
 Bundle-Activator: org.eclipse.wst.dtd.core.internal.DTDCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -29,8 +29,8 @@ Export-Package: org.eclipse.wst.dtd.core.internal;x-friends:="org.eclipse.wst.dt
  org.eclipse.wst.dtd.core.internal.validation;x-friends:="org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.xml.core,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui",
  org.eclipse.wst.dtd.core.internal.validation.eclipse;x-internal:=true,
  org.eclipse.wst.dtd.core.text
-Import-Package: com.ibm.icu.util; version="3.8",
- com.ibm.icu.text; version="3.8"
+Import-Package: com.ibm.icu.util,
+ com.ibm.icu.text
 Require-Bundle: org.eclipse.core.resources;bundle-version="[3.13.0,4.0.0)",
  org.eclipse.core.runtime;bundle-version="[3.14.0,4.0.0)",
  org.eclipse.emf.ecore;bundle-version="[2.14.0,3.0.0)",

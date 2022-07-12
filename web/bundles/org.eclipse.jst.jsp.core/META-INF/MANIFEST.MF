@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.jst.jsp.core;singleton:=true
-Bundle-Version: 1.4.300.qualifier
+Bundle-Version: 1.4.400.qualifier
 Bundle-Activator: org.eclipse.jst.jsp.core.internal.JSPCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -42,8 +42,8 @@ Export-Package: org.eclipse.jst.jsp.core.internal;x-friends:="org.eclipse.jst.js
  org.eclipse.jst.jsp.css.core.internal.modelhandler;x-friends:="org.eclipse.jst.jsp.ui",
  org.eclipse.jst.jsp.css.core.internal.parser;x-internal:=true,
  org.eclipse.jst.jsp.css.core.internal.parserz;x-internal:=true
-Import-Package: com.ibm.icu.text;version="3.8",
- com.ibm.icu.util;version="3.8",
+Import-Package: com.ibm.icu.text,
+ com.ibm.icu.util,
  javax.servlet.jsp.tagext;version="[2.0.0,3.0.0)",
  org.w3c.dom.css,
  org.w3c.dom.stylesheets

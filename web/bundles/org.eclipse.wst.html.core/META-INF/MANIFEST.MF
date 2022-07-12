@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.html.core; singleton:=true
-Bundle-Version: 1.4.100.qualifier
+Bundle-Version: 1.4.200.qualifier
 Bundle-Activator: org.eclipse.wst.html.core.internal.HTMLCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -29,7 +29,7 @@ Export-Package: org.eclipse.wst.html.core.internal;x-internal:=true,
  org.eclipse.wst.html.core.internal.validation;x-internal:=true,
  org.eclipse.wst.html.core.text,
  org.eclipse.wst.html.core.validate.extension
-Import-Package: com.ibm.icu.util; version="3.8",
+Import-Package: com.ibm.icu.util,
  org.w3c.dom.css,
  org.w3c.dom.stylesheets
 Require-Bundle: org.eclipse.core.resources;bundle-version="[3.13.0,4.0.0)",

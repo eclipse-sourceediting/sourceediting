@@ -26,8 +26,8 @@ Export-Package: org.eclipse.wst.jsdt.web.ui;x-internal:=true,
  org.eclipse.wst.jsdt.web.ui.internal.text;x-internal:=true,
  org.eclipse.wst.jsdt.web.ui.views.contentoutline,
  org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline
-Import-Package: com.ibm.icu.util; version="3.8",
- com.ibm.icu.text; version="3.8",
+Import-Package: com.ibm.icu.util,
+ com.ibm.icu.text,
  org.eclipse.core.filesystem,
  org.eclipse.ui.views.contentoutline
 Require-Bundle: org.eclipse.ui.ide;bundle-version="[3.14.0,4.0.0)",
