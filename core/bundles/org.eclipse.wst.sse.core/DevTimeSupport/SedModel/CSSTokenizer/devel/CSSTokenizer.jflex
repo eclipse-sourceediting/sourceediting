@@ -280,8 +280,9 @@ nmchar = [_a-zA-Z0-9-]|{nonascii}|{escape}
 string1 = \"([\t !#$%&(-~]|\\{nl}|\'|{nonascii}|{escape})*\"
 string2 = \'([\t !#$%&(-~]|\\{nl}|\"|{nonascii}|{escape})*\'
 
-ident = -?{nmstart}{nmchar}*
-value_ident = -?{nmstart}"."?({nmchar}+"."?)*
+ident = -?{nmstart}{nmchar}*|{dashed_ident}
+value_ident = -?{nmstart}"."?({nmchar}+"."?)*|{dashed_ident}
+dashed_ident = --{nmchar}*
 
 name = {nmchar}+
 num = [+-]?([0-9]+|[0-9]*"."[0-9]*)

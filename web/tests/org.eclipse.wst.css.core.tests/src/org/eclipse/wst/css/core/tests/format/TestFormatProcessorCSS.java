@@ -215,5 +215,11 @@ public class TestFormatProcessorCSS extends TestCase {
 	public void testKeepCommentInSameLine_bug390904() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertEquals("testfiles/bug390904_KeepCommentInSameLine.css", "testfiles/bug390904_KeepCommentInSameLine-fmt.css");
 	} 
-	
+
+	/**
+	 * Should not split the two hyphens in a custom property name 
+	 */
+	public void testCustomProperty_bug492844() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/bug492844_CustomProperty.css", "testfiles/bug492844_CustomProperty-fmt.css");
+	}
 }
