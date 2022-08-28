@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2020 IBM Corporation and others.
+ * Copyright (c) 2010, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -60,7 +60,7 @@ import org.w3c.dom.NodeList;
 public abstract class AbstractXMLCompletionProposalComputer implements ICompletionProposalComputer {
 	/**
 	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
-	 * way for expedency. Should be evolved in future to depend on
+	 * way for expediency. Should be evolved in future to depend on
 	 * "nestedContext".
 	 */
 	private class DOMJSPRegionContextsPrivateCopy {
@@ -1057,15 +1057,16 @@ public abstract class AbstractXMLCompletionProposalComputer implements ICompleti
 			int end = offset;
 			IDocument document = parent.getParentDocument();
 			try {
-				while (start > 0 && !Character.isWhitespace(document.getChar(start - 1))) {
+				// rewind to break the "word"
+				while (start > 0 && !Character.isWhitespace(document.getChar(start - 1)) && document.getChar(start - 1) != '>') {
 					start--;
 				}
 				matchString = document.get(start, end - start);
 			}
 			catch (BadLocationException e) {
+				matchString = ""; //$NON-NLS-1$
 				Logger.logException(e);
-			matchString = ""; //$NON-NLS-1$
-		}
+			}
 		}
 		else {
 			if ((parent.getText(aRegion).length() > 0) && (parent.getStartOffset(aRegion) < offset)) {
