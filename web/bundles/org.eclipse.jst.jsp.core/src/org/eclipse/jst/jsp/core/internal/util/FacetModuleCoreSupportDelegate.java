@@ -66,10 +66,9 @@ final class FacetModuleCoreSupportDelegate {
 	 */
 	static float getDynamicWebProjectVersion(IProject project) {
 		if (project == null)
-			return FacetModuleCoreSupport.DEFAULT_SERVLET_VERSION;
+			return -1;
 
-		// In the absence of any facet information, assume the highest level
-		float version = FacetModuleCoreSupport.DEFAULT_SERVLET_VERSION;
+		float version = -1;
 		try {
 			IFacetedProject faceted = ProjectFacetsManager.create(project);
 			if (faceted != null && ProjectFacetsManager.isProjectFacetDefined(JST_WEB_MODULE)) {

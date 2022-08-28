@@ -69,7 +69,7 @@ public final class FacetModuleCoreSupport {
 
 	/**
 	 * @param project
-	 * @return the version of the JST Web facet installed on the project, a default otherwise
+	 * @return the version of the JST Web facet installed on the project, -1 otherwise
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
 	public static float getDynamicWebProjectVersion(IProject project) {

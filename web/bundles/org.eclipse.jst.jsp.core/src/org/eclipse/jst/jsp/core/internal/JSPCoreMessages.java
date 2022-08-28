@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2013 IBM Corporation and others.
+ * Copyright (c) 2005, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -34,8 +34,9 @@ public class JSPCoreMessages extends NLS {
 	public static String JSPDirectiveValidator_9;
 	public static String JSPDirectiveValidator_10;
 	public static String JSPDirectiveValidator_11;
-
 	public static String JSPDirectiveValidator_12;
+	public static String JSPDirectiveValidator_13;
+	
 	public static String JSPActionValidator_0;
 
 	public static String JSPActionValidator_1;

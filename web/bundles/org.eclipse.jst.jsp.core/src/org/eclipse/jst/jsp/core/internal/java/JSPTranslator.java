@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2021 IBM Corporation and others.
+ * Copyright (c) 2004, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -130,7 +130,7 @@ public class JSPTranslator implements Externalizable {
 	 * @see #writeRanges(ObjectOutput, HashMap)
 	 * @see #readRanges(ObjectInput)
 	 */
-	private static final long serialVersionUID = 4L;
+	private static final long serialVersionUID = 5L;
 	
 	/** for debugging */
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping")).booleanValue(); //$NON-NLS-1$
@@ -382,6 +382,7 @@ public class JSPTranslator implements Externalizable {
 
 		fServletAPIDescriptor = DeploymentDescriptorPropertyCache.getInstance().getServletAPIVersion(ResourcesPlugin.getWorkspace().getRoot().getProject(new Path(baseLocation).segment(0)));
 		fSuperclass = fServletAPIDescriptor.getRootPackage() + ".http.HttpServlet"; //$NON-NLS-1$
+		fIsDefaultSuperclass = true;
 
 		init();
 
@@ -410,6 +411,7 @@ public class JSPTranslator implements Externalizable {
 
 		fServletAPIDescriptor = DeploymentDescriptorPropertyCache.getInstance().getServletAPIVersion(jspFile.getProject());
 		fSuperclass = fServletAPIDescriptor.getRootPackage() + ".http.HttpServlet"; //$NON-NLS-1$
+		fIsDefaultSuperclass = true;
 
 		init();
 
@@ -733,9 +735,14 @@ public class JSPTranslator implements Externalizable {
 		javaOffset += fSuperclass.length() + 2;
 
 		List errorTypeNames = new ArrayList(2);
-		if (!isTypeFound(decodeType(fSuperclass), errorTypeNames)) {
+		String decodedSuperType = decodeType(fSuperclass);
+		if (!isTypeFound(decodedSuperType, errorTypeNames)) {
 			for (int i = 0; i < errorTypeNames.size(); i++) {
-				Object problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPDirectiveValidator_8, new String[]{errorTypeNames.get(i).toString()}), 0, 1);
+				Object problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPDirectiveValidator_8, (Object[]) new String[]{errorTypeNames.get(i).toString()}), 0, 1);
+				// if its the default supertype, and it was based on the facet, mention that
+				if (fIsDefaultSuperclass && fServletAPIDescriptor.getOrigin().equals(ServletAPIDescriptor.ORIGIN.FACET)) {
+					problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPDirectiveValidator_13, errorTypeNames.get(i).toString(), String.valueOf(fServletAPIDescriptor.getAPIversion())), 0, 1);					
+				}
 				fTranslationProblems.add(problem);
 			}
 		}
@@ -1329,6 +1336,8 @@ public class JSPTranslator implements Externalizable {
 					rootPackage + ".jsp.JspWriter out = pageContext.getOut();" + ENDL + //$NON-NLS-1$
 					"Object page = this;" + ENDL; //$NON-NLS-1$
 		fSuperclass = rootPackage + ".http.HttpServlet"; //$NON-NLS-1$
+		fIsDefaultSuperclass = true;
+
 		fContext = "pageContext"; //$NON-NLS-1$
 		fSession = fContext+".getSession();"; //$NON-NLS-1$
 	}
@@ -2074,6 +2083,11 @@ public class JSPTranslator implements Externalizable {
 	private int fLastJSPType = SCRIPTLET;
 
 	/**
+	 * Whether the superclass has been explictly set via the document contents
+	 */
+	private boolean fIsDefaultSuperclass;
+
+	/**
 	 * JSPType is only used internally in this class to describe tye type of
 	 * region to be translated
 	 * 
@@ -2354,6 +2368,7 @@ public class JSPTranslator implements Externalizable {
 		if (attrName.equals("extends")) //$NON-NLS-1$
 		{
 			fSuperclass = attrValue;
+			fIsDefaultSuperclass = false;
 		}
 		else if (attrName.equals("import")) //$NON-NLS-1$
 		{
@@ -3363,6 +3378,7 @@ public class JSPTranslator implements Externalizable {
 		writeString(out, this.fClassHeader);
 		writeString(out, this.fClassname);
 		writeString(out, this.fSuperclass);
+		writeString(out, Boolean.toString(fIsDefaultSuperclass));
 		writeString(out, this.fImplicitImports);
 		writeString(out, this.fServiceHeader);
 		writeBuffer(out, this.fUserImports);
@@ -3416,6 +3432,7 @@ public class JSPTranslator implements Externalizable {
 		this.fClassHeader = readString(in);
 		this.fClassname = readString(in);
 		this.fSuperclass = readString(in);
+		this.fIsDefaultSuperclass = Boolean.parseBoolean(readString(in));
 		this.fImplicitImports = readString(in);
 		this.fServiceHeader = readString(in);
 		this.fUserImports = new StringBuffer(readString(in));

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020, 2021 IBM Corporation and others.
+ * Copyright (c) 2020, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -18,30 +18,54 @@ package org.eclipse.jst.jsp.core.internal.contenttype;
  * project. Typically this will have been discovered against actual libraries.
  */
 public class ServletAPIDescriptor {
-	public static ServletAPIDescriptor DEFAULT = new ServletAPIDescriptor("jakarta.servlet", 5);
+	public enum ORIGIN {
+		/**
+		 * This descriptor is based on the types and methods found on the Java Build Path
+		 **/
+		BUILD_PATH,
+		/**
+		 * This descriptor is based on the project's Facet(s)
+		 **/
+		FACET,
+		/**
+		 * This descriptor is merely a set of defaults.
+		 **/
+		DEFAULT
+	}
+	public static final ServletAPIDescriptor DEFAULT = new ServletAPIDescriptor("jakarta.servlet", 5, ORIGIN.DEFAULT);
+	private ORIGIN fOrigin;
 
-	public ServletAPIDescriptor(String rootPackage, float apiVersion) {
+	String fRootPackage;
+
+	float fAPIversion;
+	public ServletAPIDescriptor(String rootPackage, float apiVersion, ORIGIN origin) {
 		super();
 		this.fRootPackage = rootPackage;
 		this.fAPIversion = apiVersion;
-	}
-
-	String fRootPackage;
-	float fAPIversion;
-
-	public String getRootPackage() {
-		return fRootPackage;
-	}
-
-	public void setRootPackage(String packageRoot) {
-		fRootPackage = packageRoot;
+		this.fOrigin = origin;
 	}
 
 	public float getAPIversion() {
 		return fAPIversion;
 	}
 
+	public ORIGIN getOrigin() {
+		return fOrigin;
+	}
+
+	public String getRootPackage() {
+		return fRootPackage;
+	}
+
 	public void setAPIversion(float aPIversion) {
 		fAPIversion = aPIversion;
+	}
+
+	public void setOrigin(ORIGIN origin) {
+		fOrigin = origin;
+	}
+
+	public void setRootPackage(String packageRoot) {
+		fRootPackage = packageRoot;
 	}
 }

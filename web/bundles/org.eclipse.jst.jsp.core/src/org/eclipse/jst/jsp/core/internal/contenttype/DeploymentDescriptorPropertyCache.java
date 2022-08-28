@@ -282,7 +282,7 @@ public final class DeploymentDescriptorPropertyCache {
 				if (segmentCount > 1 && path.lastSegment().equals(WEB_XML) && path.segment(segmentCount - 2).equals(WEB_INF)) {
 					getInstance().deploymentDescriptorChanged(path);
 				}
-				if ("org.eclipse.wst.common.project.facet.core.xml".equalsIgnoreCase(path.lastSegment())) { //$NON-NLS-1$
+				if ("org.eclipse.wst.common.project.facet.core.xml".equalsIgnoreCase(path.lastSegment()) || ".classpath".equalsIgnoreCase(path.lastSegment())) { //$NON-NLS-1$
 					synchronized (LOCK) {
 						getInstance().invalidate(path.segment(0));
 					}
@@ -825,63 +825,79 @@ public final class DeploymentDescriptorPropertyCache {
 
 	/**
 	 * @param project
-	 * @return Descriptor for the Servlet API version found on the project's Java
-	 *         Build Path, <code>null</code> if none was discoverable.
+	 * @return Descriptor for the Servlet API version found on the project's
+	 *         Java Build Path, <code>null</code> if none was discoverable, by
+	 *         facet version and looking at available API classes and methods.
 	 */
 	private ServletAPIDescriptor discoverServletAPIVersion(IProject project) {
 		if (FacetModuleCoreSupport.isDynamicWebProject(project) || FacetModuleCoreSupport.isWebFragmentProject(project)) {
 			float version = FacetModuleCoreSupport.getDynamicWebProjectVersion(project);
 			if (version >= 5) {
-				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAKARTA_SERVLET, version));
+				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAKARTA_SERVLET, version, ServletAPIDescriptor.ORIGIN.FACET));
 			}
 			if (version > 0) {
-				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, version));
+				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, version, ServletAPIDescriptor.ORIGIN.FACET));
 			}
 		}
 
 		IJavaProject javaProject = JavaCore.create(project);
-		if (!javaProject.exists()) {
+		if (javaProject == null || !javaProject.exists()) {
 			return null;
 		}
 
-		try {
-			if (javaProject.findType("jakarta.servlet.GenericFilter") != null) { //$NON-NLS-1$
-				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAKARTA_SERVLET, 5));
-			}
-			if (javaProject.findType("javax.servlet.GenericFilter") != null) { //$NON-NLS-1$
-				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 4));
-			}
-			if (javaProject.findType("javax.servlet.ReadListener") != null) { //$NON-NLS-1$
-				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 3.1f));
-			}
-			if (javaProject.findType("javax.servlet.SessionCookieConfig") != null) { //$NON-NLS-1$
-				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 3));
-			}
-			IType servletRequestType = javaProject.findType("javax.servlet.http.HttpServletRequest"); //$NON-NLS-1$
-			if (servletRequestType != null) {
+		if (findType(javaProject, "jakarta.servlet.GenericFilter") != null) { //$NON-NLS-1$
+			return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAKARTA_SERVLET, 5, ServletAPIDescriptor.ORIGIN.BUILD_PATH));
+		}
+		if (findType(javaProject, "javax.servlet.GenericFilter") != null) { //$NON-NLS-1$
+			return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 4, ServletAPIDescriptor.ORIGIN.BUILD_PATH));
+		}
+		if (findType(javaProject, "javax.servlet.ReadListener") != null) { //$NON-NLS-1$
+			return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 3.1f, ServletAPIDescriptor.ORIGIN.BUILD_PATH));
+		}
+		if (findType(javaProject, "javax.servlet.SessionCookieConfig") != null) { //$NON-NLS-1$
+			return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 3, ServletAPIDescriptor.ORIGIN.BUILD_PATH));
+		}
+		IType servletRequestType = findType(javaProject, "javax.servlet.http.HttpServletRequest"); //$NON-NLS-1$
+		if (servletRequestType != null) {
+			try {
 				IMethod[] methods = servletRequestType.getMethods();
 				for (int i = 0; i < methods.length; i++) {
 					if ("getContextPath".equals(methods[i].getElementName())) { //$NON-NLS-1$
-						return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 2.5f));
+						return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 2.5f, ServletAPIDescriptor.ORIGIN.BUILD_PATH));
 					}
 				}
 			}
-			if (javaProject.findType("javax.servlet.ServletRequestAttributeEvent") != null) { //$NON-NLS-1$
-				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 2.4f));
+			catch (JavaModelException e) {
+				Logger.logException(e);
 			}
-			if (javaProject.findType("javax.servlet.Filter") != null) { //$NON-NLS-1$
-				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 2.3f));
-			}
-			if (javaProject.findType("javax.servlet.http.HttpServletResponse") != null) { //$NON-NLS-1$
-				if (servletRequestType != null) {
-					IField[] fields = servletRequestType.getFields();
-					for (int i = 0; i < fields.length; i++) {
-						if ("SC_REQUESTED_RANGE_NOT_SATISFIABLE".equals(fields[i].getElementName())) { //$NON-NLS-1$
-							return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 2.2f));
-						}
+		}
+		if (findType(javaProject, "javax.servlet.ServletRequestAttributeEvent") != null) { //$NON-NLS-1$
+			return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 2.4f, ServletAPIDescriptor.ORIGIN.BUILD_PATH));
+		}
+		if (findType(javaProject, "javax.servlet.Filter") != null) { //$NON-NLS-1$
+			return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 2.3f, ServletAPIDescriptor.ORIGIN.BUILD_PATH));
+		}
+		if (servletRequestType != null && findType(javaProject, "javax.servlet.http.HttpServletResponse") != null) { //$NON-NLS-1$
+			try {
+				IField[] fields = null;
+				fields = servletRequestType.getFields();
+				for (int i = 0; i < fields.length; i++) {
+					if ("SC_REQUESTED_RANGE_NOT_SATISFIABLE".equals(fields[i].getElementName())) { //$NON-NLS-1$
+						return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, 2.2f, ServletAPIDescriptor.ORIGIN.BUILD_PATH));
 					}
 				}
 			}
+			catch (JavaModelException e) {
+				Logger.logException(e);
+			}
+		}
+		return null;
+	}
+
+	private IType findType(IJavaProject javaProject, String typeName) {
+		try {
+			IType type = javaProject.findType(typeName);
+			return type;
 		}
 		catch (JavaModelException e) {
 			Logger.logException(e);
@@ -1076,6 +1092,9 @@ public final class DeploymentDescriptorPropertyCache {
 	 *         Build Path, <code>null</code> if none was discoverable.
 	 */
 	public ServletAPIDescriptor getServletAPIVersion(IProject project) {
+		if (project == null) {
+			return ServletAPIDescriptor.DEFAULT;
+		}
 		Reference<ServletAPIDescriptor> ref = apiVersions.get(project.getName());
 		ServletAPIDescriptor descriptor = ref != null ? ref.get() : null;
 		if (descriptor == null) {
