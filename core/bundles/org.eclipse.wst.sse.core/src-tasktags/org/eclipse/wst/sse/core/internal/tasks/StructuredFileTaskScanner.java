@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2021 IBM Corporation and others.
+ * Copyright (c) 2001, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -148,17 +148,32 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IEx
 					int end = Math.min(endOffset, line.getOffset() + line.getLength());
 					int length = end - begin;
 
-					/* XXX: This generates a lot of garbage objects */
+					/* XXX: This generates a lot of garbage strings */
 
 					String commentedText = getCommentedText(document, begin, length);
-					String comparisonText = commentedText.toLowerCase(Locale.ENGLISH);
+					String lowercaseText = commentedText.toLowerCase(Locale.ENGLISH);
 
 					for (int i = 0; i < taskTags.length; i++) {
-						int tagIndex = comparisonText.indexOf(taskTags[i].getTag().toLowerCase(Locale.ENGLISH));
+						int tagIndex = lowercaseText.indexOf(taskTags[i].getTag().toLowerCase(Locale.ENGLISH));
 						if (tagIndex >= 0) {
+							boolean isEndOfComment = tagIndex + taskTags[i].getTag().length() == lowercaseText.length();
+							if (!isEndOfComment) {
+								char nextChar = lowercaseText.charAt(tagIndex + taskTags[i].getTag().length());
+								boolean followedByWhitespaceOrColon = Character.isWhitespace(nextChar) || nextChar == ':';
+								if (!followedByWhitespaceOrColon) {
+									continue;
+								}
+								boolean precededByWhitespaceOrNonLetter = tagIndex == 0 || Character.isWhitespace(lowercaseText.charAt(tagIndex - 1)) || !Character.isLetter(lowercaseText.charAt(tagIndex - 1));
+								if (!precededByWhitespaceOrNonLetter) {
+									continue;
+								}
+							}
 							String markerDescription = commentedText.substring(tagIndex);
-							if (markerDescription.length() > 500) {
-								markerDescription = markerDescription.substring(0,500);
+							if (markerDescription.trim().length() == taskTags[i].getTag().length()) {
+								continue;
+							}
+							if (markerDescription.length() > 120) {
+								markerDescription = markerDescription.substring(0,120);
 							}
 							int markerOffset = begin + tagIndex;
 							int markerLength = end - markerOffset;

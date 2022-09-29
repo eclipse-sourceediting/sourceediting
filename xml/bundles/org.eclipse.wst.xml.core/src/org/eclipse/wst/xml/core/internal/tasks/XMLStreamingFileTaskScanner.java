@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2021 IBM Corporation and others.
+ * Copyright (c) 2001, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -125,15 +125,30 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 						String lowercaseText = lineComment.toLowerCase(Locale.ENGLISH);
 
 						for (int i = 0; i < taskTags.length; i++) {
-							int tagIndex = lowercaseText.indexOf(searchTags[i]);
+							int tagIndex = lowercaseText.indexOf(taskTags[i].getTag().toLowerCase(Locale.ENGLISH));
 							if (tagIndex >= 0) {
+								boolean isEndOfComment = tagIndex + taskTags[i].getTag().length() == lowercaseText.length();
+								if (!isEndOfComment) {
+									char nextChar = lowercaseText.charAt(tagIndex + taskTags[i].getTag().length());
+									boolean followedByWhitespaceOrColon = Character.isWhitespace(nextChar) || nextChar == ':';
+									if (!followedByWhitespaceOrColon) {
+										continue;
+									}
+									boolean precededByWhitespaceOrNonLetter = tagIndex == 0 || Character.isWhitespace(lowercaseText.charAt(tagIndex - 1)) || !Character.isLetter(lowercaseText.charAt(tagIndex - 1));
+									if (!precededByWhitespaceOrNonLetter) {
+										continue;
+									}
+								}
 								String markerDescription = lineComment.substring(tagIndex);
-								if (markerDescription.length() > 500) {
-									markerDescription = markerDescription.substring(0,500);
+								if (markerDescription.trim().length() == taskTags[i].getTag().length()) {
+									continue;
+								}
+								if (markerDescription.length() > 120) {
+									markerDescription = markerDescription.substring(0,120);
 								}
 								int markerOffset = getOffset() + line.getOffset() + tagIndex;
 								int markerLength = line.getLength() - tagIndex;
-								fNewMarkerAttributeMaps.add(createInitialMarkerAttributes(markerDescription, lineNumber + getLine(), markerOffset, markerLength, taskTags[i].getPriority()));
+								fNewMarkerAttributeMaps.add(createInitialMarkerAttributes(markerDescription, lineNumber, markerOffset, markerLength, taskTags[i].getPriority()));
 							}
 						}
 					}
