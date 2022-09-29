@@ -21,6 +21,26 @@
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.wst.sse.ui</artifactId>
-  <version>1.7.600-SNAPSHOT</version>
+  <version>1.7.500-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
+
+  <build> 
+    <plugins> 
+      <plugin> 
+        <groupId>org.eclipse.tycho</groupId> 
+        <artifactId>target-platform-configuration</artifactId> 
+        <configuration> 
+          <dependency-resolution> 
+            <extraRequirements> 
+              <requirement> 
+                <type>eclipse-plugin</type> 
+                <id>com.ibm.icu</id> 
+                <versionRange>0.0.0</versionRange> 
+              </requirement> 
+            </extraRequirements> 
+          </dependency-resolution> 
+        </configuration> 
+      </plugin> 
+    </plugins> 
+  </build>
 </project>

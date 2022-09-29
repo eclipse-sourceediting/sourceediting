@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2022 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@
 package org.eclipse.wst.sse.ui.internal.taginfo;
 
 import java.util.HashMap;
-import java.util.StringTokenizer;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextHover;
@@ -23,6 +22,8 @@ import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * Manages text hovers for Structured Text editors

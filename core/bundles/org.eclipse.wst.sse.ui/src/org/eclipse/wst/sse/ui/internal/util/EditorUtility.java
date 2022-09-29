@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2022 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,7 @@
 package org.eclipse.wst.sse.ui.internal.util;
 
 
-import java.util.StringTokenizer;
+import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.JFaceResources;

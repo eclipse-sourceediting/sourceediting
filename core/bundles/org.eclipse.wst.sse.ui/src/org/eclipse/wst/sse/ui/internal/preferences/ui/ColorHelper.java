@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2022 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -16,11 +16,11 @@ package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
 
 
-import java.util.StringTokenizer;
-
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.sse.ui.internal.Logger;
+
+import com.ibm.icu.util.StringTokenizer;
 
 
 public class ColorHelper {
