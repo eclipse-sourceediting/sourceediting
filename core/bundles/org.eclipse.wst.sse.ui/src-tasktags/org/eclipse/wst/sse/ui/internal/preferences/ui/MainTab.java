@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ package org.eclipse.wst.sse.ui.internal.preferences.ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Platform;
@@ -59,8 +60,6 @@ import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 import org.eclipse.wst.sse.core.internal.tasks.TaskTagPreferenceKeys;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
-
-import com.ibm.icu.util.StringTokenizer;
 
 class MainTab implements IPreferenceTab {
 	public class TaskTagDialog extends Dialog {
@@ -193,9 +192,9 @@ class MainTab implements IPreferenceTab {
 		int result = dlg.open();
 		if (result == Window.OK) {
 			TaskTag newTag = dlg.taskTag;
-			List newTags = new ArrayList(Arrays.asList(fTaskTags));
+			List<TaskTag> newTags = new ArrayList<>(Arrays.asList(fTaskTags));
 			newTags.add(newTag);
-			fTaskTags = (TaskTag[]) newTags.toArray(new TaskTag[newTags.size()]);
+			fTaskTags = newTags.toArray(new TaskTag[newTags.size()]);
 			valueTable.setInput(fTaskTags);
 			valueTable.getTable().setSelection(fTaskTags.length - 1);
 		}
@@ -211,7 +210,6 @@ class MainTab implements IPreferenceTab {
 
 		Label description = new Label(composite, SWT.NONE);
 		description.setText(SSEUIMessages.TaskTagPreferenceTab_33); //$NON-NLS-1$
-//		description.setBackground(composite.getBackground());
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=104403
 		Point sizeHint = description.computeSize(SWT.DEFAULT, SWT.DEFAULT);
@@ -340,7 +338,7 @@ class MainTab implements IPreferenceTab {
 		String[] tags = StringUtils.unpack(tagString);
 
 		StringTokenizer toker = null;
-		List list = new ArrayList();
+		List<Integer> list = new ArrayList<>();
 
 		toker = new StringTokenizer(priorityString, ","); //$NON-NLS-1$
 		while (toker.hasMoreTokens()) {
@@ -349,11 +347,11 @@ class MainTab implements IPreferenceTab {
 				number = Integer.valueOf(toker.nextToken());
 			}
 			catch (NumberFormatException e) {
-				number = new Integer(IMarker.PRIORITY_NORMAL);
+				number = Integer.valueOf(IMarker.PRIORITY_NORMAL);
 			}
 			list.add(number);
 		}
-		Integer[] priorities = (Integer[]) list.toArray(new Integer[0]);
+		Integer[] priorities = list.toArray(new Integer[0]);
 
 		fTaskTags = new TaskTag[Math.min(tags.length, priorities.length)];
 		for (int i = 0; i < fTaskTags.length; i++) {
@@ -396,18 +394,18 @@ class MainTab implements IPreferenceTab {
 	 */
 	private void removeTags(ISelection selection) {
 		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-		List taskTags = new ArrayList(Arrays.asList(fTaskTags));
+		List<TaskTag> taskTags = new ArrayList<>(Arrays.asList(fTaskTags));
 		taskTags.removeAll(structuredSelection.toList());
-		fTaskTags = (TaskTag[]) taskTags.toArray(new TaskTag[taskTags.size()]);
+		fTaskTags = taskTags.toArray(new TaskTag[taskTags.size()]);
 		valueTable.setInput(fTaskTags);
 	}
 
 	private void save() {
-		IEclipsePreferences defaultPreferences = new DefaultScope().getNode(TaskTagPreferenceKeys.TASK_TAG_NODE);
+		IEclipsePreferences defaultPreferences = DefaultScope.INSTANCE.getNode(TaskTagPreferenceKeys.TASK_TAG_NODE);
 		String defaultTags = defaultPreferences.get(TaskTagPreferenceKeys.TASK_TAG_TAGS, null);
 		String defaultPriorities = defaultPreferences.get(TaskTagPreferenceKeys.TASK_TAG_PRIORITIES, null);
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (int i = 0; i < fTaskTags.length; i++) {
 			if (i > 0) {
 				buf.append(","); //$NON-NLS-1$
@@ -429,7 +427,7 @@ class MainTab implements IPreferenceTab {
 			fPreferencesLookupOrder[0].getNode(TaskTagPreferenceKeys.TASK_TAG_NODE).put(TaskTagPreferenceKeys.TASK_TAG_TAGS, currentTags);
 		}
 
-		StringBuffer buf2 = new StringBuffer();
+		StringBuilder buf2 = new StringBuilder();
 		for (int i = 0; i < fTaskTags.length; i++) {
 			if (i > 0) {
 				buf2.append(","); //$NON-NLS-1$

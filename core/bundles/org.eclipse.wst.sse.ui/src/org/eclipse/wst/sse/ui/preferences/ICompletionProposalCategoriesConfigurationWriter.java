@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -87,7 +87,7 @@ public interface ICompletionProposalCategoriesConfigurationWriter extends
 	 * @param order <code>{@link List}<{@link String}></code>
 	 * <ul><li><b>values:</b> {@link CompletionProposalCategory} IDs</li></ul>
 	 */
-	void setPageOrder(List order);
+	void setPageOrder(List<String> order);
 	
 	/**
 	 * <p>Sets the order in which the categories should be listed on the default page.
@@ -102,7 +102,7 @@ public interface ICompletionProposalCategoriesConfigurationWriter extends
 	 * @param order <code>{@link List}<{@link String}></code>
 	 * <ul><li><b>values:</b> {@link CompletionProposalCategory} IDs</li></ul>
 	 */
-	void setDefaultPageOrder(List order);
+	void setDefaultPageOrder(List<String> order);
 	
 	/**
 	 * <p>Should load the default settings from wherever they are being stored</p>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 IBM Corporation and others.
+ * Copyright (c) 2011, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,12 +12,11 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.filter;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.ibm.icu.text.Collator;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -25,15 +24,11 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
-
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ViewerFilter;
-
 import org.eclipse.ui.IPluginContribution;
 import org.eclipse.ui.activities.WorkbenchActivityHelper;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-
-
 
 /**
  * Represents a custom filter which is provided by the
@@ -82,7 +77,7 @@ public class OutlineFilterDescriptor implements Comparable, IPluginContribution 
 	 */
 	public static OutlineFilterDescriptor[] getFilterDescriptors(String targetId) {
 		OutlineFilterDescriptor[] filterDescs= OutlineFilterDescriptor.getFilterDescriptors();
-		List result= new ArrayList(filterDescs.length);
+		List<OutlineFilterDescriptor> result= new ArrayList<>(filterDescs.length);
 		for (int i= 0; i < filterDescs.length; i++) {
 			String tid= filterDescs[i].getTargetId();
 			if (WorkbenchActivityHelper.filterItem(filterDescs[i]))
@@ -90,7 +85,7 @@ public class OutlineFilterDescriptor implements Comparable, IPluginContribution 
 			if (tid == null || tid.equals(targetId))
 				result.add(filterDescs[i]);
 		}
-		return (OutlineFilterDescriptor[])result.toArray(new OutlineFilterDescriptor[result.size()]);
+		return result.toArray(new OutlineFilterDescriptor[result.size()]);
 	}
 
 	/**
@@ -247,8 +242,8 @@ public class OutlineFilterDescriptor implements Comparable, IPluginContribution 
 	 * @return new filter descriptors
 	 */
 	private static OutlineFilterDescriptor[] createFilterDescriptors(IConfigurationElement[] elements) {
-		List result= new ArrayList(5);
-		Set descIds= new HashSet(5);
+		List<OutlineFilterDescriptor> result= new ArrayList<>(5);
+		Set<String> descIds= new HashSet<>(5);
 		for (int i= 0; i < elements.length; i++) {
 			final IConfigurationElement element= elements[i];
 			if (FILTER_TAG.equals(element.getName())) {
@@ -266,7 +261,7 @@ public class OutlineFilterDescriptor implements Comparable, IPluginContribution 
 				}
 			}
 		}
-		return (OutlineFilterDescriptor[])result.toArray(new OutlineFilterDescriptor[result.size()]);
+		return result.toArray(new OutlineFilterDescriptor[result.size()]);
 	}
 
 	public String getLocalId() {

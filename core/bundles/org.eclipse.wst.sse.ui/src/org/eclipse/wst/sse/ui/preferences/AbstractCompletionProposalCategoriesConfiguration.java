@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 IBM Corporation and others.
+ * Copyright (c) 2010, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,11 +17,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.contentassist.CompletionProposalCategory;
-
-import com.ibm.icu.util.StringTokenizer;
 
 /**
  * <p>Implements a completion proposal categories configuration
@@ -47,7 +46,7 @@ public abstract class AbstractCompletionProposalCategoriesConfiguration
 	 * <code>{@link List}<{@link String}></code>
 	 * <ul><li><b>values:</b> {@link CompletionProposalCategory} IDs</li></ul>
 	 */
-	private List fDefaultPageSortOrder;
+	private List<String> fDefaultPageSortOrder;
 	
 	/**
 	 * <p>{@link CompletionProposalCategory} IDs sorted by the order they should
@@ -56,7 +55,7 @@ public abstract class AbstractCompletionProposalCategoriesConfiguration
 	 * <code>{@link List}<{@link String}></code>
 	 * <ul><li><b>values:</b> {@link CompletionProposalCategory} IDs</li></ul>
 	 */
-	private List fOwnPageSortOrder;
+	private List<String> fOwnPageSortOrder;
 	
 	/**
 	 * <p>{@link CompletionProposalCategory} IDs that should not be displayed on
@@ -65,7 +64,7 @@ public abstract class AbstractCompletionProposalCategoriesConfiguration
 	 * <code>{@link Set}<{@link String}></code>
 	 * <ul><li><b>values:</b> {@link CompletionProposalCategory} IDs</li></ul>
 	 */
-	private Set fShouldNotDisplayOnOwnPage;
+	private Set<String> fShouldNotDisplayOnOwnPage;
 	
 	/**
 	 * <p>{@link CompletionProposalCategory} IDs that should not be displayed on
@@ -74,16 +73,16 @@ public abstract class AbstractCompletionProposalCategoriesConfiguration
 	 * <code>{@link Set}<{@link String}></code>
 	 * <ul><li><b>values:</b> {@link CompletionProposalCategory} IDs</li></ul>
 	 */
-	private Set fShouldNotDisplayOnDefaultPage;
+	private Set<String> fShouldNotDisplayOnDefaultPage;
 	
 	/**
 	 * <p>Create a new configuration by loading from the associated {@link IPreferenceStore}</p>
 	 */
 	public AbstractCompletionProposalCategoriesConfiguration() {
-		this.fOwnPageSortOrder = new ArrayList();
-		this.fDefaultPageSortOrder = new ArrayList();
-		this.fShouldNotDisplayOnOwnPage = new HashSet();
-		this.fShouldNotDisplayOnDefaultPage = new HashSet();
+		this.fOwnPageSortOrder = new ArrayList<>();
+		this.fDefaultPageSortOrder = new ArrayList<>();
+		this.fShouldNotDisplayOnOwnPage = new HashSet<>();
+		this.fShouldNotDisplayOnDefaultPage = new HashSet<>();
 		
 		this.loadUserConfiguration();
 	}
@@ -208,14 +207,14 @@ public abstract class AbstractCompletionProposalCategoriesConfiguration
 	/**
 	 * @see org.eclipse.wst.sse.ui.preferences.ICompletionProposalCategoriesConfigurationWriter#setPageOrder(java.util.List)
 	 */
-	public void setPageOrder(List order) {
+	public void setPageOrder(List<String> order) {
 		this.fOwnPageSortOrder = order;
 	}
 	
 	/**
 	 * @see org.eclipse.wst.sse.ui.preferences.ICompletionProposalCategoriesConfigurationWriter#setDefaultPageOrder(java.util.List)
 	 */
-	public void setDefaultPageOrder(List order) {
+	public void setDefaultPageOrder(List<String> order) {
 		this.fDefaultPageSortOrder = order;
 	}
 
@@ -314,7 +313,7 @@ public abstract class AbstractCompletionProposalCategoriesConfiguration
 		
 		//parse either the default or user configuration preference
 		String preference;
-		if(useDefaults) {
+		if (useDefaults) {
 			preference = getPreferenceStore().getDefaultString(getShouldNotDisplayOnOwnPagePrefKey());
 		} else {
 			preference = getPreferenceStore().getString(getShouldNotDisplayOnOwnPagePrefKey());
@@ -333,9 +332,9 @@ public abstract class AbstractCompletionProposalCategoriesConfiguration
 	private void saveShouldDisplayOnDefaultPageConfiguration() {
 		//create the preference string
 		StringBuffer defaultPageBuff = new StringBuffer();
-		Iterator defaultPageIter = this.fShouldNotDisplayOnDefaultPage.iterator();
-		while(defaultPageIter.hasNext()) {
-			String categoryID = (String)defaultPageIter.next();
+		Iterator<String> defaultPageIter = this.fShouldNotDisplayOnDefaultPage.iterator();
+		while (defaultPageIter.hasNext()) {
+			String categoryID = defaultPageIter.next();
 			defaultPageBuff.append(categoryID + PREFERENCE_CATEGORY_SEPERATOR);
 		}
 		
@@ -348,9 +347,9 @@ public abstract class AbstractCompletionProposalCategoriesConfiguration
 	 */
 	private void savePageSortOrderConfiguration() {
 		//create the preference string
-		StringBuffer orderBuff = new StringBuffer();
-		for(int i = 0; i < this.fOwnPageSortOrder.size(); ++i) {
-			if(this.fOwnPageSortOrder.get(i) != null) {
+		StringBuilder orderBuff = new StringBuilder();
+		for (int i = 0; i < this.fOwnPageSortOrder.size(); ++i) {
+			if (this.fOwnPageSortOrder.get(i) != null) {
 				orderBuff.append(this.fOwnPageSortOrder.get(i) + PREFERENCE_CATEGORY_SEPERATOR);
 			}
 		}
@@ -364,8 +363,8 @@ public abstract class AbstractCompletionProposalCategoriesConfiguration
 	 */
 	private void saveDefaultPageSortOrderConfiguration() {
 		//create the preference string
-		StringBuffer orderBuff = new StringBuffer();
-		for(int i = 0; i < this.fDefaultPageSortOrder.size(); ++i) {
+		StringBuilder orderBuff = new StringBuilder();
+		for (int i = 0; i < this.fDefaultPageSortOrder.size(); ++i) {
 			if(this.fDefaultPageSortOrder.get(i) != null) {
 				orderBuff.append(this.fDefaultPageSortOrder.get(i) + PREFERENCE_CATEGORY_SEPERATOR);
 			}
@@ -381,10 +380,10 @@ public abstract class AbstractCompletionProposalCategoriesConfiguration
 	 */
 	private void saveShouldDisplayOnOwnPageConfiguration() {
 		//create the preference string
-		StringBuffer buff = new StringBuffer();
-		Iterator iter = this.fShouldNotDisplayOnOwnPage.iterator();
+		StringBuilder buff = new StringBuilder();
+		Iterator<String> iter = this.fShouldNotDisplayOnOwnPage.iterator();
 		while(iter.hasNext()) {
-			String categoryID = (String)iter.next();
+			String categoryID = iter.next();
 			buff.append(categoryID + PREFERENCE_CATEGORY_SEPERATOR);
 		}
 		

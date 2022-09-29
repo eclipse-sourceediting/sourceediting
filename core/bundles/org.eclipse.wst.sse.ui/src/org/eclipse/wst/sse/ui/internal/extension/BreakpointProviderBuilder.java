@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2018 IBM Corporation and others.
+ * Copyright (c) 2001, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import com.ibm.icu.util.StringTokenizer;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -40,7 +40,7 @@ import org.osgi.framework.Bundle;
 
 
 /**
- * Reads breakpoint extension registory and returns breakpoint provider
+ * Reads breakpoint extension registry and returns breakpoint provider
  * instances
  */
 public class BreakpointProviderBuilder extends RegistryReader {
@@ -129,8 +129,8 @@ public class BreakpointProviderBuilder extends RegistryReader {
 
 	}
 
-	protected List cache;
-	private Map map = new HashMap();
+	protected List<IConfigurationElement> cache;
+	private Map<String,IBreakpointProvider[]> map = new HashMap<>();
 
 	protected String targetContributionTag;
 
@@ -219,7 +219,7 @@ public class BreakpointProviderBuilder extends RegistryReader {
 			return new IConfigurationElement[0];
 
 		int num = cache.size();
-		List elements = new ArrayList(1);
+		List<IConfigurationElement> elements = new ArrayList<>(1);
 		for (int i = 0; i < num; i++) {
 			Object obj = cache.get(i);
 			if (!(obj instanceof IConfigurationElement))
@@ -265,7 +265,7 @@ public class BreakpointProviderBuilder extends RegistryReader {
 				elements.add(element);
 			}
 		}
-		return (IConfigurationElement[]) elements.toArray(new IConfigurationElement[0]);
+		return elements.toArray(new IConfigurationElement[0]);
 	}
 
 	/**
@@ -284,9 +284,9 @@ public class BreakpointProviderBuilder extends RegistryReader {
 		// Get breakpoint providers for this content type handler
 		IBreakpointProvider[] providers1 = new IBreakpointProvider[0];
 		IContentType contentType = Platform.getContentTypeManager().getContentType(contentTypeID);
-		List holdProviders = new ArrayList(2);
+		List<IBreakpointProvider> holdProviders = new ArrayList<>(2);
 		while (contentType != null) {
-			IBreakpointProvider[] providers = (IBreakpointProvider[]) map.get(contentType.getId());
+			IBreakpointProvider[] providers = map.get(contentType.getId());
 			if (providers == null) {
 				providers = createBreakpointProviders(ATT_CONTENT_TYPES, contentType.getId());
 				if (providers != null) {
@@ -299,12 +299,12 @@ public class BreakpointProviderBuilder extends RegistryReader {
 			}
 			contentType = contentType.getBaseType();
 		}
-		providers1 = (IBreakpointProvider[]) holdProviders.toArray(new IBreakpointProvider[holdProviders.size()]);
+		providers1 = holdProviders.toArray(new IBreakpointProvider[holdProviders.size()]);
 
 		// Get breakpoint providers for this extension
 		IBreakpointProvider[] providers2 = new IBreakpointProvider[0];
 		if (ext != null) {
-			providers2 = (IBreakpointProvider[]) map.get(ext);
+			providers2 = map.get(ext);
 			if (providers2 == null) {
 				providers2 = createBreakpointProviders(ATT_EXTENSIONS, ext);
 				if (providers2 != null) {
@@ -314,7 +314,7 @@ public class BreakpointProviderBuilder extends RegistryReader {
 		}
 
 		// create single hash set to remove duplication
-		Set s = new HashSet();
+		Set<IBreakpointProvider> s = new HashSet<>();
 		s.addAll(Arrays.asList(providers1));
 		s.addAll(Arrays.asList(providers2));
 
@@ -355,7 +355,7 @@ public class BreakpointProviderBuilder extends RegistryReader {
 
 	private void initCache() {
 		if (cache == null) {
-			cache = new ArrayList();
+			cache = new ArrayList<>();
 			readContributions(TAG_BREAKPOINT_CONTRIBUTION, PL_BREAKPOINT);
 		}
 	}
