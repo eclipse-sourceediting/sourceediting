@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2020 IBM Corporation and others.
+ * Copyright (c) 2009, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -503,6 +503,8 @@ public abstract class AbstractStructuredFoldingStrategy
 			
 			int offset = structuredDocumentRegion.getStartOffset();
 			IndexedRegion indexedRegion = model.getIndexedRegion(offset);
+			if (indexedRegion == null)
+				continue;
 			indexedRegions.add(indexedRegion);
 			if (structuredDocumentRegion.getEndOffset() <= indexedRegion.getEndOffset())
 				continue;
