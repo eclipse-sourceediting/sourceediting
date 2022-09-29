@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2022 IBM Corporation and others.
+ * Copyright (c) 2001, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -15,7 +15,6 @@
 package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
 import java.io.CharArrayReader;
-import java.text.Collator;
 import java.util.Dictionary;
 import java.util.List;
 
@@ -60,6 +59,8 @@ import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.w3c.dom.Node;
+
+import com.ibm.icu.text.Collator;
 
 /**
  * This class is configurable by setting 3 properties: 1) an array of Strings
@@ -201,7 +202,7 @@ public class StyledTextColorPicker extends Composite {
 	private IPreferenceStore fPreferenceStore;
 	protected Combo fStyleCombo = null;
 	// The list of supported ITextRegion types [Strings]
-	protected List<String> fStyleList = null;
+	protected List fStyleList = null;
 
 	// controls in picker
 	protected StyledText fText = null;
@@ -888,7 +889,7 @@ public class StyledTextColorPicker extends Composite {
 			if (fStyleList.get(i) != null)
 				descriptions[i] = (String) getDescriptions().get(fStyleList.get(i));
 			else
-				descriptions[i] = fStyleList.get(i);
+				descriptions[i] = (String) fStyleList.get(i);
 		}
 		Object[] sortedObjects = new DescriptionSorter().sort(descriptions);
 		String[] sortedDescriptions = new String[descriptions.length];
