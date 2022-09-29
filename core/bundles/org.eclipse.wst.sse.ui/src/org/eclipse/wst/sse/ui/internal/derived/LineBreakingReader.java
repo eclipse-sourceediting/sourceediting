@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2022 IBM Corporation and others.
+ * Copyright (c) 2005, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,7 @@ package org.eclipse.wst.sse.ui.internal.derived;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.text.BreakIterator;
+import com.ibm.icu.text.BreakIterator;
 
 import org.eclipse.swt.graphics.GC;
 
