@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -88,8 +88,8 @@ public class LabelEditManager extends DirectEditManager {
 			getCellEditor().setValue(initialLabelText);
 		}
 		else {
-			scaledFont = label.getParent().getFont();
-			text.setBackground(label.getParent().getBackgroundColor());
+			scaledFont = text.getFont();
+			text.setBackground(text.getParent().getBackground());
 		}
 		
 		FontData data = scaledFont.getFontData()[0];
