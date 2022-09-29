@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2022 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,8 +49,6 @@ import org.eclipse.wst.sse.core.internal.tasks.TaskTagPreferenceKeys;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.util.Sorter;
-
-import com.ibm.icu.text.Collator;
 
 class ExclusionsTab implements IPreferenceTab {
 	private class ArrayTreeContentProvider implements ITreeContentProvider {
