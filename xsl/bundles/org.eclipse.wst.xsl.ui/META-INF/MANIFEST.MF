@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xsl.ui;singleton:=true
-Bundle-Version: 1.2.100.qualifier
+Bundle-Version: 1.2.200.qualifier
 Bundle-Activator: org.eclipse.wst.xsl.ui.internal.XSLUIPlugin
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui;bundle-version="[3.109.0,4.0.0)",
+Require-Bundle: org.eclipse.ui;bundle-version="[3.201.0,4.0.0)",
  org.eclipse.core.runtime;bundle-version="[3.14.0,4.0.0)",
  org.eclipse.wst.xml.core;bundle-version="[1.2.0,2.0.0)",
  org.eclipse.ui.console;bundle-version="[3.7.0,4.0.0)",
@@ -13,17 +13,17 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.109.0,4.0.0)",
  org.eclipse.ui.navigator.resources;bundle-version="[3.6.0,4.0.0)",
  org.eclipse.wst.sse.core;bundle-version="[1.2.0,2.0.0)",
  org.eclipse.wst.sse.ui;bundle-version="[1.7.0,2.0.0)",
- org.apache.xalan;bundle-version="[2.7.1,2.8.0)",
- org.eclipse.jface.text;bundle-version="[3.13.0,4.0.0)",
+ org.apache.xalan;bundle-version="[2.7.2,2.8.0)",
+ org.eclipse.jface.text;bundle-version="[3.21.0,4.0.0)",
  org.eclipse.wst.xml.ui;bundle-version="[1.2.300,2.0.0)",
  org.eclipse.wst.xsl.core;bundle-version="[1.2.0,2.0.0)",
  org.eclipse.ui.workbench.texteditor;bundle-version="[3.10.0,4.0.0)",
- org.eclipse.wst.validation;bundle-version="[1.2.700,2.0.0)",
- org.eclipse.ui.ide;bundle-version="[3.14.0,4.0.0)",
+ org.eclipse.wst.validation;bundle-version="[1.2.800,2.0.0)",
+ org.eclipse.ui.ide;bundle-version="[3.19.0,4.0.0)",
  org.eclipse.ui.forms;bundle-version="[3.7.100,4.0.0)",
  org.eclipse.wst.xml.xpath.ui;bundle-version="[1.1.0,2.0.0)",
  org.eclipse.wst.xml.xpath.core;bundle-version="[1.3.0,2.0.0)",
- com.ibm.icu;bundle-version="3.8.1"
+ com.ibm.icu;bundle-version="71.1.0"
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.wst.xsl.ui.internal;x-internal:=true,
