@@ -117,7 +117,7 @@
       &lt;!-- An adopter can specify the ${eclipse_orbit: } variable to indicate which eclipse
            bundle should be added to the class path. --&gt;
       &lt;processor
-      classpath=&quot;${eclipse_orbit:org.apache.xalan};${eclipse_orbit:org.apache.xml.serializer};${eclipse_orbit:org.apache.bcel};${eclipse_orbit:java_cup.runtime}&quot;
+      classpath=&quot;${eclipse_orbit:org.apache.xalan};${eclipse_orbit:org.apache.xml.serializer};${eclipse_orbit:org.apache.bcel};${eclipse_orbit:java_cup-runtime}&quot;
             id=&quot;org.eclipse.wst.xsl.launching.xalan.processor&quot;
             label=&quot;%processor.label.1&quot;
             processorTypeId=&quot;org.eclipse.wst.xsl.xalan.processorType&quot;
