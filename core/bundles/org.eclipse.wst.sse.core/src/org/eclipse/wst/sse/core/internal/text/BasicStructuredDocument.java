@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2020 IBM Corporation and others.
+ * Copyright (c) 2001, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -58,6 +58,7 @@ import org.eclipse.jface.text.ILineTracker;
 import org.eclipse.jface.text.ILineTrackerExtension;
 import org.eclipse.jface.text.IPositionUpdater;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.IRepairableDocumentExtension;
 import org.eclipse.jface.text.ITextStore;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Position;
@@ -90,7 +91,7 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
 /**
  * The standard implementation of structured document.
  */
-public class BasicStructuredDocument implements IStructuredDocument, IDocumentExtension, IDocumentExtension3, IDocumentExtension4, CharSequence, IRegionComparible {
+public class BasicStructuredDocument implements IStructuredDocument, IDocumentExtension, IDocumentExtension3, IDocumentExtension4, CharSequence, IRegionComparible, IRepairableDocumentExtension {
 
 	/**
 	 * This ThreadLocal construct is used so each thread can maintain its only
@@ -2977,5 +2978,59 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				}
 			});
 		}
+	}
+
+	@Override
+	public boolean isLineInformationRepairNeeded(int offset, int length, String text) throws BadLocationException {
+		if ((0 > offset) || (0 > length) || (offset + length > getLength()))
+			throw new BadLocationException();
+
+		return isLineInformationRepairNeeded(text) || isLineInformationRepairNeeded(get(offset, length));
+	}
+
+	/**
+	 * Checks whether the line information needs to be repaired.
+	 *
+	 * @param text the text to check
+	 * @return <code>true</code> if the line information must be repaired
+	 * @since 3.4
+	 */
+	private boolean isLineInformationRepairNeeded(String text) {
+		if (text == null)
+			return false;
+
+		int length= text.length();
+		if (length == 0)
+			return false;
+
+		int rIndex= text.indexOf('\r');
+		int nIndex= text.indexOf('\n');
+		if (rIndex == -1 && nIndex == -1)
+			return false;
+
+		if (rIndex > 0 && rIndex < length-1 && nIndex > 1 && rIndex < length-2)
+			return false;
+
+		String defaultLD= null;
+		try {
+			defaultLD= getLineDelimiter(0);
+		} catch (BadLocationException x) {
+			return true;
+		}
+
+		if (defaultLD == null)
+			return false;
+
+		defaultLD= getDefaultLineDelimiter();
+
+		if (defaultLD.length() == 1) {
+			if (rIndex != -1 && !"\r".equals(defaultLD)) //$NON-NLS-1$
+				return true;
+			if (nIndex != -1 && !"\n".equals(defaultLD)) //$NON-NLS-1$
+				return true;
+		} else if (defaultLD.length() == 2)
+			return rIndex == -1 || nIndex - rIndex != 1;
+
+		return false;
 	}
 }

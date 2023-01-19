@@ -1,8 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
+Automatic-Module-Name: org.eclipse.wst.sse.core
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.sse.core; singleton:=true
-Bundle-Version: 1.2.900.qualifier
+Bundle-Version: 1.2.1000.qualifier
 Bundle-Activator: org.eclipse.wst.sse.core.internal.SSECorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -39,16 +40,16 @@ Export-Package: org.eclipse.wst.sse.core,
  org.eclipse.wst.sse.core.utils,
  org.eclipse.wst.sse.internal.contentproperties;x-friends:="org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.sse.ui,org.eclipse.wst.xml.core,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui"
 Require-Bundle: org.eclipse.core.resources;bundle-version="[3.13.0,4.0.0)",
- org.eclipse.text;bundle-version="[3.6.0,4.0.0)";visibility:=reexport,
- org.eclipse.core.jobs;bundle-version="[3.10.0,4.0.0)",
- org.eclipse.core.runtime;bundle-version="[3.14.0,4.0.0)",
+ org.eclipse.text;bundle-version="[3.12.0,4.0.0)";visibility:=reexport,
+ org.eclipse.core.jobs;bundle-version="[3.13.0,4.0.0)",
+ org.eclipse.core.runtime;bundle-version="[3.26.0,4.0.0)",
  org.eclipse.core.filebuffers;bundle-version="[3.6.0,4.0.0)",
  org.eclipse.wst.common.uriresolver;bundle-version="[1.2.300,2.0.0)",
  org.eclipse.emf.common;bundle-version="[2.14.0,3.0.0)",
  org.eclipse.wst.validation;bundle-version="[1.2.700,2.0.0)";resolution:=optional,
- org.eclipse.core.filesystem;bundle-version="[1.7.0,2.0.0)",
+ org.eclipse.core.filesystem;bundle-version="[1.9.0,2.0.0)",
  org.eclipse.core.expressions;bundle-version="[3.6.100,4.0.0)",
- org.eclipse.osgi.services;bundle-version="[3.7.0,4.0.0)",
+ org.eclipse.osgi.services;bundle-version="[3.11.0,4.0.0)",
  com.ibm.icu;bundle-version="72.1.0"
 Bundle-ActivationPolicy: lazy;exclude:="org.eclipse.wst.sse.core.internal.propertytester"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
