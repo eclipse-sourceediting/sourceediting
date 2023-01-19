@@ -58,6 +58,7 @@ import org.eclipse.jface.text.ILineTracker;
 import org.eclipse.jface.text.ILineTrackerExtension;
 import org.eclipse.jface.text.IPositionUpdater;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.IRepairableDocument;
 import org.eclipse.jface.text.IRepairableDocumentExtension;
 import org.eclipse.jface.text.ITextStore;
 import org.eclipse.jface.text.ITypedRegion;
@@ -91,7 +92,7 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
 /**
  * The standard implementation of structured document.
  */
-public class BasicStructuredDocument implements IStructuredDocument, IDocumentExtension, IDocumentExtension3, IDocumentExtension4, CharSequence, IRegionComparible, IRepairableDocumentExtension {
+public class BasicStructuredDocument implements IStructuredDocument, IDocumentExtension, IDocumentExtension3, IDocumentExtension4, CharSequence, IRegionComparible, IRepairableDocument, IRepairableDocumentExtension {
 
 	/**
 	 * This ThreadLocal construct is used so each thread can maintain its only
@@ -3032,5 +3033,10 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			return rIndex == -1 || nIndex - rIndex != 1;
 
 		return false;
+	}
+
+	@Override
+	public void repairLineInformation() {
+		getTracker().set(get());
 	}
 }
