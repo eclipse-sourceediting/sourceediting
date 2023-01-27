@@ -14,7 +14,6 @@
 package org.eclipse.wst.xsl.internal.debug.ui;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -281,15 +280,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 						}
 					}
 				}
-			} catch (IOException e) {
-				// ignored
-			} catch (ParserConfigurationException e) {
-				// ignored
-			} catch (SAXException e) {
-				// ignored
-			} catch (CoreException e) {
-				// ignored
-			} catch (URISyntaxException e) {
+			} catch (IOException | ParserConfigurationException | SAXException | CoreException | URISyntaxException e) {
 				// ignored
 			}
 		}
@@ -455,16 +446,8 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 			XslOutputMethodSniffer xofs = new XslOutputMethodSniffer();
 			xofs.parseContents(new InputSource(new FileInputStream(lastDef.getLocation().toFile())));
 			return xofs.getOutputMethod();
-		} catch (FileNotFoundException e) {
+		} catch (IOException | ParserConfigurationException | SAXException | CoreException e) {
 			// It's OK
-		} catch (IOException e) {
-			// It's OK
-		} catch (ParserConfigurationException e) {
-			// It's OK
-		} catch (SAXException e) {
-			// It's OK
-		} catch (CoreException e) {
-			// It really is OK!
 		}
 		return null;
 	}
