@@ -92,7 +92,7 @@ import org.xml.sax.SAXException;
  * </tr>
  * </tbody>
  * </table>
- * 
+ *
  * <p>
  * The launch shortcut should not appear in the menu for any other combination
  * of files
@@ -101,7 +101,7 @@ import org.xml.sax.SAXException;
  * In all cases, a check must be performed to find any existing launch
  * configuration that uses the selected files.
  * </p>
- * 
+ *
  * @author Doug
  * @since 1.0
  */
@@ -111,7 +111,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 	private IPath xmlFilePath;
 	private IFile[] xslFiles;
 	private String xslFilePath; // always an external path
-	private LaunchPipeline pipeline; 
+	private LaunchPipeline pipeline;
 
 	public void launch(ISelection selection, String mode) {
 		if (selection instanceof IStructuredSelection) {
@@ -123,7 +123,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 	public void launch(IEditorPart editor, String mode) {
 		IEditorInput input = editor.getEditorInput();
 		if (input != null) {
-			IFile file = (IFile) input.getAdapter(IFile.class);
+			IFile file = input.getAdapter(IFile.class);
 			if (file != null)
 				searchAndLaunch(new Object[] { file }, mode);
 		}
@@ -193,7 +193,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 	private void promptForStylesheet() {
 		// prompt for input xml file
 		final LaunchPipeline promptedPipeline = new LaunchPipeline();
-		
+
 		StatusDialog dialog = new StatusDialog(getShell()) {
 			private TransformsBlock transformsBlock = new TransformsBlock();
 
@@ -269,10 +269,10 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 					for (Map<String, String> attrs : instructions) {
 						String alternative = attrs.get("alternative"); //$NON-NLS-1$
 						if (alternative != null && alternative.equalsIgnoreCase("yes")) continue; //$NON-NLS-1$
-						
+
 						String href = attrs.get("href"); //$NON-NLS-1$
 						if (href == null) continue;
-						
+
 						// This is the one, now compute the path
 						if (new URI(href).isAbsolute()) {
 							xslFilePath = href;
@@ -293,7 +293,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 				// ignored
 			}
 		}
-		
+
 		xslFiles = xslFileList.toArray(new IFile[0]);
 		return true;
 	}
@@ -437,7 +437,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 							XSLLaunchConfigurationConstants.ATTR_DEFAULT_OUTPUT_METHOD,
 							outputFormat);
 				}
-			}			
+			}
 			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_PIPELINE,
 					pipeline.toXML());
 			if (xmlFile != null)
