@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2013 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007, 2023 Chase Technology Ltd - http://www.chasetechnology.co.uk and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     Jesper Steen Moller - Bug 404956: Launching an XML file as 'XSL Transformation' doesn't transform anything
+ *     Erik Brangs - Bug 581425: ClassCastException in XSLLaunchShortcut when trying to launch on an IAdaptable selected object
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui;
 
@@ -27,6 +28,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Adapters;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -113,10 +115,8 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 	private LaunchPipeline pipeline;
 
 	public void launch(ISelection selection, String mode) {
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection ssel = (IStructuredSelection) selection;
-			searchAndLaunch(ssel.toArray(), mode);
-		}
+		Adapters.of(selection, IStructuredSelection.class).ifPresent((ssel) ->
+					searchAndLaunch(ssel.toArray(), mode));
 	}
 
 	public void launch(IEditorPart editor, String mode) {
@@ -180,7 +180,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 				else if (ResourcesPlugin.getWorkspace().getRoot().exists(
 						res.getFullPath())
 						&& res.getType() == IResource.FILE)
-					xmlFile = (IFile) res;
+					xmlFile = Adapters.adapt(res, IFile.class);
 			}
 		};
 		dialog.setHelpAvailable(false);
@@ -242,10 +242,10 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 		List<IFile> xslFileList = new ArrayList<IFile>();
 		xslFilePath = null;
 		for (Object object : selections) {
-			IResource resource = (IResource) object;
-			if (resource.getType() == IResource.FILE) {
-				IFile file = (IFile) resource;
-				if (XSLCore.isXMLFile(file)) {
+			IResource resource = Adapters.adapt(object, IResource.class);
+			if (resource != null && resource.getType() == IResource.FILE) {
+				IFile file = Adapters.adapt(resource, IFile.class);
+				if (file != null && XSLCore.isXMLFile(file)) {
 					if (XSLCore.isXSLFile(file))
 						xslFileList.add(file);
 					else if (xmlFile == null)
