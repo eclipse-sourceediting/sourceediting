@@ -390,7 +390,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut {
 			String lastSegment = xmlFile != null ? xmlFile.getName() :  xmlFilePath != null ? xmlFilePath.lastSegment() : "XSLTransformation"; //$NON-NLS-1$
 			ILaunchConfigurationWorkingCopy wc = configType.newInstance(null,
 					getLaunchManager()
-							.generateUniqueLaunchConfigurationNameFrom(
+							.generateLaunchConfigurationName(
 									lastSegment));
 			if (xmlFile != null)
 				wc
