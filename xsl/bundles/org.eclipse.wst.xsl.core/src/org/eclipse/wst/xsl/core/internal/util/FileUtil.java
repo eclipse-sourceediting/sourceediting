@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -35,9 +35,11 @@ public class FileUtil {
 	{
 		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
+		IContentType xmlContentType = contentTypeManager.getContentType("org.eclipse.core.runtime.xml"); //$NON-NLS-1$
+		IContentType illformedXML = contentTypeManager.getContentType("org.eclipse.wst.xml.core.xmlsource"); //$NON-NLS-1$
 		for (IContentType contentType : types)
 		{
-			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.core.runtime.xml")) || contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xmlsource"))) //$NON-NLS-1$ //$NON-NLS-2$
+			if (contentType.isKindOf(xmlContentType) || contentType.isKindOf(illformedXML))
 			{
 				return true;
 			}
@@ -54,10 +56,11 @@ public class FileUtil {
 	public static boolean isXSLFile(IFile file)
 	{
 		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
+		IContentType xslContentType = contentTypeManager.getContentType(XSLCore.XSL_CONTENT_TYPE);
 		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
 		for (IContentType contentType : types)
 		{
-			if (contentType.equals(contentTypeManager.getContentType(XSLCore.XSL_CONTENT_TYPE)))
+			if (contentType.equals(xslContentType))
 			{
 				return true;
 			}
