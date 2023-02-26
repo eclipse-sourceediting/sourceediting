@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2022 IBM Corporation and others.
+ * Copyright (c) 2007, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -830,7 +830,7 @@ public final class DeploymentDescriptorPropertyCache {
 	 *         facet version and looking at available API classes and methods.
 	 */
 	private ServletAPIDescriptor discoverServletAPIVersion(IProject project) {
-		if (FacetModuleCoreSupport.isDynamicWebProject(project) || FacetModuleCoreSupport.isWebFragmentProject(project)) {
+		if (FacetModuleCoreSupport.isDynamicWebProject(project)) {
 			float version = FacetModuleCoreSupport.getDynamicWebProjectVersion(project);
 			if (version >= 5) {
 				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAKARTA_SERVLET, version, ServletAPIDescriptor.ORIGIN.FACET));
@@ -840,11 +840,23 @@ public final class DeploymentDescriptorPropertyCache {
 			}
 		}
 
+		if (FacetModuleCoreSupport.isWebFragmentProject(project)) {
+			float version = FacetModuleCoreSupport.getDynamicWebFragmentVersion(project);
+			if (version >= 5) {
+				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAKARTA_SERVLET, version, ServletAPIDescriptor.ORIGIN.FFACET));
+			}
+			if (version > 0) {
+				return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAVAX_SERVLET, version, ServletAPIDescriptor.ORIGIN.FFACET));
+			}
+		}
 		IJavaProject javaProject = JavaCore.create(project);
 		if (javaProject == null || !javaProject.exists()) {
 			return null;
 		}
 
+		if (findType(javaProject, "jakarta.servlet.ServletConnection") != null) { //$NON-NLS-1$
+			return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAKARTA_SERVLET, 6, ServletAPIDescriptor.ORIGIN.BUILD_PATH));
+		}
 		if (findType(javaProject, "jakarta.servlet.GenericFilter") != null) { //$NON-NLS-1$
 			return doCacheDescriptor(project.getName(), new ServletAPIDescriptor(JAKARTA_SERVLET, 5, ServletAPIDescriptor.ORIGIN.BUILD_PATH));
 		}

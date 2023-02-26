@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2022 IBM Corporation and others.
+ * Copyright (c) 2007, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -75,6 +75,34 @@ final class FacetModuleCoreSupportDelegate {
 				IProjectFacet webModuleFacet = ProjectFacetsManager.getProjectFacet(JST_WEB_MODULE);
 				if (faceted.hasProjectFacet(webModuleFacet)) {
 					version = Float.parseFloat(faceted.getInstalledVersion(webModuleFacet).getVersionString());
+				}
+			}
+		}
+		catch (NumberFormatException e) {
+			Logger.logException(e);
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		return version;
+	}
+
+	/**
+	 * @param project
+	 * @return the version of the JST Web Fragment facet, a default version otherwise
+	 * @throws CoreException
+	 */
+	static float getDynamicWebFragmentVersion(IProject project) {
+		if (project == null)
+			return -1;
+
+		float version = -1;
+		try {
+			IFacetedProject faceted = ProjectFacetsManager.create(project);
+			if (faceted != null && ProjectFacetsManager.isProjectFacetDefined(JST_WEBFRAGMENT_MODULE)) {
+				IProjectFacet webFragmentFacet = ProjectFacetsManager.getProjectFacet(JST_WEBFRAGMENT_MODULE);
+				if (faceted.hasProjectFacet(webFragmentFacet)) {
+					version = Float.parseFloat(faceted.getInstalledVersion(webFragmentFacet).getVersionString());
 				}
 			}
 		}

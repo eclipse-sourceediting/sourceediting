@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2022 IBM Corporation and others.
+ * Copyright (c) 2007, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -65,6 +65,23 @@ public final class FacetModuleCoreSupport {
 			root = getLocalRoot(path);
 		}
 		return root;
+	}
+
+	/**
+	 * @param project
+	 * @return the version of the JST Web Fragment facet installed on the project, -1 otherwise
+	 * @throws org.eclipse.core.runtime.CoreException
+	 */
+	public static float getDynamicWebFragmentVersion(IProject project) {
+		float version = -1;
+		try {
+			version = FacetModuleCoreSupportDelegate.getDynamicWebFragmentVersion(project);
+		}
+		catch (NoClassDefFoundError e) {
+			if (_dump_NCDFE)
+				e.printStackTrace();
+		}
+		return version;
 	}
 
 	/**
