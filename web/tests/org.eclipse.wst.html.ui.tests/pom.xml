@@ -21,7 +21,7 @@
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.wst.html.ui.tests</artifactId>
-  <version>1.1.100-SNAPSHOT</version>
+  <version>1.1.101-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
 
   <properties>
@@ -39,6 +39,11 @@
           <useUIHarness>true</useUIHarness>
           <useUIThread>true</useUIThread>
           <dependencies>
+	        <dependency>
+              <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.sdk.ide</artifactId>
+              <version>0.0.0</version>
+	        </dependency>
             <dependency>
               <type>p2-installable-unit</type>
               <artifactId>org.eclipse.equinox.event</artifactId>
