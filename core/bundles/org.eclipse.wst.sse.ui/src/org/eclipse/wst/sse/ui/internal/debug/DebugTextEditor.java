@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2018 IBM Corporation and others.
+ * Copyright (c) 2001, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -164,7 +164,7 @@ public class DebugTextEditor extends TextEditor {
 		}
 	}
 
-	String[] fShowInTargetIds = new String[]{IPageLayout.ID_RES_NAV};
+	String[] fShowInTargetIds = new String[]{IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.ID_OUTLINE};
 	private IShowInTargetList fShowInTargetListAdapter = new ShowInTargetLister();
 
 	IDocumentProvider fStorageInputDocumentProvider = null;
@@ -232,9 +232,6 @@ public class DebugTextEditor extends TextEditor {
 			}
 		}
 
-		if (!allIds.contains(IPageLayout.ID_RES_NAV)) {
-			allIds.add(IPageLayout.ID_RES_NAV);
-		}
 		return (String[]) allIds.toArray(new String[0]);
 	}
 

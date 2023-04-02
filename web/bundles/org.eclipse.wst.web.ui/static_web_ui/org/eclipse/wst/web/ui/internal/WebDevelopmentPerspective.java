@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2021 IBM Corporation and others.
+ * Copyright (c) 2006, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -34,10 +34,10 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 	protected static final String BOTTOM_LOCATION = "bottom"; //$NON-NLS-1$
 
 	// view id's
-	protected static String ID_PROJECT_EXPLORER = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-1$
 	protected static final String ID_SERVER = "org.eclipse.wst.server.ui.ServersView"; //$NON-NLS-1$
 	protected static String ID_WST_SNIPPETS_VIEW = "org.eclipse.wst.common.snippets.internal.ui.SnippetsView"; //$NON-NLS-1$
 	private static final String ID_TERMINAL_VIEW = "org.eclipse.tm.terminal.view.ui.TerminalsView"; //$NON-NLS-1$
+	String fExplorerViewID = IPageLayout.ID_PROJECT_EXPLORER;
 
 	public WebDevelopmentPerspective() {
 		super();
@@ -46,7 +46,7 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 		if (viewerID != null) {
 			// verify that the view actually exists
 			if (PlatformUI.getWorkbench().getViewRegistry().find(viewerID) != null){
-				ID_PROJECT_EXPLORER = viewerID;
+				fExplorerViewID = viewerID;
 			}
 		}
 	}
@@ -82,8 +82,7 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 		// LEFT Area (Project Explorer)
 		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION,
 				IPageLayout.LEFT, 0.25f, editorArea);
-		topLeft.addView(ID_PROJECT_EXPLORER);
-		topLeft.addPlaceholder(IPageLayout.ID_RES_NAV);
+		topLeft.addView(fExplorerViewID);
 
 		// TOP RIGHT Area (Outline)
 		IFolderLayout topRight = layout.createFolder(TOP_RIGHT_LOCATION,
@@ -101,8 +100,12 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 		bottom.addPlaceholder(NewSearchUI.SEARCH_VIEW_ID);
 		bottom.addPlaceholder(IConsoleConstants.ID_CONSOLE_VIEW);
 		bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
-		bottom.addPlaceholder(IProgressConstants.PROGRESS_VIEW_ID);
 		bottom.addPlaceholder(IPageLayout.ID_TASK_LIST);
+		String allMarkersViewId = "org.eclipse.ui.views.AllMarkersView"; //$NON-NLS-1$
+		if (PlatformUI.getWorkbench().getViewRegistry().find(allMarkersViewId) != null) {
+			bottom.addPlaceholder(allMarkersViewId);
+		}
+		bottom.addPlaceholder(IProgressConstants.PROGRESS_VIEW_ID);
 		addViewIfPresent(bottom, ID_TERMINAL_VIEW);
 	}
 

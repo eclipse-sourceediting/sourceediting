@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -70,7 +70,7 @@ public class ShowInNavigatorAction extends JsElementActionProxy {
 		}
 		try {
 			IWorkbenchPage page = targetWorkbenchPart.getSite().getPage();
-			IViewPart view = page.showView(IPageLayout.ID_RES_NAV);
+			IViewPart view = page.showView(IPageLayout.ID_PROJECT_EXPLORER);
 			if (view instanceof ISetSelectionTarget) {
 				ISelection selection = new StructuredSelection(resource);
 				((ISetSelectionTarget) view).selectReveal(selection);

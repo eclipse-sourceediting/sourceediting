@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2020 IBM Corporation and others.
+ * Copyright (c) 2001, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -1645,7 +1645,7 @@ public class StructuredTextEditor extends TextEditor {
 			if (viewID != null) {
 				// make sure the specified view ID is known
 				if (PlatformUI.getWorkbench().getViewRegistry().find(viewID) != null) {
-					fShowInTargetIds = new String[]{viewID, IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.ID_RES_NAV, IPageLayout.ID_OUTLINE};
+					fShowInTargetIds = new String[]{viewID, IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.ID_OUTLINE};
 				}
 			}
 		}
@@ -1688,9 +1688,6 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 
-		if (!allIds.contains(IPageLayout.ID_RES_NAV)) {
-			allIds.add(IPageLayout.ID_RES_NAV);
-		}
 		if (!allIds.contains(IPageLayout.ID_PROJECT_EXPLORER)) {
 			allIds.add(IPageLayout.ID_PROJECT_EXPLORER);
 		}
