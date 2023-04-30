@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009, 2023 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -106,6 +106,7 @@ import org.eclipse.wst.xml.xpath2.processor.util.StaticContextBuilder;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
@@ -670,7 +671,25 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 			if (aat instanceof NodeType) {
 				NodeType nodeType = (NodeType) aat;
 				Node node = nodeType.node_value();
-				serializer.write(node, outputText);
+//				assertTrue("Serializer " + serializer + " failed to serialize " + node.getClass().getName() + " " + node, serializer.write(node, outputText));
+				if (!serializer.write(node, outputText)) {
+					switch(node.getNodeType()) {
+						case Node.COMMENT_NODE:
+							outputText.getByteStream().write("<!--".getBytes("UTF-8"));
+							outputText.getByteStream().write(node.getNodeValue().getBytes("UTF-8"));
+							outputText.getByteStream().write("-->".getBytes("UTF-8"));
+							break;
+						case Node.PROCESSING_INSTRUCTION_NODE:
+							outputText.getByteStream().write("<?".getBytes("UTF-8"));
+							outputText.getByteStream().write(((ProcessingInstruction)node).getTarget().getBytes("UTF-8"));
+							outputText.getByteStream().write(" ".getBytes("UTF-8"));
+							outputText.getByteStream().write(node.getNodeValue().getBytes("UTF-8"));
+							outputText.getByteStream().write("?>".getBytes("UTF-8"));
+							break;
+						default:
+						outputText.getByteStream().write(node.getNodeValue().getBytes("UTF-8"));
+					}
+				}
 				queueSpace = false;
 			} else {
 				if (queueSpace) outputText.getByteStream().write(32);
@@ -680,7 +699,9 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		}
 
 		actual = outputStream.toString("UTF-8");
+		actual = actual.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n", "");
 		actual = actual.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
+		actual = actual.replace("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n", "");
 		actual = actual.replace("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>", "");
 		outputStream.close();
 		return actual.trim();
