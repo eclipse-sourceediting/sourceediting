@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE Invoice PUBLIC "InvoiceId" "http://www.eclipse.org/webtools/wst/components/xsd/tests/dtd-references/Invoice.dtd">
+<!DOCTYPE Invoice PUBLIC "InvoiceId" "https://www.eclipse.org/webtools/wst/components/xsd/tests/dtd-references/Invoice.dtd">
 <Invoice>
   <Header invoiceNumber="12345">
     <Date>
