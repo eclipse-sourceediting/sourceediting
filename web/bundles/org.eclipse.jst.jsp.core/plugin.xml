@@ -167,7 +167,6 @@
 	<!--======================================================================================-->
         <content-type
 			file-extensions="jsp"
-			priority="high"
 			name="%contentTypeCSSJSPName"
 			id="org.eclipse.jst.jsp.core.cssjspsource"
 			base-type="org.eclipse.jst.jsp.core.jspsource">
@@ -176,7 +175,6 @@
 		</content-type>
         <content-type
 	        file-extensions="jspf"
-			priority="high"
 			name="%contentTypeCSSJSPFName"
 			id="org.eclipse.jst.jsp.core.cssjspfragmentsource"
 			base-type="org.eclipse.jst.jsp.core.cssjspsource">
