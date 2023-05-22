@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -33,22 +33,22 @@ public class ClassPatternRegistry {
 
 	private static ClassPatternRegistry fInstance = null;
 
-	private Map fPatterns = null;
+	private Map<String,Set<String>> fPatterns = null;
 
 	private ClassPatternRegistry() {
 		IExtensionRegistry registry = RegistryFactory.getRegistry();
 		if (registry != null) {
 			IConfigurationElement[] elements = RegistryFactory.getRegistry().getConfigurationElementsFor(JSPUIPlugin.ID, "classPatternProvider"); //$NON-NLS-1$
-			fPatterns = new HashMap(elements.length);
+			fPatterns = new HashMap<>(elements.length);
 			for (int i = 0; i < elements.length; i++) {
 				final IConfigurationElement element = elements[i];
 				final String contentType = element.getAttribute("contentType"); //$NON-NLS-1$
 				final String pattern = element.getAttribute("pattern"); //$NON-NLS-1$
 				if (pattern != null && contentType != null) {
 					final StringTokenizer tokenizer = new StringTokenizer(pattern, ","); //$NON-NLS-1$
-					Set patterns = (Set) fPatterns.get(contentType);
+					Set<String> patterns = fPatterns.get(contentType);
 					if (patterns == null) {
-						patterns = new HashSet(0);
+						patterns = new HashSet<>(0);
 						fPatterns.put(contentType, patterns);
 					}
 
@@ -73,13 +73,14 @@ public class ClassPatternRegistry {
 	public String getClassPattern(String contentType) {
 		if (fPatterns == null)
 			return null;
-		final Set patterns = (Set) fPatterns.get(contentType);
+		final Set<String> patterns = fPatterns.get(contentType);
 		if (patterns != null) {
-			final Iterator it = patterns.iterator();
-			final StringBuffer buffer = new StringBuffer();
+			final Iterator<String> it = patterns.iterator();
+			final StringBuilder buffer = new StringBuilder();
 			while (it.hasNext()) {
-				if (buffer.length() > 0)
+				if (buffer.length() > 0) {
 					buffer.append(',');
+				}
 				buffer.append(it.next());
 			}
 			return buffer.toString();
@@ -87,17 +88,17 @@ public class ClassPatternRegistry {
 		return null;
 	}
 
-	public Iterator getClassPatternSegments(String contentType) {
-		Iterator result = EMPTY;
+	public Iterator<String> getClassPatternSegments(String contentType) {
+		Iterator<String> result = EMPTY;
 		if (fPatterns != null) {
-			Set patterns = (Set) fPatterns.get(contentType);
+			Set<String> patterns = fPatterns.get(contentType);
 			if (patterns != null)
 				result = patterns.iterator();
 		}
 		return result;
 	}
 
-	private static final Iterator EMPTY = new Iterator() {
+	private static final Iterator<String> EMPTY = new Iterator<String>() {
 
 		/* (non-Javadoc)
 		 * @see java.util.Iterator#hasNext()
@@ -109,7 +110,7 @@ public class ClassPatternRegistry {
 		/* (non-Javadoc)
 		 * @see java.util.Iterator#next()
 		 */
-		public Object next() {
+		public String next() {
 			return null;
 		}
 

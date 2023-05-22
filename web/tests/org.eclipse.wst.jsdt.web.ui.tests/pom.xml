@@ -60,7 +60,7 @@
                 </requirement>
                 <requirement>
                   <type>eclipse-plugin</type>
-                  <id>org.eclipse.jst.jsp.core</id>
+                  <id>org.eclipse.jst.jsp.ui</id>
                   <versionRange>0.0.0</versionRange>
                 </requirement>
                 <requirement>

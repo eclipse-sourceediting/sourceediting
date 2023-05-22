@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2015 IBM Corporation and others.
+ * Copyright (c) 2008, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -33,11 +33,11 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
+import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -230,22 +230,37 @@ public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		if (region != null && textViewer != null) {
 			IDocument document = textViewer.getDocument();
-			// find hyperlink range for Java element
-			IRegion hyperlinkRegion = region.getLength() > 0 ? region : selectQualifiedName(document, region.getOffset());
-			if (hyperlinkRegion == null || // Bug #462949 - Because selectQualifiedName may return null
-					isJspJavaContent(document, hyperlinkRegion)) { // Handled by JSPJavaHyperlinkDetector
-				return null;
-			}
-			String name = null;
-			try {
-				name = document.get(hyperlinkRegion.getOffset(), hyperlinkRegion.getLength()).trim();
-			}
-			catch (BadLocationException e) {
-			}
-			if (name != null) {
-				IHyperlink link = createHyperlink(name, hyperlinkRegion, document);
-				if (link != null)
-					return new IHyperlink[]{link};
+			ITextFileBuffer textFileBuffer = FileBuffers.getTextFileBufferManager().getTextFileBuffer(document);
+			if (textFileBuffer != null) {
+				IPath basePath = textFileBuffer.getLocation();
+				if (basePath != null && !basePath.isEmpty()) {
+					IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(basePath.segment(0));
+					try {
+						if (basePath.segmentCount() > 1 && project.isAccessible() && project.hasNature(JavaCore.NATURE_ID)) {
+							// find hyperlink range for Java element
+							IRegion hyperlinkRegion = region.getLength() > 0 ? region : selectQualifiedName(document, region.getOffset());
+							if (hyperlinkRegion == null || // Bug #462949 - Because selectQualifiedName may return null
+									isJspJavaContent(document, hyperlinkRegion)) { // Handled by JSPJavaHyperlinkDetector
+								return null;
+							}
+							String name = null;
+							try {
+								name = document.get(hyperlinkRegion.getOffset(), hyperlinkRegion.getLength()).trim();
+							}
+							catch (BadLocationException e) {
+							}
+							if (name != null && !name.isEmpty()) {
+								IHyperlink link = createHyperlink(name, hyperlinkRegion, document);
+								if (link != null) {
+									return new IHyperlink[]{link};
+								}
+							}
+						}
+					}
+					catch (CoreException e) {
+						Logger.logException(e);
+					}
+				}
 			}
 		}
 
