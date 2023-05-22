@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2022 IBM Corporation and others.
+ * Copyright (c) 2004, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -130,7 +130,7 @@ public class JSPTranslator implements Externalizable {
 	 * @see #writeRanges(ObjectOutput, HashMap)
 	 * @see #readRanges(ObjectInput)
 	 */
-	private static final long serialVersionUID = 5L;
+	private static final long serialVersionUID = 6L;
 	
 	/** for debugging */
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping")).booleanValue(); //$NON-NLS-1$
@@ -742,6 +742,9 @@ public class JSPTranslator implements Externalizable {
 				// if its the default supertype, and it was based on the facet, mention that
 				if (fIsDefaultSuperclass && fServletAPIDescriptor.getOrigin().equals(ServletAPIDescriptor.ORIGIN.FACET)) {
 					problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPDirectiveValidator_13, errorTypeNames.get(i).toString(), String.valueOf(fServletAPIDescriptor.getAPIversion())), 0, 1);					
+				}
+				else if (fIsDefaultSuperclass && fServletAPIDescriptor.getOrigin().equals(ServletAPIDescriptor.ORIGIN.FFACET)) {
+					problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPDirectiveValidator_14, errorTypeNames.get(i).toString(), String.valueOf(fServletAPIDescriptor.getAPIversion())), 0, 1);
 				}
 				fTranslationProblems.add(problem);
 			}

@@ -602,7 +602,7 @@ public final class DeploymentDescriptorPropertyCache {
 	private static final boolean _debugResolutionCache = false;
 
 	// Java Servlet API version
-	static final float DEFAULT_WEBAPP_VERSION = 5f; // Jakarta EE 9
+	static final float DEFAULT_WEBAPP_VERSION = 6f; // Jakarta EE 10
 
 	static final String EL_IGNORED = "el-ignored"; //$NON-NLS-1$
 	static final String ID = "id"; //$NON-NLS-1$
@@ -795,6 +795,10 @@ public final class DeploymentDescriptorPropertyCache {
 	 */
 	private float convertSpecVersions(float version) {
 		if (version > 0) {
+			if (version == 6.1f)
+				return 4f;
+			if (version == 6f)
+				return 3.1f;
 			if (version == 5f)
 				return 3f;
 			if (version == 4f)

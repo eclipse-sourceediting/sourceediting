@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2018 IBM Corporation and others.
+ * Copyright (c) 2004, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.util.FileContentCache;
+import org.eclipse.jst.jsp.css.core.internal.parserz.JSPedCSSRegionContexts;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
@@ -217,7 +218,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 					processUseBean(sdRegion);
 				}
 			}
-			else if (sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_CONTENT || sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_CONTENT) {
+			else if (sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_CONTENT || sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_CONTENT || sdRegion.getFirstRegion().getType() == JSPedCSSRegionContexts.CSS_JSP_SCRIPTLET || sdRegion.getFirstRegion().getType() == JSPedCSSRegionContexts.CSS_JSP_EXP || sdRegion.getFirstRegion().getType() == JSPedCSSRegionContexts.CSS_JSP_DECL) {
 				// this section assumes important content (to translate)
 				// is AFTER the opening tag
 				if (fTagname != null) {
@@ -234,14 +235,14 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				}
 				else {
 					final String previousType = sdRegion.getPrevious() != null ? sdRegion.getPrevious().getType() : null;
-					if (previousType != null) {
-						if (DOMJSPRegionContexts.JSP_EXPRESSION_OPEN.equals(previousType)) {
+					if (previousType != null || sdRegion.getPrevious() == null) {
+						if (DOMJSPRegionContexts.JSP_EXPRESSION_OPEN.equals(previousType) || JSPedCSSRegionContexts.CSS_JSP_EXP.equals(sdRegion.getFirstRegion().getType())) {
 							processExpression(sdRegion, true);
 						}
-						else if (DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN.equals(previousType)) {
+						else if (DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN.equals(previousType) || JSPedCSSRegionContexts.CSS_JSP_SCRIPTLET.equals(sdRegion.getFirstRegion().getType())) {
 							processScriptlet(sdRegion, true);
 						}
-						else if (DOMJSPRegionContexts.JSP_DECLARATION_OPEN.equals(previousType)) {
+						else if (DOMJSPRegionContexts.JSP_DECLARATION_OPEN.equals(previousType) || JSPedCSSRegionContexts.CSS_JSP_DECL.equals(sdRegion.getFirstRegion().getType())) {
 							processDeclaration(sdRegion, true);
 						}
 					}

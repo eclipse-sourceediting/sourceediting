@@ -36,7 +36,7 @@ public class ServletAPIDescriptor {
 		 **/
 		DEFAULT
 	}
-	public static final ServletAPIDescriptor DEFAULT = new ServletAPIDescriptor("jakarta.servlet", 5, ORIGIN.DEFAULT);
+	public static final ServletAPIDescriptor DEFAULT = new ServletAPIDescriptor("jakarta.servlet", 6, ORIGIN.DEFAULT);
 	private ORIGIN fOrigin;
 
 	String fRootPackage;
