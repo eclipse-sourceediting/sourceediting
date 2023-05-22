@@ -109,7 +109,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		// this arrayList needs to be bounded, or 'cleaned up'.
 		// this assumption should be tested in practice and long running
 		// jobs -- found not to be a good assumption. See below.
-		private List cachedRegionPositionArray = Collections.synchronizedList(new ArrayList());
+		private List<IStructuredDocumentRegion> cachedRegionPositionArray = Collections.synchronizedList(new ArrayList<>());
 		private final boolean DEBUG = false;
 		private static final int MAX_SIZE = 50;
 
@@ -120,7 +120,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			IStructuredDocumentRegion region = null;
 			int pos = getThreadLocalPosition();
 			try {
-				region = (IStructuredDocumentRegion) cachedRegionPositionArray.get(pos);
+				region = cachedRegionPositionArray.get(pos);
 			}
 			catch (IndexOutOfBoundsException e) {
 				// even though the cachedRegionPosition is synchronized,
@@ -280,11 +280,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 */
 	private Map fDocumentPartitioners;
 	/** The registered document partitioning listeners */
-	private List fDocumentPartitioningListeners;
+	private List<IDocumentPartitioningListener> fDocumentPartitioningListeners;
 	private IStructuredDocumentRegion firstDocumentRegion;
 	private RegionParser fParser;
 	private GenericPositionManager fPositionManager;
-	private List fPostNotificationChanges;
+	private List<RegisteredReplace> fPostNotificationChanges;
 	private IDocumentListener[] fPrenotifiedDocumentListeners;
 	private int fReentranceCount = 0;
 	private IStructuredTextReParser fReParser;
@@ -295,7 +295,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	private Object[] fStructuredDocumentChangedListeners;
 	private Object[] fStructuredDocumentChangingListeners;
 
-	private List fDocumentRewriteSessionListeners;
+	private List<IDocumentRewriteSessionListener> fDocumentRewriteSessionListeners;
 
 	private ILineTracker fTracker;
 	private IStructuredTextUndoManager fUndoManager;
@@ -843,7 +843,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 			Assert.isNotNull(listener);
 			if (fDocumentPartitioningListeners == null) {
-				fDocumentPartitioningListeners = new ArrayList(1);
+				fDocumentPartitioningListeners = new ArrayList<>(1);
 			}
 			if (!fDocumentPartitioningListeners.contains(listener))
 				fDocumentPartitioningListeners.add(listener);
@@ -1099,11 +1099,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		if (fStoppedCount > 0)
 			return;
 		while (fPostNotificationChanges != null) {
-			List changes = fPostNotificationChanges;
+			List<RegisteredReplace> changes = fPostNotificationChanges;
 			fPostNotificationChanges = null;
-			Iterator e = changes.iterator();
+			Iterator<RegisteredReplace> e = changes.iterator();
 			while (e.hasNext()) {
-				RegisteredReplace replace = (RegisteredReplace) e.next();
+				RegisteredReplace replace = e.next();
 				replace.fReplace.perform(this, replace.fOwner);
 			}
 		}
@@ -1137,10 +1137,10 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		if (fDocumentPartitioningListeners == null || fDocumentPartitioningListeners.size() == 0)
 			return;
 
-		List list = new ArrayList(fDocumentPartitioningListeners);
-		Iterator e = list.iterator();
+		List<IDocumentPartitioningListener> list = new ArrayList<>(fDocumentPartitioningListeners);
+		Iterator<IDocumentPartitioningListener> e = list.iterator();
 		while (e.hasNext()) {
-			IDocumentPartitioningListener l = (IDocumentPartitioningListener) e.next();
+			IDocumentPartitioningListener l = e.next();
 			if (l instanceof IDocumentPartitioningListenerExtension2) {
 				IDocumentPartitioningListenerExtension2 extension2 = (IDocumentPartitioningListenerExtension2) l;
 				extension2.documentPartitioningChanged(event);
@@ -1256,7 +1256,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		return result;
 	}
 
-	public Object getAdapter(Class adapter) {
+	public <T> T getAdapter(Class<T> adapter) {
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
@@ -1677,7 +1677,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				}
 				else {
 					// search towards end
-					// There is a legitamat condition where the
+					// There is a legitimate condition where the
 					// offset will not be contained in any node,
 					// which is if the offset is just past the last
 					// character of text.
@@ -1771,7 +1771,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		if (length > 0)
 			length--;
 
-		List results = new ArrayList();
+		List<IStructuredDocumentRegion> results = new ArrayList<>();
 
 		// start thread safe block
 		try {
@@ -1793,7 +1793,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		}
 		// end thread safe block
 
-		return (IStructuredDocumentRegion[]) results.toArray(new IStructuredDocumentRegion[results.size()]);
+		return results.toArray(new IStructuredDocumentRegion[results.size()]);
 	}
 
 	/**
@@ -2016,7 +2016,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @see java.lang.CharSequence#length()
 	 */
 	public int length() {
-
 		return getLength();
 	}
 	
@@ -2115,7 +2114,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public void registerPostNotificationReplace(IDocumentListener owner, IDocumentExtension.IReplace replace) {
 		if (fAcceptPostNotificationReplaces) {
 			if (fPostNotificationChanges == null)
-				fPostNotificationChanges = new ArrayList(1);
+				fPostNotificationChanges = new ArrayList<>(1);
 			fPostNotificationChanges.add(new RegisteredReplace(owner, replace));
 		}
 	}
@@ -2812,7 +2811,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 */
 	final void startRewriteSessionOnPartitioners(DocumentRewriteSession session) {
 		if (fDocumentPartitioners != null) {
-			Iterator e= fDocumentPartitioners.values().iterator();
+			Iterator<IDocumentPartitioner> e= fDocumentPartitioners.values().iterator();
 			while (e.hasNext()) {
 				Object partitioner= e.next();
 				if (partitioner instanceof IDocumentPartitionerExtension3) {
@@ -2864,9 +2863,9 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	final void stopRewriteSessionOnPartitioners(DocumentRewriteSession session) {
 		if (fDocumentPartitioners != null) {
 			DocumentPartitioningChangedEvent event= new DocumentPartitioningChangedEvent(this);
-			Iterator e= fDocumentPartitioners.keySet().iterator();
+			Iterator<String> e= fDocumentPartitioners.keySet().iterator();
 			while (e.hasNext()) {
-				String partitioning= (String) e.next();
+				String partitioning= e.next();
 				IDocumentPartitioner partitioner= (IDocumentPartitioner) fDocumentPartitioners.get(partitioning);
 				if (partitioner instanceof IDocumentPartitionerExtension3) {
 					IDocumentPartitionerExtension3 extension= (IDocumentPartitionerExtension3) partitioner;
@@ -2897,7 +2896,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		synchronized (listenerLock) {
 			Assert.isNotNull(listener);
 			if (fDocumentRewriteSessionListeners == null) {
-				fDocumentRewriteSessionListeners = new ArrayList(1);
+				fDocumentRewriteSessionListeners = new ArrayList<>(1);
 			}
 			if (!fDocumentRewriteSessionListeners.contains(listener))
 				fDocumentRewriteSessionListeners.add(listener);
@@ -2911,7 +2910,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 */
 	public void removeDocumentRewriteSessionListener(IDocumentRewriteSessionListener listener) {
 		synchronized (listenerLock) {
-
 			Assert.isNotNull(listener);
 			if (fDocumentRewriteSessionListeners != null)
 				fDocumentRewriteSessionListeners.remove(listener);

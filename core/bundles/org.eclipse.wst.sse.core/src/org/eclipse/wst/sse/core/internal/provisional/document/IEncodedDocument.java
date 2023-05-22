@@ -21,7 +21,7 @@ import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
  * This interface is strictly to define important "document properties" not
  * found in IDocument, but not central to "StructuredDocument".
  * 
- * Its not to be be implmented by clients.
+ * It's not to be be implemented by clients.
  * 
  * @plannedfor 1.0
  */
