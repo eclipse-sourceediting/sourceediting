@@ -816,7 +816,7 @@
                         label="%category.label"
                         smallicon="icons/full/obj16/tag-html.gif"
                         id="org.eclipse.wst.html.ui.category0"
-                        contenttypes="org.eclipse.wst.html.core.htmlsource,org.eclipse.wildwebdeveloper.html">
+                        contenttypes="org.eclipse.wst.html.core.htmlsource">
                         <item
                                 label="%nbsp.label"
                                 id="org.eclipse.wst.html.ui.nbsp">
