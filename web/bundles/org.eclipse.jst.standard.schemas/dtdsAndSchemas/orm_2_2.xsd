@@ -2333,4 +2333,4 @@
     <xsd:attribute name="access" type="orm:access-type"/>
   </xsd:complexType>
 
-</xsd:schema>ma>
+</xsd:schema>
