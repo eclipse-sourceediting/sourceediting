@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014, 2017 IBM Corporation and others.
+ * Copyright (c) 2014, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -32,8 +32,8 @@ public class WebContainerInitializer extends ClasspathContainerInitializer {
 	public void initialize(final IPath containerPath, IJavaProject project) throws CoreException {
 		if (bundles == null) {
 			try {
-				IClasspathEntry servlet = JavaCore.newLibraryEntry(new Path(FileLocator.getBundleFile(Platform.getBundle("javax.servlet")).getAbsolutePath()), null, null);
-				IClasspathEntry jsp = JavaCore.newLibraryEntry(new Path(FileLocator.getBundleFile(Platform.getBundle("javax.servlet.jsp")).getAbsolutePath()), null, null);
+				IClasspathEntry servlet = JavaCore.newLibraryEntry(new Path(FileLocator.getBundleFile(Platform.getBundle("javax.servlet-api")).getAbsolutePath()), null, null);
+				IClasspathEntry jsp = JavaCore.newLibraryEntry(new Path(FileLocator.getBundleFile(Platform.getBundle("javax.servlet.jsp-api")).getAbsolutePath()), null, null);
 				bundles = new IClasspathEntry[] {servlet, jsp};
 			}
 			catch (Exception e) {
