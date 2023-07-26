@@ -1,8 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
+Automatic-Module-Name: org.eclipse.wst.dtd.core
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.dtd.core; singleton:=true
-Bundle-Version: 1.2.501.qualifier
+Bundle-Version: 1.2.600.qualifier
 Bundle-Activator: org.eclipse.wst.dtd.core.internal.DTDCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
