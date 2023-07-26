@@ -21,7 +21,7 @@
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.wst.xml.ui</artifactId>
-  <version>1.2.700-SNAPSHOT</version>
+  <version>1.2.701-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 
   <build>

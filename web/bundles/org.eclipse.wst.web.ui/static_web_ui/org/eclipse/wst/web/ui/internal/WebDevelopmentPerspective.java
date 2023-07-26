@@ -33,10 +33,12 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 	protected static final String TOP_RIGHT_LOCATION = "topRight"; //$NON-NLS-1$
 	protected static final String BOTTOM_LOCATION = "bottom"; //$NON-NLS-1$
 
-	// view id's
-	protected static final String ID_SERVER = "org.eclipse.wst.server.ui.ServersView"; //$NON-NLS-1$
-	protected static String ID_WST_SNIPPETS_VIEW = "org.eclipse.wst.common.snippets.internal.ui.SnippetsView"; //$NON-NLS-1$
+	// view ids
+	private static final String ID_SERVER = "org.eclipse.wst.server.ui.ServersView"; //$NON-NLS-1$
+	private static String ID_WST_SNIPPETS_VIEW = "org.eclipse.wst.common.snippets.internal.ui.SnippetsView"; //$NON-NLS-1$
 	private static final String ID_TERMINAL_VIEW = "org.eclipse.tm.terminal.view.ui.TerminalsView"; //$NON-NLS-1$
+	private static final String ID_SEARCH_VIEW = "org.eclipse.search.ui.views.SearchView"; //$NON-NLS-1$
+	private static final String ID_CONSOLE_VIEW= "org.eclipse.ui.console.ConsoleView"; //$NON-NLS-1$
 	String fExplorerViewID = IPageLayout.ID_PROJECT_EXPLORER;
 
 	public WebDevelopmentPerspective() {
@@ -81,8 +83,10 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 
 		// LEFT Area (Project Explorer)
 		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION,
-				IPageLayout.LEFT, 0.25f, editorArea);
+				IPageLayout.LEFT, 0.2f, editorArea);
 		topLeft.addView(fExplorerViewID);
+		topLeft.addPlaceholder(NewSearchUI.SEARCH_VIEW_ID);
+		topLeft.addPlaceholder("org.eclipse.jdt.ui.PackagesView"); //$NON-NLS-1$
 
 		// TOP RIGHT Area (Outline)
 		IFolderLayout topRight = layout.createFolder(TOP_RIGHT_LOCATION,
@@ -92,21 +96,32 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 
 		// BOTTOM Area (Problems, Server, Properties)
 		IFolderLayout bottom = layout.createFolder(BOTTOM_LOCATION,
-				IPageLayout.BOTTOM, 0.70f, editorArea);
+				IPageLayout.BOTTOM, 0.80f, editorArea);
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
-		bottom.addView(ID_SERVER);
+		addViewIfPresent(bottom, ID_SERVER);
+		addViewIfPresent(bottom, ID_TERMINAL_VIEW);
 		bottom.addView(IPageLayout.ID_PROP_SHEET);
-		bottom.addView(ID_WST_SNIPPETS_VIEW);
-		bottom.addPlaceholder(NewSearchUI.SEARCH_VIEW_ID);
+		bottom.addPlaceholder(ID_WST_SNIPPETS_VIEW);
 		bottom.addPlaceholder(IConsoleConstants.ID_CONSOLE_VIEW);
 		bottom.addPlaceholder(IPageLayout.ID_BOOKMARKS);
 		bottom.addPlaceholder(IPageLayout.ID_TASK_LIST);
 		String allMarkersViewId = "org.eclipse.ui.views.AllMarkersView"; //$NON-NLS-1$
-		if (PlatformUI.getWorkbench().getViewRegistry().find(allMarkersViewId) != null) {
-			bottom.addPlaceholder(allMarkersViewId);
-		}
+		bottom.addPlaceholder(allMarkersViewId);
 		bottom.addPlaceholder(IProgressConstants.PROGRESS_VIEW_ID);
-		addViewIfPresent(bottom, ID_TERMINAL_VIEW);
-	}
 
+
+		layout.addActionSet(IPageLayout.ID_NAVIGATE_ACTION_SET);
+		layout.addShowViewShortcut(IPageLayout.ID_BOOKMARKS);
+		layout.addShowViewShortcut(IPageLayout.ID_OUTLINE);
+		layout.addShowViewShortcut(IPageLayout.ID_PROP_SHEET);
+		layout.addShowViewShortcut(IPageLayout.ID_PROJECT_EXPLORER);
+		layout.addShowViewShortcut(ID_WST_SNIPPETS_VIEW);
+		layout.addShowViewShortcut(IPageLayout.ID_PROBLEM_VIEW);
+		layout.addShowViewShortcut(ID_TERMINAL_VIEW);
+		
+		// views - search
+		layout.addShowViewShortcut(ID_SEARCH_VIEW);
+		// views - debugging
+		layout.addShowViewShortcut(ID_CONSOLE_VIEW);
+	}
 }
