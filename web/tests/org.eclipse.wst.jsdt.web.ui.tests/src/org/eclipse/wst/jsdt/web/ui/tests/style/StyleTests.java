@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 IBM Corporation and others.
+ * Copyright (c) 2009, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -14,8 +14,6 @@
 package org.eclipse.wst.jsdt.web.ui.tests.style;
 
 import java.io.ByteArrayInputStream;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -38,6 +36,8 @@ import org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.launching.JavaRuntime;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
+
+import junit.framework.TestCase;
 
 /**
  * @author nitin
@@ -90,7 +90,7 @@ public class StyleTests extends TestCase {
 			assertTrue("editor Control adapter is not a StyledText widget", control instanceof StyledText);
 			int varIndex = contents.indexOf("var");
 			StyleRange[] styleRanges = ((StyledText) control).getStyleRanges(varIndex, 3);
-			assertTrue("no style range for 'var' keyword (this test may fail due to unpredictable timing issues with the test workbench)", styleRanges.length > 0);
+			assertTrue("no style range for 'var' keyword in " + editor.getClass().getName() + " (this test may fail due to unpredictable timing issues with the test workbench)", styleRanges.length > 0);
 			assertNotNull("no foreground color for 'var' keyword", styleRanges[0].foreground);
 			assertNotSame("foreground color has same RGB as black", PlatformUI.getWorkbench().getDisplay().getSystemColor(SWT.COLOR_BLACK).getRGB(), styleRanges[0].foreground.getRGB());
 		}

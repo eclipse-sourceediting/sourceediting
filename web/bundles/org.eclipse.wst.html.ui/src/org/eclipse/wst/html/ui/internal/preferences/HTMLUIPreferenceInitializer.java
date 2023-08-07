@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2020 IBM Corporation and others.
+ * Copyright (c) 2006, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -147,7 +147,7 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(AppearancePreferenceNames.FOLDING_ENABLED, true);
 		
 		// set default for show message dialog when unknown content type in editor
-		store.setDefault(AppearancePreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG, true);
+		store.setDefault(AppearancePreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG, false);
 
 		store.setDefault(AppearancePreferenceNames.SEMANTIC_HIGHLIGHTING, true);
 
