@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2017 IBM Corporation and others.
+ * Copyright (c) 2007, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -154,6 +154,7 @@ public class TestJSPContentFormatter extends TestCase {
 		try {
 			IModelManager modelManager = StructuredModelManager.getModelManager();
 			model = modelManager.getModelForEdit(file);
+			assertNotNull("No model created for file type " + file.getContentDescription().getContentType().getId(), model);
 		}
 		catch (CoreException ce) {
 			ce.printStackTrace();

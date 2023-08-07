@@ -1,6 +1,9 @@
 Manifest-Version: 1.0
-Require-Bundle: javax.servlet,javax.servlet.jsp
+Import-package: jakarta.servlet,
+ jakarta.servlet.http,
+ jakarta.servlet.jsp,
+ jakarta.servlet.jsp.tagext
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: jspx_javaVariable_includes; singleton:=true
 Bundle-Version: 1.1
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17

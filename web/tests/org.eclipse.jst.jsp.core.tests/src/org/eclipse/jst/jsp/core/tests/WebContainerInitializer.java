@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.tests;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -29,12 +31,19 @@ public class WebContainerInitializer extends ClasspathContainerInitializer {
 	public WebContainerInitializer() {
 	}
 
+	private IClasspathEntry getBundleEntry(String bundleName) throws IOException {
+		return JavaCore.newLibraryEntry(new Path(FileLocator.getBundleFile(Platform.getBundle(bundleName)).getAbsolutePath()), null, null);
+	}
+
 	public void initialize(final IPath containerPath, IJavaProject project) throws CoreException {
 		if (bundles == null) {
 			try {
-				IClasspathEntry servlet = JavaCore.newLibraryEntry(new Path(FileLocator.getBundleFile(Platform.getBundle("javax.servlet-api")).getAbsolutePath()), null, null);
-				IClasspathEntry jsp = JavaCore.newLibraryEntry(new Path(FileLocator.getBundleFile(Platform.getBundle("javax.servlet.jsp-api")).getAbsolutePath()), null, null);
-				bundles = new IClasspathEntry[] {servlet, jsp};
+				bundles = new IClasspathEntry[] {
+							getBundleEntry("jakarta.servlet.jsp"),
+							getBundleEntry("jakarta.servlet"),
+							getBundleEntry("jakarta.servlet-api"),
+							getBundleEntry("javax.servlet.jsp-api")
+						};
 			}
 			catch (Exception e) {
 				bundles = new IClasspathEntry[0];

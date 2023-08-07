@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.jst.jsp.core.tests;singleton:=true
-Bundle-Version: 1.1.101.qualifier
+Bundle-Version: 1.1.200.qualifier
 Bundle-Activator: org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
@@ -25,7 +25,9 @@ Export-Package: org.eclipse.jst.jsp.core.tests,
 Import-Package: org.w3c.dom.css,
  org.w3c.dom.stylesheets,
  javax.servlet,
- javax.servlet.jsp
+ javax.servlet.jsp,
+ jakarta.servlet,
+ jakarta.servlet.jsp
 Require-Bundle: org.junit;bundle-version="[3.8.2,5.0.0)",
  org.eclipse.pde.core,
  org.eclipse.update.configurator,
