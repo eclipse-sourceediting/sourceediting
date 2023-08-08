@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2017 IBM Corporation and others.
+ * Copyright (c) 2004, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -63,8 +63,8 @@ public class JSPJavaTranslatorTest extends TestCase {
 				// translatedCursorPosition, 519, translatedCursorPosition);
 				// assertEquals("translation was incorrect", "testJspString",
 				// translation.substring(519, 532));
-				int cursorStart = translation.indexOf("out.print( testJspString );" ) + 10;
-				assertEquals("incorrect cursor position >" + cursorStart, 914, cursorStart);
+				int cursorStart = translation.indexOf("out.print( testJspString );" );
+				assertEquals("incorrect cursor position >" + cursorStart, 928, cursorStart);
 			}
 			sm.releaseFromRead();
 		}
