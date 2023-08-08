@@ -29,4 +29,39 @@
     <testSuite>${project.artifactId}</testSuite>
     <testClass>org.eclipse.jst.jsp.core.tests.JSPCoreTestSuite</testClass>
   </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <configuration>
+          <dependency-resolution>
+             <extraRequirements>
+                <requirement>
+                  <type>eclipse-plugin</type>
+                  <id>jakarta.servlet.jsp</id>
+                  <versionRange>0.0.0</versionRange>
+                </requirement>
+                <requirement>
+                  <type>eclipse-plugin</type>
+                  <id>jakarta.servlet</id>
+                  <versionRange>0.0.0</versionRange>
+                </requirement>
+                <requirement>
+                  <type>eclipse-plugin</type>
+                  <id>jakarta.servlet-api</id>
+                  <versionRange>0.0.0</versionRange>
+                </requirement>
+                <requirement>
+                  <type>eclipse-plugin</type>
+                  <id>javax.servlet.jsp-api</id>
+                  <versionRange>0.0.0</versionRange>
+                </requirement>
+             </extraRequirements>
+          </dependency-resolution>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
