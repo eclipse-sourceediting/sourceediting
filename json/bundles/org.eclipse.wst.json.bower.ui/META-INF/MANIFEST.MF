@@ -18,5 +18,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.json.core,
  org.eclipse.json,
  org.eclipse.wst.json.ui
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ActivationPolicy: lazy
