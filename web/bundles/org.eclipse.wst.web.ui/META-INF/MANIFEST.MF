@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Automatic-Module-Name: org.eclipse.wst.web.ui
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.web.ui; singleton:=true
-Bundle-Version: 1.2.401.qualifier
+Bundle-Version: 1.2.500.qualifier
 Bundle-Activator: org.eclipse.wst.web.ui.internal.WSTWebUIPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Bundle-Vendor.0

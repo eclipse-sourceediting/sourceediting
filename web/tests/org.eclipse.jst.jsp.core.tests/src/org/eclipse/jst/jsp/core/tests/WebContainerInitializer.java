@@ -39,11 +39,11 @@ public class WebContainerInitializer extends ClasspathContainerInitializer {
 		if (bundles == null) {
 			try {
 				bundles = new IClasspathEntry[] {
-							getBundleEntry("jakarta.servlet.jsp"),
-							getBundleEntry("jakarta.servlet"),
-							getBundleEntry("jakarta.servlet-api"),
-							getBundleEntry("javax.servlet.jsp-api")
-						};
+					getBundleEntry("jakarta.servlet.jsp"),
+					getBundleEntry("jakarta.servlet"),
+					getBundleEntry("jakarta.servlet-api"),
+					getBundleEntry("javax.servlet.jsp-api")
+				};
 			}
 			catch (Exception e) {
 				bundles = new IClasspathEntry[0];

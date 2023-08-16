@@ -14,7 +14,7 @@
 		<scanner
 			id="org.eclipse.wst.dtd.core.internal.tasks.DTDFileTaskScanner"
 			class="org.eclipse.wst.dtd.core.internal.tasks.DTDFileTaskScanner:org.eclipse.wst.dtd.core.taskMarker"
-			contentTypeIds="org.eclipse.wst.dtd.core.dtdsource" />
+			contentTypeIds="org.eclipse.wst.dtd.core.dtdsource,org.eclipse.wildwebdeveloper.dtd" />
 	</extension>
 	<extension
 		id="taskMarker"

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2018 IBM Corporation and others.
+ * Copyright (c) 2001, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ package org.eclipse.wst.sse.core.internal;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -592,28 +591,22 @@ public class FileBufferModelManager {
 				}
 			}
 			else {
-				File file = FileBuffers.getSystemFileAtLocation(location);
-				if (file != null) {
-					InputStream input = null;
-					try {
-						input = new FileInputStream(file);
-						type = Platform.getContentTypeManager().findContentTypeFor(input, file.getName());
+				IFileStore fileStore = FileBuffers.getFileStoreAtLocation(location);
+				if (fileStore != null) {
+					try (InputStream input = fileStore.openInputStream(EFS.NONE, null)) {
+						type = Platform.getContentTypeManager().findContentTypeFor(input, fileStore.getName());
 					}
 					catch (FileNotFoundException e) {
+						Logger.logException(e);
 					}
 					catch (IOException e) {
+						Logger.logException(e);
 					}
-					finally {
-						if (input != null) {
-							try {
-								input.close();
-							}
-							catch (IOException e1) {
-							}
-						}
+					catch (CoreException e) {
+						Logger.logException(e);
 					}
 					if (type == null) {
-						type = Platform.getContentTypeManager().findContentTypeFor(file.getName());
+						type = Platform.getContentTypeManager().findContentTypeFor(fileStore.getName());
 					}
 				}
 			}
@@ -726,8 +719,10 @@ public class FileBufferModelManager {
 				DocumentInfo info = (DocumentInfo) fDocumentMap.get(buffer.getDocument());
 				if (info != null) {
 					/*
-					 * Note: "info" being null at this point is a slight
-					 * error.
+					 * Note: "info" being null means someone requested a
+					 * model for a file with a text file buffer containing
+					 * a document implementation other than
+					 * StructuredDocument.
 					 * 
 					 * The connect call from above (or at some time earlier in
 					 * the session) would have notified the FileBufferMapper
@@ -748,6 +743,14 @@ public class FileBufferModelManager {
 					model = getModel((IStructuredDocument) bufferDocument);
 				}
 				else {
+					IContentType[] contentTypes = Platform.getContentTypeManager().findContentTypesFor(buffer.getLocation().lastSegment());
+					for (int i = 0; i < contentTypes.length; i++) {
+						IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(contentTypes[i].getId());
+						if (handler != null) {
+							Logger.log(Logger.ERROR, "Detected content type did not match one for which a model handler is registered: " + detectContentType(buffer) + " vs. " + handler.getAssociatedContentTypeId() , null);
+							break;
+						}
+					}
 					/*
 					 * 190768 - Quick diff marks do not disappear in the
 					 * vertical ruler of JavaScript editor and
@@ -791,8 +794,10 @@ public class FileBufferModelManager {
 					DocumentInfo info = (DocumentInfo) fDocumentMap.get(buffer.getDocument());
 					if (info != null) {
 						/*
-						 * Note: "info" being null at this point is a slight
-						 * error.
+						 * Note: "info" being null means someone requested a
+						 * model for a file with a text file buffer containing
+						 * a document implementation other than
+						 * StructuredDocument.
 						 * 
 						 * The connect call from above (or at some time
 						 * earlier in the session) would have notified the
@@ -813,6 +818,14 @@ public class FileBufferModelManager {
 						model = getModel((IStructuredDocument) bufferDocument);
 					}
 					else {
+						IContentType[] contentTypes = Platform.getContentTypeManager().findContentTypesFor(buffer.getLocation().lastSegment());
+						for (int i = 0; i < contentTypes.length; i++) {
+							IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(contentTypes[i].getId());
+							if (handler != null) {
+								Logger.log(Logger.ERROR, "Detected content type did not match one for which a model handler is registered: " + detectContentType(buffer) + " vs. " + handler.getAssociatedContentTypeId() , null);
+								break;
+							}
+						}
 						/*
 						 * 190768 - Quick diff marks do not disappear in the
 						 * vertical ruler of JavaScript editor and

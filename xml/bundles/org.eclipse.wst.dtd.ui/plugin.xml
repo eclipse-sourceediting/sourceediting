@@ -8,6 +8,7 @@
 			name="%DTD_Source_Page_Editor.name"
 			icon="$nl$/icons/full/obj16/DTDFile.gif"
 			contributorClass="org.eclipse.wst.dtd.ui.internal.editor.ActionContributorDTD"
+			extensions="dtd,mod,ent"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.wst.dtd.core.dtdsource.source">
 			<class class="org.eclipse.wst.dtd.ui.internal.DTDEditor">

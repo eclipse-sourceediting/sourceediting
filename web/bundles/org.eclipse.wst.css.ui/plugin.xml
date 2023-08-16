@@ -10,6 +10,7 @@
 			icon="$nl$/icons/full/obj16/sourceEditor.gif"
 			contributorClass="org.eclipse.wst.css.ui.internal.ActionContributorCSS"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
+			extensions="css"
 			id="org.eclipse.wst.css.core.csssource.source">
 			<class class="org.eclipse.wst.sse.ui.StructuredTextEditor">
 				<parameter name="org.eclipse.wst.sse.ui.appearancePreferenceScopeName" value="org.eclipse.wst.css.ui"/>

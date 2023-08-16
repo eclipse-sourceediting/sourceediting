@@ -97,7 +97,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	/**
 	 * This ThreadLocal construct is used so each thread can maintain its only
 	 * pointer to the double linked list that manages the documents regions.
-	 * The only thing we "gaurd" for is that a previously cached region has
+	 * The only thing we "guard" for is that a previously cached region has
 	 * been deleted.
 	 * 
 	 * The object that is kept in the thread local's map, is just a pointer to

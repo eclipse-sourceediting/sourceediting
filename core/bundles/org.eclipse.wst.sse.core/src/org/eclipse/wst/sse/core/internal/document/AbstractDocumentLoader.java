@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -44,7 +44,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionin
 
 
 /**
- * This class reads a file and creates an Structured Model.
+ * This class reads a file and creates a Structured Document.
  */
 public abstract class AbstractDocumentLoader implements IDocumentLoader {
 
@@ -301,13 +301,13 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 	 * later). Needs to be public to handle interface. It is in the interface
 	 * just so ModelManagerImpl can use it in a special circumstance.
 	 */
-	public StringBuffer handleLineDelimiter(StringBuffer originalString, IEncodedDocument theFlatModel) {
+	public StringBuffer handleLineDelimiter(StringBuffer originalString, IEncodedDocument structuredDocument) {
 		// TODO: need to handle line delimiters so Marker Positions are
 		// updated
 		StringBuffer convertedText = null;
 		// based on text, make a guess on what's being used as
 		// line delimiter
-		String probableLineDelimiter = TextUtilities.determineLineDelimiter(originalString, theFlatModel.getLegalLineDelimiters(), System.getProperty("line.separator")); //$NON-NLS-1$
+		String probableLineDelimiter = TextUtilities.determineLineDelimiter(originalString, structuredDocument.getLegalLineDelimiters(), System.getProperty("line.separator")); //$NON-NLS-1$
 		String preferredLineDelimiter = getPreferredNewLineDelimiter(null);
 		if (preferredLineDelimiter == null) {
 			// when preferredLineDelimiter is null, it means "leave alone"
@@ -315,8 +315,8 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 			// set here, only if null (should already be set, but if not,
 			// we'll set so any subsequent editing inserts what we're
 			// assuming)
-			if (!theFlatModel.getPreferredLineDelimiter().equals(probableLineDelimiter)) {
-				theFlatModel.setPreferredLineDelimiter(probableLineDelimiter);
+			if (!structuredDocument.getPreferredLineDelimiter().equals(probableLineDelimiter)) {
+				structuredDocument.setPreferredLineDelimiter(probableLineDelimiter);
 			}
 			convertedText = originalString;
 		}
@@ -327,11 +327,11 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 				// line delimter is "leave alone" then we do leave alone,
 				// so best to be right from beginning.
 				convertedText = convertLineDelimiters(originalString, preferredLineDelimiter);
-				theFlatModel.setPreferredLineDelimiter(preferredLineDelimiter);
+				structuredDocument.setPreferredLineDelimiter(preferredLineDelimiter);
 			}
 			else {
 				// they are already the same, no conversion needed
-				theFlatModel.setPreferredLineDelimiter(preferredLineDelimiter);
+				structuredDocument.setPreferredLineDelimiter(preferredLineDelimiter);
 				convertedText = originalString;
 			}
 		}

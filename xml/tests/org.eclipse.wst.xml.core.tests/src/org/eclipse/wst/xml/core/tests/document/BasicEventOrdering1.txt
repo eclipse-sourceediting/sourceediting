@@ -1,0 +1,132 @@
+BEGIN Setting Content
+BEGIN DocumentAboutToChange
+org.eclipse.wst.sse.core.internal.provisional.events.AboutToBeChangedEvent
+END DocumentAboutToChange
+BEGIN PrenotifiedDocumentListener
+offset: 0, length: 0, timestamp: 0
+text:><?xml version="1.0" encoding="UTF-8"?><rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0"><
+
+END   PrenotifiedDocumentListener
+BEGIN DocumentListener
+offset: 0, length: 0, timestamp: 0
+text:><?xml version="1.0" encoding="UTF-8"?><rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0"><
+
+END   DocumentListener
+BEGIN DocumentChanging
+org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent
+END   DocumentChanging
+BEGIN DocumentChanged
+org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent
+END   DocumentChanged
+BEGIN PrenotifiedDocumentListener
+offset: 0, length: 0, timestamp: 0
+text:><?xml version="1.0" encoding="UTF-8"?><rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0"><
+
+END   PrenotifiedDocumentListener
+BEGIN DocumentListener
+offset: 0, length: 0, timestamp: 0
+text:><?xml version="1.0" encoding="UTF-8"?><rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0"><
+
+END   DocumentListener
+END   Setting Content
+BEGIN Change Content
+BEGIN DocumentAboutToChange
+org.eclipse.wst.sse.core.internal.provisional.events.AboutToBeChangedEvent
+END DocumentAboutToChange
+BEGIN PrenotifiedDocumentListener
+offset: 38, length: 0, timestamp: 0
+text:>
+<
+
+END   PrenotifiedDocumentListener
+BEGIN DocumentListener
+offset: 38, length: 0, timestamp: 0
+text:>
+<
+
+END   DocumentListener
+BEGIN DocumentChanging
+org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent
+END   DocumentChanging
+BEGIN DocumentChanged
+org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent
+END   DocumentChanged
+BEGIN PrenotifiedDocumentListener
+offset: 38, length: 0, timestamp: 2
+text:>
+<
+
+END   PrenotifiedDocumentListener
+BEGIN DocumentListener
+offset: 38, length: 0, timestamp: 2
+text:>
+<
+
+END   DocumentListener
+END   Change Content
+BEGIN NoChangeContent
+BEGIN DocumentAboutToChange
+org.eclipse.wst.sse.core.internal.provisional.events.AboutToBeChangedEvent
+END DocumentAboutToChange
+BEGIN PrenotifiedDocumentListener
+offset: 43, length: 1, timestamp: 2
+text:> <
+
+END   PrenotifiedDocumentListener
+BEGIN DocumentListener
+offset: 43, length: 1, timestamp: 2
+text:> <
+
+END   DocumentListener
+BEGIN DocumentChanging
+org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent
+END   DocumentChanging
+BEGIN DocumentChanged
+org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent
+END   DocumentChanged
+BEGIN PrenotifiedDocumentListener
+offset: 43, length: 1, timestamp: 2
+text:> <
+
+END   PrenotifiedDocumentListener
+BEGIN DocumentListener
+offset: 43, length: 1, timestamp: 2
+text:> <
+
+END   DocumentListener
+END   NoChangeContent
+BEGIN Append
+BEGIN DocumentAboutToChange
+org.eclipse.wst.sse.core.internal.provisional.events.AboutToBeChangedEvent
+END DocumentAboutToChange
+BEGIN PrenotifiedDocumentListener
+offset: 115, length: 0, timestamp: 2
+text:>
+</rss><
+
+END   PrenotifiedDocumentListener
+BEGIN DocumentListener
+offset: 115, length: 0, timestamp: 2
+text:>
+</rss><
+
+END   DocumentListener
+BEGIN DocumentChanging
+org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent
+END   DocumentChanging
+BEGIN DocumentChanged
+org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent
+END   DocumentChanged
+BEGIN PrenotifiedDocumentListener
+offset: 115, length: 0, timestamp: 4
+text:>
+</rss><
+
+END   PrenotifiedDocumentListener
+BEGIN DocumentListener
+offset: 115, length: 0, timestamp: 4
+text:>
+</rss><
+
+END   DocumentListener
+END   Append

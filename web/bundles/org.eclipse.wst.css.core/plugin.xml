@@ -43,7 +43,7 @@
 		<scanner
 			id="org.eclipse.wst.css.core.internal.tasks.CSSFileTaskScanner"
 			class="org.eclipse.wst.css.core.internal.tasks.CSSFileTaskScanner:org.eclipse.wst.css.core.taskMarker"
-			contentTypeIds="org.eclipse.wst.css.core.csssource" />
+			contentTypeIds="org.eclipse.wst.css.core.csssource,org.eclipse.wildwebdeveloper.css" />
 	</extension>
 	<extension
 		id="taskMarker"

@@ -149,8 +149,10 @@ public class TestJSPContentAssistComputers extends TestCase {
 	
 	public void testJSPRegionProposals() throws Exception {
 		//default, jsp, jsp java, default
-		int[] expectedProposalCounts = new int[] {60, 0, 60, 60};
-		runProposalTest("test1.jsp", 28, 0, expectedProposalCounts);
+		int[] expectedProposalCounts = new int[] {59, 0, 59, 59};
+		String[] proposalLists = runProposalTest("test1.jsp", 28, 0, expectedProposalCounts);
+		assertTrue("testJspString, declared in the page itself, was not proposed", proposalLists[0].indexOf("testJspString") >=0);
+		assertTrue("pageContext : PageContext, an argument to the generated service method, was not proposed", proposalLists[0].indexOf("pageContext : PageContext") >=0);
 	}
 	
 	public void testDIVTagAttributeNameProposals() throws Exception {
@@ -225,7 +227,7 @@ public class TestJSPContentAssistComputers extends TestCase {
 	 * @param expectedProposalCounts
 	 * @throws Exception
 	 */
-	private static void runProposalTest(String fileName,
+	private static String[] runProposalTest(String fileName,
 			int lineNum, int lineRelativeCharOffset,
 			int[] expectedProposalCounts) throws Exception{
 		
@@ -235,8 +237,19 @@ public class TestJSPContentAssistComputers extends TestCase {
 		int offset = viewer.getDocument().getLineOffset(lineNum) + lineRelativeCharOffset;
 
 		ICompletionProposal[][] pages = getProposals(viewer, offset, expectedProposalCounts.length);
-		
+
 		verifyProposalCounts(pages, expectedProposalCounts);
+
+		String[] proposalPages = new String[pages.length];
+		for (int i = 0; i < proposalPages.length; i++) {
+			var builder = new StringBuilder();
+			for (int j = 0; j < pages[i].length; j++) {
+				builder.append(pages[i][j].getDisplayString());
+				builder.append('\n');
+			}
+			proposalPages[i] = builder.toString();
+		}
+		return proposalPages;
 	}
 	
 	/**

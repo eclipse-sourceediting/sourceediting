@@ -64,7 +64,7 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 	protected BasicStructuredDocument fStructuredDocument;
 
 	/**
-	 * variable used in anticiapation of multithreading
+	 * variable used in anticipation of multi-threading
 	 */
 	protected boolean isParsing;
 	final private String singleQuote = new String(new char[]{'\''});

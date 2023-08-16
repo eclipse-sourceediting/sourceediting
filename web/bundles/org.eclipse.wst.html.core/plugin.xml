@@ -23,7 +23,7 @@
 		<scanner
 			id="org.eclipse.wst.html.core.internal.tasks.HTMLFileTaskScanner"
 			class="org.eclipse.wst.xml.core.internal.tasks.XMLStreamingFileTaskScanner:org.eclipse.wst.html.core.taskMarker"
-			contentTypeIds="org.eclipse.wst.html.core.htmlsource" />
+			contentTypeIds="org.eclipse.wst.html.core.htmlsource,org.eclipse.wildwebdeveloper.html" />
 	</extension>
 	<extension
 		id="taskMarker"
