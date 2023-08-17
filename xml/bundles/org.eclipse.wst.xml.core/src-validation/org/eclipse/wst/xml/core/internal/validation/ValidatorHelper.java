@@ -17,8 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
-import java.util.List;
-import java.util.Vector;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -47,13 +48,24 @@ import com.ibm.icu.util.StringTokenizer;
  */
 public class ValidatorHelper
 {
-  public List namespaceURIList = new Vector();
   public boolean isGrammarEncountered = false;
   public boolean isDTDEncountered = false;
   public boolean isNamespaceEncountered = false;
   public String schemaLocationString = ""; //$NON-NLS-1$
   public int numDTDElements = 0;
   public boolean isDocumentElementEncountered = false;
+
+  private static class GrammarEncounteredResult {
+    boolean result;
+    private long timestamp;
+
+    GrammarEncounteredResult(boolean value) {
+      this.result = value;
+      this.timestamp = System.currentTimeMillis();
+    }
+  }
+
+  private static final Map<String, GrammarEncounteredResult> grammarCheckerCache = new HashMap<>(3);
 
   private static final boolean _trace = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.xml.core/debug/validation")).booleanValue(); //$NON-NLS-1$
   /**
@@ -307,31 +319,7 @@ public class ValidatorHelper
 
         if (location != null)
         {
-          InputStream is = null;
-          try
-          {
-            URL url = new URL(location);
-            is = url.openStream();
-            isGrammarEncountered = true;
-          }
-          catch(Exception e)
-          {
-        	// Do nothing.
-          }
-          finally
-          {
-        	if(is != null)
-        	{
-        	  try
-        	  {
-        	    is.close();
-        	  }
-        	  catch(Exception e)
-        	  {
-        		// Do nothing.
-        	  }
-        	}
-          }
+          isGrammarEncountered  = checkGrammar(location);
         }
       }
     }
@@ -398,5 +386,26 @@ public class ValidatorHelper
       }
     }
     return string;
+  }
+
+  private static boolean checkGrammarImpl(String location) {
+    try {
+      URL url = new URL(location);
+      try (InputStream is = url.openStream()) {
+        return true;
+      }
+    } catch (Exception e) {
+      // Do nothing.
+    }
+    return false;
+  }
+
+  private synchronized static boolean checkGrammar(String location) {
+    GrammarEncounteredResult result = grammarCheckerCache.get(location);
+    if (result == null || (System.currentTimeMillis() - result.timestamp) > Duration.ofMinutes(10).toMillis()) {
+      result = new GrammarEncounteredResult(checkGrammarImpl(location));
+      grammarCheckerCache.put(location, result);
+    }
+    return result.result;
   }
 }
