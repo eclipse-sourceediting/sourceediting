@@ -22,7 +22,7 @@ import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
-import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.core.internal.Logger;
 
 /**
  * Extends the MultiPassContentFormatter to allow clients to contribute
@@ -37,7 +37,7 @@ class StructuredTextMultiPassContentFormatter extends MultiPassContentFormatter 
 	/**
 	 * list of partition types that already have a formatting strategy
 	 */
-	private List fInstalledPartitionTypes;
+	private List<String> fInstalledPartitionTypes;
 
 	/**
 	 * Creates a new content formatter.
@@ -68,7 +68,7 @@ class StructuredTextMultiPassContentFormatter extends MultiPassContentFormatter 
 	 * contributed via the editorConfiguration extension point.
 	 */
 	protected void formatSlave(IFormattingContext context, IDocument document, int offset, int length, String type) {
-		List installedTypes = getInstalledPartitionTypes();
+		List<String> installedTypes = getInstalledPartitionTypes();
 		if (installedTypes.contains(type)) {
 			// we've already set the slave formatter strategy so just perform
 			// as normal
@@ -117,9 +117,9 @@ class StructuredTextMultiPassContentFormatter extends MultiPassContentFormatter 
 	 * 
 	 * @return List
 	 */
-	private List getInstalledPartitionTypes() {
+	private List<String> getInstalledPartitionTypes() {
 		if (fInstalledPartitionTypes == null)
-			fInstalledPartitionTypes = new ArrayList();
+			fInstalledPartitionTypes = new ArrayList<>();
 		return fInstalledPartitionTypes;
 	}
 }
