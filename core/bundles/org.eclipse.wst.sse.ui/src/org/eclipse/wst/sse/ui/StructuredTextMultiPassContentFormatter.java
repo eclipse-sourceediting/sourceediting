@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -21,8 +21,8 @@ import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
-import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 /**
  * Extends the MultiPassContentFormatter to allow clients to contribute
