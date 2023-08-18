@@ -16,7 +16,6 @@ package org.eclipse.wst.sse.core.internal;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -582,7 +581,8 @@ public class FileBufferModelManager {
 					catch (CoreException e) {
 						/*
 						 * Should not be possible given the accessible and
-						 * file type check above
+						 * file type check above; maybe a temporary file or
+						 * system that's only advisory locking?
 						 */
 					}
 					if (type == null) {
@@ -596,11 +596,11 @@ public class FileBufferModelManager {
 					try (InputStream input = fileStore.openInputStream(EFS.NONE, null)) {
 						type = Platform.getContentTypeManager().findContentTypeFor(input, fileStore.getName());
 					}
-					catch (FileNotFoundException e) {
-						Logger.logException(e);
-					}
 					catch (IOException e) {
-						Logger.logException(e);
+						/*
+						 * Failure. Resort to finding the content type based
+						 * solely on the file name.
+						 */
 					}
 					catch (CoreException e) {
 						Logger.logException(e);
@@ -614,27 +614,14 @@ public class FileBufferModelManager {
 		else {
 			IFileStore fileStore = buffer.getFileStore();
 			if (fileStore != null) {
-				InputStream input = null;
-				try {
-					input = fileStore.openInputStream(EFS.NONE, null);
-					if (input != null) {
-						type = Platform.getContentTypeManager().findContentTypeFor(input, fileStore.getName());
-					}
+				try (InputStream input = fileStore.openInputStream(EFS.NONE, null)) {
+					type = Platform.getContentTypeManager().findContentTypeFor(input, fileStore.getName());
 				}
 				catch (CoreException e) {
 					// failure, assume plain text
 				}
 				catch (IOException e) {
 					// failure, assume plain text
-				}
-				finally {
-					if (input != null) {
-						try {
-							input.close();
-						}
-						catch (IOException e1) {
-						}
-					}
 				}
 				if (type == null) {
 					type = Platform.getContentTypeManager().findContentTypeFor(fileStore.getName());
@@ -747,7 +734,7 @@ public class FileBufferModelManager {
 					for (int i = 0; i < contentTypes.length; i++) {
 						IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(contentTypes[i].getId());
 						if (handler != null) {
-							Logger.log(Logger.ERROR, "Detected content type did not match one for which a model handler is registered: " + detectContentType(buffer) + " vs. " + handler.getAssociatedContentTypeId() , null);
+							Logger.log(Logger.WARNING, "Detected content type did not match one for which a model handler is registered: " + detectContentType(buffer) + " vs. " + handler.getAssociatedContentTypeId() , null);
 							break;
 						}
 					}
@@ -822,7 +809,7 @@ public class FileBufferModelManager {
 						for (int i = 0; i < contentTypes.length; i++) {
 							IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(contentTypes[i].getId());
 							if (handler != null) {
-								Logger.log(Logger.ERROR, "Detected content type did not match one for which a model handler is registered: " + detectContentType(buffer) + " vs. " + handler.getAssociatedContentTypeId() , null);
+								Logger.log(Logger.WARNING, "Detected content type did not match one for which a model handler is registered: " + detectContentType(buffer) + " vs. " + handler.getAssociatedContentTypeId() , null);
 								break;
 							}
 						}
