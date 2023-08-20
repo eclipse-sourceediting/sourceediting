@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -43,6 +43,11 @@ public class Logger {
 	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter"; //$NON-NLS-1$
 	public static final int WARNING = IStatus.WARNING; // 2
 	public static final int WARNING_DEBUG = 200 + WARNING;
+
+	/**
+	 * true if platform and plug-in are in debug mode and debugging formatting
+	 */
+	public static final boolean DEBUG_FORMAT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/format")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
 	 * Adds message to log.

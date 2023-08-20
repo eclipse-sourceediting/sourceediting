@@ -22,7 +22,7 @@ import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.formatter.IFormattingStrategy;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
-import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 /**
  * Extends the MultiPassContentFormatter to allow clients to contribute
