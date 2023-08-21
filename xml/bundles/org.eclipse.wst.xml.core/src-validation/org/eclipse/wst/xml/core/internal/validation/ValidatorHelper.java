@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2017 IBM Corporation and others.
+ * Copyright (c) 2001, 2023 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +49,7 @@ import com.ibm.icu.util.StringTokenizer;
  */
 public class ValidatorHelper
 {
+  private static final int TWO_MINUTES = (int) Duration.ofMinutes(2).toMillis();
   public boolean isGrammarEncountered = false;
   public boolean isDTDEncountered = false;
   public boolean isNamespaceEncountered = false;
@@ -388,10 +390,12 @@ public class ValidatorHelper
     return string;
   }
 
-  private static boolean checkGrammarImpl(String location) {
+  private static boolean doCheckGrammar(String location) {
     try {
       URL url = new URL(location);
-      try (InputStream is = url.openStream()) {
+      URLConnection connection = url.openConnection();
+      connection.setConnectTimeout(TWO_MINUTES);
+      try (InputStream is = connection.getInputStream()) {
         return true;
       }
     } catch (Exception e) {
@@ -400,11 +404,13 @@ public class ValidatorHelper
     return false;
   }
 
-  private synchronized static boolean checkGrammar(String location) {
+  private static boolean checkGrammar(String location) {
     GrammarEncounteredResult result = grammarCheckerCache.get(location);
-    if (result == null || (System.currentTimeMillis() - result.timestamp) > Duration.ofMinutes(10).toMillis()) {
-      result = new GrammarEncounteredResult(checkGrammarImpl(location));
-      grammarCheckerCache.put(location, result);
+    if (result == null || (System.currentTimeMillis() - result.timestamp) > TWO_MINUTES) {
+      result = new GrammarEncounteredResult(doCheckGrammar(location));
+      synchronized (grammarCheckerCache) {
+    	  grammarCheckerCache.put(location, result);
+      }
     }
     return result.result;
   }
