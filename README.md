@@ -22,17 +22,13 @@ more.
 
 The project maintains the following source code repository (this is not a cloning URL):
 
-* http://git.eclipse.org/c/sourceediting/webtools.sourceediting
+* https://github.com/eclipse-webtools-sourceediting/sourceediting
 
-The 5 other similarly named repositories have been merged into the main for some time.
+This project uses GitHub Issues to track ongoing development and issues.
 
-This project uses Bugzilla to track ongoing development and issues.
+* Search for older issues from Bugzilla, while they last: https://bugs.eclipse.org/bugs/buglist.cgi?product=WTP+Source+Editing
 
-* Search for issues: https://bugs.eclipse.org/bugs/buglist.cgi?product=WTP+Source+Editing
-* Create a new report: https://bugs.eclipse.org/bugs/enter_bug.cgi?product=WTP+Source+Editing
-
-Be sure to search for existing bugs before you create another one. Remember that
-contributions are always welcome!
+Be sure to search for existing bugs before you create another one. Remember that contributions are always welcome!
 
 ## Eclipse Development Process
 
