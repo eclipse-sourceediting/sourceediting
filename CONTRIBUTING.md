@@ -8,7 +8,7 @@ If you're seeing this repository somewhere other than [this GitHub repository](h
 
 Hints for pull requests:
 - You should import the master unit test project from the `web/tests/org.eclipse.wst.sse.unittests/` location in the repository. Try to at least run the unit tests corresponding to the project for which you're proposing changes.
-- You can also run the Maven build, supplying using at least Tycho 2.3.0 for the values in `-Dtycho-extras.version=${tychoVersion} -Dtycho.version=${tychoVersion}` and profile `bree-libs` with `-Pbree-libs`.
+- You can also run the Maven build, supplying using at least Tycho 4.0.1 for the values in `-Dtycho-extras.version=${tychoVersion} -Dtycho.version=${tychoVersion}` and profile `bree-libs` with `-Pbree-libs`.
 - Please refer the GitHub issue in your commit message (e.g #1). If you're fixing an old bug [from Bugzilla](https://bugs.eclipse.org/bugs/), start your commit messages first line with the word "bug" and the bug number, e.g. Bug 12345 to refer to bug 12345 to make it more understandable in the eventual git history.
 
 ## Eclipse Development Process
