@@ -174,9 +174,6 @@
                 name="http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"
                 uri="dtdsAndSchemas/ejb-jar_3_1.xsd" />
             <uri
-                name="http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_1.xsd"
-                uri="dtdsAndSchemas/ejb-jar_3_1.xsd" />
-            <uri
                 name="http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd"
                 uri="dtdsAndSchemas/ejb-jar_3_2.xsd" />
             <uri
@@ -509,7 +506,9 @@
             <uri
                 name="https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_3_0.xsd"
                 uri="dtdsAndSchemas/web-facesconfig_3_0.xsd"/>
-
+            <uri
+                name="https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd"
+                uri="dtdsAndSchemas/web-facesconfig_4_0.xsd"/>
 
             <uri
                 name="http://java.sun.com/xml/ns/javaee/web-facesuicomponent_2_0.xsd"
