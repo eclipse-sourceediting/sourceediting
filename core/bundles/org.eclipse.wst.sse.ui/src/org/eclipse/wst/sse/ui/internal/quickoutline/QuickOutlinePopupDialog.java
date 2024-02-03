@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2019 IBM Corporation and others.
+ * Copyright (c) 2010, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.quickoutline;
 
+import org.eclipse.core.commands.Command;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.bindings.TriggerSequence;
 import org.eclipse.jface.bindings.keys.KeySequence;
@@ -62,7 +63,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommand;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.keys.IBindingService;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -109,7 +110,7 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 	 * {@link org.eclipse.jdt.internal.ui.text.JavaOutlineInformationControl}
 	 */
 	private KeyAdapter fKeyAdapter;
-	private ICommand fInvokingCommand;
+	private Command fInvokingCommand;
 	private TriggerSequence[] fInvokingCommandKeySequences;
 	private AbstractQuickOutlineConfiguration fFirstConfiguration;
 	private AbstractQuickOutlineConfiguration fConfiguration;
@@ -123,7 +124,7 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		fFilter = configuration.getFilter();
 		fModel = model;
 
-		fInvokingCommand = PlatformUI.getWorkbench().getCommandSupport().getCommandManager().getCommand(DIALOG_SECTION);
+		fInvokingCommand = PlatformUI.getWorkbench().getService(ICommandService.class).getCommand(DIALOG_SECTION);
 
 		updateStatusText();
 
@@ -298,14 +299,14 @@ public class QuickOutlinePopupDialog extends PopupDialog implements IInformation
 		return editor;
 	}
 
-	final protected ICommand getInvokingCommand() {
+	final protected Command getInvokingCommand() {
 		return fInvokingCommand;
 	}
 
 	final protected TriggerSequence[] getInvokingCommandKeySequences() {
 		if (fInvokingCommandKeySequences == null) {
 			if (getInvokingCommand() != null) {
-				IBindingService bindingService = PlatformUI.getWorkbench().getAdapter(IBindingService.class);
+				IBindingService bindingService = PlatformUI.getWorkbench().getService(IBindingService.class);
 				fInvokingCommandKeySequences = bindingService.getActiveBindingsFor(getInvokingCommand().getId());
 				return fInvokingCommandKeySequences;
 			}
