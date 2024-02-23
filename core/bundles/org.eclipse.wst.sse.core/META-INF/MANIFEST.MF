@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Automatic-Module-Name: org.eclipse.wst.sse.core
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.sse.core; singleton:=true
-Bundle-Version: 1.2.1200.qualifier
+Bundle-Version: 1.2.1300.qualifier
 Bundle-Activator: org.eclipse.wst.sse.core.internal.SSECorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
