@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008-2011 Chase Technology Ltd - http://www.chasetechnology.co.uk and others
+ * Copyright (c) 2008-2024 Chase Technology Ltd - http://www.chasetechnology.co.uk and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -105,14 +105,16 @@ public class XPathComputer {
 	}
 
 	private void updateXPath() {
-		Document doc = (Document) model.getAdapter(Document.class);
-		if (doc == null) {
-			return;
-		}
-
-		try {
-			updateExpression();
-		} catch (XPathExpressionException e) {
+		Object o = model.getAdapter(Document.class);
+		if (o instanceof Document) {
+			Document doc = (Document) o;
+			if (doc != null) {
+				try {
+					updateExpression();
+				}
+				catch (XPathExpressionException e) {
+				}
+			}
 		}
 	}
 
@@ -121,8 +123,10 @@ public class XPathComputer {
 			if (text != null) {
 				SimpleXPathEngine engine = getCurrentEngine();
 				
-				IDOMDocument doc = (node.getNodeType() == Node.DOCUMENT_NODE) ? (IDOMDocument) node : (IDOMDocument) node.getOwnerDocument();
-				updateNamespaces(engine, doc);
+				if (node != null) {
+					IDOMDocument doc = (node.getNodeType() == Node.DOCUMENT_NODE) ? (IDOMDocument) node : (IDOMDocument) node.getOwnerDocument();
+					updateNamespaces(engine, doc);
+				}
 
 				engine.parse(text);
 				this.expression = text;

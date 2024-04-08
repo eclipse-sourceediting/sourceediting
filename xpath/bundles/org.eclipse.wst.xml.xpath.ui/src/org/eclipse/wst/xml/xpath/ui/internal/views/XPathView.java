@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2011 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2008, 2024 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -374,8 +374,10 @@ public class XPathView extends ViewPart {
 			if (model != null) {
 				activeEditor = editor;
 				xpathComputer.setModel(model);
-				xpathComputer.setSelectedNode((Document) model
-						.getAdapter(Document.class));
+				Object o = model.getAdapter(Document.class);
+				if (o instanceof Document) {
+					xpathComputer.setSelectedNode((Document) o);
+				}
 			}
 			recomputeXPath();
 		}
