@@ -298,6 +298,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		}
 		setOverviewRulerAnnotationHover(configuration.getOverviewRulerAnnotationHover(this));
 
+		getTextWidget().setLineSpacing(configuration.getLineSpacing(this));
 		getTextWidget().setTabs(configuration.getTabWidth(this));
 		setHoverControlCreator(configuration.getInformationControlCreator(this));
 
