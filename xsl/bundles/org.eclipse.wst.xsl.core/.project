@@ -6,7 +6,7 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>sf.eclipse.javacc.javaccbuilder</name>
+			<name>sf.eclipse.javacc.core.javaccbuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -43,7 +43,7 @@
 	<natures>
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>sf.eclipse.javacc.javaccnature</nature>
 		<nature>org.eclipse.pde.api.tools.apiAnalysisNature</nature>
+		<nature>sf.eclipse.javacc.core.javaccnature</nature>
 	</natures>
 </projectDescription>
