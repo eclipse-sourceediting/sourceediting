@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2023 IBM Corporation and others.
+ * Copyright (c) 2001, 2024 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -97,7 +97,7 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 				return file.getCharset(true);
 			}
 			catch (CoreException e) {
-				Logger.logException(e);
+				Logger.logException("Problem detecting charset for ".concat(file.getFullPath().toString()), e);
 			}
 		}
 		return ResourcesPlugin.getEncoding();
@@ -194,7 +194,6 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 		return DOMRegionContext.XML_COMMENT_TEXT.equals(regionType);
 	}
 
-	@SuppressWarnings("unchecked")
 	public synchronized Map<String, Object>[] scan(IFile file, TaskTag[] taskTags, IProgressMonitor monitor) {
 		fNewMarkerAttributeMaps = new ArrayList<>();
 		if (monitor.isCanceled() || !shouldScan(file)) {
@@ -220,7 +219,6 @@ public class XMLStreamingFileTaskScanner extends XMLLineTokenizer implements IFi
 	 * (org.eclipse.core.runtime.IConfigurationElement, java.lang.String,
 	 * java.lang.Object)
 	 */
-	@SuppressWarnings("rawtypes")
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
 		if (data != null && data instanceof String) {
 			runtimeMarkerType = data.toString();
