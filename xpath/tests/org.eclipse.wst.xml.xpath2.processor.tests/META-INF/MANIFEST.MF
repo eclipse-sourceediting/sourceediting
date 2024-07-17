@@ -11,7 +11,6 @@ Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
  org.junit;bundle-version="3.8.2",
  org.w3c.xqts.testsuite;bundle-version="1.0.2",
  org.eclipse.core.resources;bundle-version="[3.13.0,4.0.0)",
- java_cup-runtime;bundle-version="0.11.0",
  com.ibm.icu
 Export-Package: org.custommonkey.xmlunit,
  org.custommonkey.xmlunit.examples,
@@ -26,6 +25,7 @@ Export-Package: org.custommonkey.xmlunit,
  org.eclipse.wst.xml.xpath2.processor.testsuite.numeric,
  org.eclipse.wst.xml.xpath2.processor.testsuite.schema,
  org.eclipse.wst.xml.xpath2.processor.testsuite.userdefined
+Import-Package: java_cup.runtime
 Bundle-Activator: org.eclipse.wst.xml.xpath2.processor.test.XPath20TestPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,

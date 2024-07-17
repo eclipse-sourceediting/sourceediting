@@ -5,4 +5,4 @@ Bundle-SymbolicName: org.eclipse.jst.standard.schemas;singleton:=true
 Bundle-Version: 1.2.700.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
-Require-Bundle: jakarta.servlet;bundle-version="5.0.0"
+Require-Bundle: jakarta.servlet-api;bundle-version="5.0.0"
