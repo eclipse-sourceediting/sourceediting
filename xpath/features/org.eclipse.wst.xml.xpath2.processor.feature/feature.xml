@@ -58,12 +58,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="java_cup-runtime"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.wst.xml.xpath2.processor.doc.user"
          download-size="0"
          install-size="0"
