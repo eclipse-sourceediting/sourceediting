@@ -5,9 +5,9 @@ Bundle-SymbolicName: org.eclipse.wst.xsl.jaxp.debug;singleton:=true
 Bundle-Version: 1.1.200.qualifier
 Bundle-Vendor: %vendorName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.apache.commons.commons-logging;bundle-version="1.0.4";visibility:=reexport,
- org.apache.xml.resolver;bundle-version="1.1.0";resolution:=optional
+Require-Bundle: org.apache.xml.resolver;bundle-version="1.1.0";resolution:=optional
 Export-Package: org.eclipse.wst.xsl.jaxp.debug.debugger,
  org.eclipse.wst.xsl.jaxp.debug.invoker,
  org.eclipse.wst.xsl.jaxp.debug.invoker.internal;x-internal:=true
+Import-Package: org.apache.commons.logging;version="[1.2.0,2.0.0)"
 Bundle-Localization: plugin
