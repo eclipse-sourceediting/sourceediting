@@ -22,7 +22,7 @@
 
   <groupId>org.eclipse.webtools.sourceediting</groupId>
   <artifactId>org.eclipse.wst.xsl.feature</artifactId>
-  <version>1.3.1700-SNAPSHOT</version>
+  <version>1.3.1800-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
   <name>XSLT FeaturePlugin</name>
 

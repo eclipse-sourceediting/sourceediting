@@ -14,7 +14,7 @@
 <feature
       id="org.eclipse.wst.xsl.feature"
       label="%featureName"
-      version="1.3.1700.qualifier"
+      version="1.3.1800.qualifier"
       provider-name="%providerName"
       plugin="org.eclipse.wst.xsl"
       license-feature="org.eclipse.license"
