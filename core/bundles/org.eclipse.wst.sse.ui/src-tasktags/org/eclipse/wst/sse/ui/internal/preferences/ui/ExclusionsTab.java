@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -24,15 +24,22 @@ import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.accessibility.ACC;
+import org.eclipse.swt.accessibility.AccessibleAdapter;
+import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -42,6 +49,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.tasks.FileTaskScannerRegistryReader;
 import org.eclipse.wst.sse.core.internal.tasks.TaskTagPreferenceKeys;
@@ -52,36 +61,6 @@ import org.eclipse.wst.sse.ui.internal.util.Sorter;
 import com.ibm.icu.text.Collator;
 
 class ExclusionsTab implements IPreferenceTab {
-	private class ArrayTreeContentProvider implements ITreeContentProvider {
-		public ArrayTreeContentProvider() {
-			super();
-		}
-
-		public void dispose() {
-		}
-
-		public Object[] getChildren(Object parentElement) {
-			if (parentElement instanceof Object[])
-				return fContentTypeSorter.sort((Object[]) parentElement);
-			return new Object[0];
-		}
-
-		public Object[] getElements(Object inputElement) {
-			return getChildren(inputElement);
-		}
-
-		public Object getParent(Object element) {
-			return null;
-		}
-
-		public boolean hasChildren(Object element) {
-			return getChildren(element).length > 0;
-		}
-
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		}
-	}
-
 	private class ContentTypeLabelProvider extends LabelProvider {
 		public String getText(Object element) {
 			if (element != null) {
@@ -189,7 +168,7 @@ class ExclusionsTab implements IPreferenceTab {
 
 	private static final boolean _debugPreferences = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/preferences")); //$NON-NLS-1$ //$NON-NLS-2$
 
-	private CheckboxTreeViewer fContentTypeList;
+	private CheckboxTableViewer fContentTypeList;
 
 	private IContentTypeManager fContentTypeManager = null;
 
@@ -234,72 +213,130 @@ class ExclusionsTab implements IPreferenceTab {
 	}
 
 	public Control createContents(Composite tabFolder) {
-		SashForm sash = new SashForm(tabFolder, SWT.VERTICAL);
-		Composite composite = new Composite(sash, SWT.NONE);
-		composite.setLayout(new GridLayout(2, true));
-		Label description = new Label(composite, SWT.NONE);
-		description.setText(SSEUIMessages.TaskTagExclusionTab_02);
-//		description.setBackground(composite.getBackground());
+	    SashForm sash = new SashForm(tabFolder, SWT.VERTICAL);
 
-		fContentTypeList = new CheckboxTreeViewer(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-		fContentTypeList.setLabelProvider(new ContentTypeLabelProvider());
-		fContentTypeList.setContentProvider(new ArrayTreeContentProvider());
+	    Composite composite = new Composite(sash, SWT.NONE);
+	    composite.setLayout(new GridLayout(2, true));
 
-		fContentTypeList.setInput(fSupportedContentTypes.toArray());
-		fContentTypeList.setCheckedElements(fSupportedContentTypes.toArray());
-		fContentTypeList.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		for (int i = 0; i < fIgnoreContentTypes.length; i++) {
-			fContentTypeList.setChecked(fIgnoreContentTypes[i], false);
-		}
+	    Label description = new Label(composite, SWT.NONE);
+	    description.setText(SSEUIMessages.TaskTagExclusionTab_02);
 
-		Button selectAll = new Button(composite, SWT.PUSH);
-		selectAll.setText(SSEUIMessages.TaskTagPreferenceTab_17);
-		selectAll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		selectAll.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				fContentTypeList.setCheckedElements(fSupportedContentTypes.toArray());
-			}
-		});
+	    fContentTypeList = CheckboxTableViewer.newCheckList(
+	        composite, SWT.CHECK | SWT.FULL_SELECTION | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
+	    );
+	    Table table = fContentTypeList.getTable();
+	    table.setHeaderVisible(true);
+	    table.setLinesVisible(true);
+	    table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
-		Button selectNone = new Button(composite, SWT.PUSH);
-		selectNone.setText(SSEUIMessages.TaskTagPreferenceTab_18);
-		selectNone.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-		selectNone.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				fContentTypeList.setCheckedElements(new Object[0]);
-			}
-		});
+	    TableViewerColumn col = new TableViewerColumn(fContentTypeList, SWT.NONE);
+	    // col.getColumn().setText(SSEUIMessages.TaskTagExclusionTab_01);
+	    col.getColumn().setWidth(480);
+	    col.setLabelProvider(new ColumnLabelProvider() {
+	        @Override public String getText(Object element) {
+	            if (element instanceof IContentType) return ((IContentType) element).getName();
+	            return super.getText(element);
+	        }
+	    });
 
-		composite = new Composite(sash, SWT.NONE);
-		composite.setLayout(new GridLayout(2, true));
-		new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+	    fContentTypeList.setContentProvider(ArrayContentProvider.getInstance());
+	    Object[] sortedSupported = fContentTypeSorter.sort(fSupportedContentTypes.toArray());
+	    fContentTypeList.setInput(sortedSupported);
 
-		Label affectedTypesLabel = new Label(composite, SWT.NONE);
-		affectedTypesLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-//		affectedTypesLabel.setBackground(composite.getBackground());
-		affectedTypesLabel.setText(SSEUIMessages.TaskTagExclusionTab_03);
+	    fContentTypeList.setCheckedElements(sortedSupported);
+	    for (int i = 0; i < fIgnoreContentTypes.length; i++) {
+	        fContentTypeList.setChecked(fIgnoreContentTypes[i], false);
+	    }
 
-		final TreeViewer contentTypeTreeViewer = new TreeViewer(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-		contentTypeTreeViewer.setLabelProvider(new ContentTypeLabelProvider());
-		contentTypeTreeViewer.setContentProvider(new ContentTypeTreeProvider());
-		contentTypeTreeViewer.setInput(new Object[0]);
-		contentTypeTreeViewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+	    table.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+	        @Override public void getName(AccessibleEvent e) {
+	            TableItem item = null;
 
-		fContentTypeList.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				if (event.getSelection() instanceof IStructuredSelection) {
-					Object[] o = ((IStructuredSelection) event.getSelection()).toArray();
-					contentTypeTreeViewer.setInput(o);
-					contentTypeTreeViewer.expandAll();
-					if (o.length > 0) {
-						contentTypeTreeViewer.reveal(o[0]);
-					}
-				}
-			}
-		});
+	            if (e.childID != ACC.CHILDID_SELF) {
+	                int idx = e.childID;
+	                if (idx >= 0 && idx < table.getItemCount()) item = table.getItem(idx);
+	            } else {
+	                TableItem[] sel = table.getSelection();
+	                if (sel.length > 0) item = sel[0];
+	            }
 
-		return sash;
+	            if (item != null) {
+	                Object el = item.getData();
+	                if (el instanceof IContentType) {
+	                    IContentType t = (IContentType) el;
+
+	                    // Build a UNIQUE accessible name (not shown in the UI)
+	                    String name = t.getName();           // e.g., "DTD"
+	                    String id   = t.getId();             // e.g., "org.eclipse.wst.dtd.core.dtdsource"
+	                    String shortId = id;
+	                    int dot = id.lastIndexOf('.');
+	                    if (dot >= 0 && dot + 1 < id.length()) shortId = id.substring(dot + 1);
+	                    // Result: "DTD [dtdsource] (checked/unchecked)"
+	                    e.result = name + shortId;
+	                } else {
+	                    e.result = item.getText();
+	                }
+	            }
+	        }
+	    });
+
+	    fContentTypeList.addCheckStateListener(new ICheckStateListener() {
+	        @Override public void checkStateChanged(CheckStateChangedEvent e) {
+	            fContentTypeList.setSelection(new StructuredSelection(e.getElement()), true);
+	        }
+	    });
+
+	    Button selectAll = new Button(composite, SWT.PUSH);
+	    selectAll.setText(SSEUIMessages.TaskTagPreferenceTab_17);
+	    selectAll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+	    selectAll.addSelectionListener(new SelectionAdapter() {
+	        @Override public void widgetSelected(SelectionEvent e) {
+	            fContentTypeList.setCheckedElements(sortedSupported);
+	            if (table.getItemCount() > 0) {
+	                fContentTypeList.setSelection(new StructuredSelection(table.getItem(0).getData()), true);
+	            }
+	        }
+	    });
+
+	    Button selectNone = new Button(composite, SWT.PUSH);
+	    selectNone.setText(SSEUIMessages.TaskTagPreferenceTab_18);
+	    selectNone.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+	    selectNone.addSelectionListener(new SelectionAdapter() {
+	        @Override public void widgetSelected(SelectionEvent e) {
+	            fContentTypeList.setCheckedElements(new Object[0]);
+	            if (table.getSelectionCount() == 0 && table.getItemCount() > 0) {
+	                fContentTypeList.setSelection(new StructuredSelection(table.getItem(0).getData()), true);
+	            }
+	        }
+	    });
+
+	    composite = new Composite(sash, SWT.NONE);
+	    composite.setLayout(new GridLayout(2, true));
+	    new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+
+	    Label affectedTypesLabel = new Label(composite, SWT.NONE);
+	    affectedTypesLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+	    affectedTypesLabel.setText(SSEUIMessages.TaskTagExclusionTab_03);
+
+	    final TreeViewer contentTypeTreeViewer =
+	        new TreeViewer(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+	    contentTypeTreeViewer.setLabelProvider(new ContentTypeLabelProvider());
+	    contentTypeTreeViewer.setContentProvider(new ContentTypeTreeProvider());
+	    contentTypeTreeViewer.setInput(new Object[0]);
+	    contentTypeTreeViewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+
+	    fContentTypeList.addSelectionChangedListener(event -> {
+	        if (event.getSelection() instanceof IStructuredSelection) {
+	            Object[] o = ((IStructuredSelection) event.getSelection()).toArray();
+	            contentTypeTreeViewer.setInput(o);
+	            contentTypeTreeViewer.expandAll();
+	            if (o.length > 0) contentTypeTreeViewer.reveal(o[0]);
+	        }
+	    });
+
+	    return sash;
 	}
+
 
 	public String getTitle() {
 		return SSEUIMessages.TaskTagExclusionTab_01;
