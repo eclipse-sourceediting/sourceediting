@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2015 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -24,20 +24,19 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.json.core.JSONCorePlugin;
 import org.eclipse.wst.json.core.contenttype.ContentTypeIdForJSON;
 import org.eclipse.wst.json.core.preferences.JSONCorePreferenceNames;
 import org.eclipse.wst.json.ui.internal.JSONUIMessages;
 //import org.eclipse.wst.json.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 
 public class JSONFilesPreferencePage extends AbstractPreferencePage {
@@ -69,8 +68,13 @@ public class JSONFilesPreferencePage extends AbstractPreferencePage {
 		fDefaultSuffix.setItems(validExtensions);
 		fDefaultSuffix.addSelectionListener(this);
 
-		Label label = createLabel(creatingGroup, JSONUIMessages.Encoding_desc);
-		((GridData) label.getLayoutData()).horizontalSpan = 2;
+		Text label = new Text(creatingGroup, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		label.setText(JSONUIMessages.Encoding_desc);
+		GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1);
+		label.setLayoutData(gd);
+		// visually match labels
+		label.setBackground(creatingGroup.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		label.setForeground(creatingGroup.getDisplay().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
 		fEncodingSettings = new EncodingSettings(creatingGroup, JSONUIMessages.Encoding);
 		((GridData) fEncodingSettings.getLayoutData()).horizontalSpan = 2;
 	}
