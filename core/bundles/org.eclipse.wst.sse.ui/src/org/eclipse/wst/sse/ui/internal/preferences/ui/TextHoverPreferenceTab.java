@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2020 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -143,11 +143,13 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 		//		addCheckBox(hoverComposite, showAffordanceLabel,
 		// CommonEditorPreferenceNames.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE, 0);
 
-		Label label = new Label(hoverComposite, SWT.NONE);
-		label.setText(SSEUIMessages.TextHoverPreferenceTab_hoverPreferences); //$NON-NLS-1$
+		Text hoverPrefsText = new Text(hoverComposite, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
+		hoverPrefsText.setText(SSEUIMessages.TextHoverPreferenceTab_hoverPreferences); //$NON-NLS-1$
 		gd = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
 		gd.horizontalAlignment = GridData.BEGINNING;
-		label.setLayoutData(gd);
+		hoverPrefsText.setLayoutData(gd);
+		hoverPrefsText.setBackground(hoverComposite.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		hoverPrefsText.setForeground(hoverComposite.getDisplay().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
 
 		fHoverTableViewer = CheckboxTableViewer.newCheckList(hoverComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
 		// Hover table
@@ -220,7 +222,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 		});
 
 		// Text field for modifier string
-		label = new Label(hoverComposite, SWT.LEFT);
+		Label label = new Label(hoverComposite, SWT.LEFT);
 		label.setText(SSEUIMessages.TextHoverPreferenceTab_keyModifier); //$NON-NLS-1$
 		fModifierEditor = new Text(hoverComposite, SWT.BORDER);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
