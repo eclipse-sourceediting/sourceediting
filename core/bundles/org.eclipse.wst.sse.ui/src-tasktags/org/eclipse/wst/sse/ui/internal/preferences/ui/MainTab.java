@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2011 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -250,9 +250,14 @@ class MainTab implements IPreferenceTab {
 		editButton.setEnabled(false);
 		removeButton.setEnabled(false);
 
-		Label warning = new Label(composite, SWT.NONE);
-		warning.setLayoutData(new GridData());
+		Text warning = new Text(composite, SWT.READ_ONLY | SWT.WRAP | SWT.MULTI);
 		warning.setText(SSEUIMessages.TaskTagPreferenceTab_19); //$NON-NLS-1$
+		GridData warnGD = new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1);
+		warnGD.widthHint = warning.computeSize(SWT.DEFAULT, SWT.DEFAULT).x + 50; // a bit wider than natural
+		warning.setLayoutData(warnGD);
+		// style like a label so it blends in
+		warning.setBackground(composite.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		warning.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
 
 		final ISelectionChangedListener selectionChangedListener = new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
