@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2023 IBM Corporation and others.
+ * Copyright (c) 2006, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,7 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 	// view ids
 	private static final String ID_SERVER = "org.eclipse.wst.server.ui.ServersView"; //$NON-NLS-1$
 	private static String ID_WST_SNIPPETS_VIEW = "org.eclipse.wst.common.snippets.internal.ui.SnippetsView"; //$NON-NLS-1$
-	private static final String ID_TERMINAL_VIEW = "org.eclipse.tm.terminal.view.ui.TerminalsView"; //$NON-NLS-1$
+	private static final String ID_TERMINAL_VIEW = "org.eclipse.terminal.view.ui.TerminalsView"; //$NON-NLS-1$
 	private static final String ID_SEARCH_VIEW = "org.eclipse.search.ui.views.SearchView"; //$NON-NLS-1$
 	private static final String ID_CONSOLE_VIEW= "org.eclipse.ui.console.ConsoleView"; //$NON-NLS-1$
 	String fExplorerViewID = IPageLayout.ID_PROJECT_EXPLORER;

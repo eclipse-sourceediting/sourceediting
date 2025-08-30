@@ -98,7 +98,7 @@
             <viewShortcut id="org.eclipse.ui.views.PropertySheet"/> 
             <viewShortcut id="org.eclipse.ui.views.ProblemView"/> 
             <viewShortcut id="org.eclipse.wst.server.ui.ServersView"/>
-            <viewShortcut id="org.eclipse.tm.terminal.view.ui.TerminalsView"/>
+            <viewShortcut id="org.eclipse.terminal.view.ui.TerminalsView"/>
             <viewShortcut id="org.eclipse.ui.views.minimap.MinimapView"/>
 
             <perspectiveShortcut id="org.eclipse.jdt.ui.JavaPerspective"/>
