@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -458,13 +458,13 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 * <jsp:declaration>tag
 	 * 
 	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
-	 * way for expedency. Should be evolved in future to depend on
+	 * way for expediency. Should be evolved in future to depend on
 	 * "nestedContext".
 	 */
 	public static boolean isXMLJSPDelimiter(IStructuredDocumentRegion fn) {
 		boolean isDelimiter = false;
 		if ((fn != null) && (fn instanceof ITextRegionContainer)) {
-			Object[] regions = ((ITextRegionContainer) fn).getRegions().toArray();
+			Object[] regions = fn.getRegions().toArray();
 			ITextRegion temp = null;
 			String regionText = ""; //$NON-NLS-1$
 			for (int i = 0; i < regions.length; i++) {

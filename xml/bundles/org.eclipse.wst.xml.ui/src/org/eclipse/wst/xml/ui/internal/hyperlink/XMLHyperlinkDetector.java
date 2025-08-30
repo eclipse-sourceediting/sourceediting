@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2011 IBM Corporation and others.
+ * Copyright (c) 2006, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -107,7 +107,7 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		// for now, only capable of creating 1 hyperlink
-		List hyperlinks = new ArrayList(0);
+		List<IHyperlink> hyperlinks = new ArrayList<>(0);
 
 		if ((region != null) && (textViewer != null)) {
 			IDocument document = textViewer.getDocument();
@@ -153,7 +153,7 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 		if (hyperlinks.size() == 0) {
 			return null;
 		}
-		return (IHyperlink[]) hyperlinks.toArray(new IHyperlink[0]);
+		return hyperlinks.toArray(new IHyperlink[0]);
 	}
 
 	/**
@@ -512,9 +512,9 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 		if (cmElement != null) {
 			CMNamedNodeMap attrDecls = cmElement.getAttributes();
 			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attrDecls);
-			List nodes = ModelQueryUtil.getModelQuery(attr.getOwnerDocument()).getAvailableContent(attr.getOwnerElement(), cmElement, ModelQuery.INCLUDE_ATTRIBUTES);
+			List<CMNode> nodes = ModelQueryUtil.getModelQuery(attr.getOwnerDocument()).getAvailableContent(attr.getOwnerElement(), cmElement, ModelQuery.INCLUDE_ATTRIBUTES);
 			for (int k = 0; k < nodes.size(); k++) {
-				CMNode cmnode = (CMNode) nodes.get(k);
+				CMNode cmnode = nodes.get(k);
 				if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
 					allAttributes.put(cmnode);
 				}
@@ -591,7 +591,7 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 	 * @return String resolved uri.
 	 */
 	private String resolveURI(String baseLocation, String publicId, String systemId) {
-		// dont resolve if there's nothing to resolve
+		// don't resolve if there's nothing to resolve
 		if ((baseLocation == null) && (publicId == null) && (systemId == null)) {
 			return null;
 		}

@@ -1186,7 +1186,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		String elementMatchString = node.getNodeName();
 		String cmnodeName = getRequiredName(parent, cmnode);// cmnode.getNodeName();
 		if (node instanceof Element) {
-			NamedNodeMap map = ((Element) node).getAttributes();
+			NamedNodeMap map = node.getAttributes();
 			String attrMatchString = ""; //$NON-NLS-1$
 			CMNamedNodeMap cmattrMap = null;
 			// iterate attribute possibilities for partially started node
@@ -1533,7 +1533,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 				// get entity proposals, passing in the appropriate start
 				// string
-				ModelQuery mq = ModelQueryUtil.getModelQuery(((Node) treeNode).getOwnerDocument());
+				ModelQuery mq = ModelQueryUtil.getModelQuery(treeNode.getOwnerDocument());
 				if (mq != null) {
 					CMDocument xmlDoc = mq.getCorrespondingCMDocument(treeNode);
 					CMNamedNodeMap cmmap = null;
@@ -1738,7 +1738,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				}
 				else {
 					// insert a valid new name, or possibly an end tag
-					contentAssistRequest = newContentAssistRequest(nodeAtOffset, ((Node) nodeAtOffset).getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
+					contentAssistRequest = newContentAssistRequest(nodeAtOffset, nodeAtOffset.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
 					addEndTagProposals(contentAssistRequest);
 					contentAssistRequest.setReplacementBeginPosition(documentPosition);
 					contentAssistRequest.setReplacementLength(0);

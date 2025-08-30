@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2012 IBM Corporation and others.
+ * Copyright (c) 2002, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -305,7 +305,7 @@ public class ModelQueryImpl implements ModelQuery
   /**
    * Returns a list of all CMNode 'meta data' that may be potentially added to the element.
    */
-  public List getAvailableContent(Element element, CMElementDeclaration ed, int includeOptions)
+  public List<CMNode> getAvailableContent(Element element, CMElementDeclaration ed, int includeOptions)
   {
     AvailableContentCMVisitor visitor = new AvailableContentCMVisitor(element, ed);
     List list = visitor.computeAvailableContent(includeOptions);

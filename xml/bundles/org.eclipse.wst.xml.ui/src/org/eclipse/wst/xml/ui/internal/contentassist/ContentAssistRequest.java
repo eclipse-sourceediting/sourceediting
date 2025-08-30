@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -23,10 +23,8 @@ import java.util.List;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.w3c.dom.Node;
-
 
 public class ContentAssistRequest {
 	protected IStructuredDocumentRegion documentRegion = null;
@@ -153,21 +151,21 @@ public class ContentAssistRequest {
 
 	public int getStartOffset() {
 		if ((getDocumentRegion() != null) && (getRegion() != null)) {
-			return ((ITextRegionCollection) getDocumentRegion()).getStartOffset(getRegion());
+			return getDocumentRegion().getStartOffset(getRegion());
 		}
 		return -1;
 	}
 
 	public String getText() {
 		if ((getDocumentRegion() != null) && (getRegion() != null)) {
-			return ((ITextRegionCollection) getDocumentRegion()).getText(getRegion());
+			return getDocumentRegion().getText(getRegion());
 		}
 		return ""; //$NON-NLS-1$
 	}
 
 	public int getTextEndOffset() {
 		if ((getDocumentRegion() != null) && (getRegion() != null)) {
-			return ((ITextRegionCollection) getDocumentRegion()).getTextEndOffset(getRegion());
+			return getDocumentRegion().getTextEndOffset(getRegion());
 		}
 		return -1;
 	}

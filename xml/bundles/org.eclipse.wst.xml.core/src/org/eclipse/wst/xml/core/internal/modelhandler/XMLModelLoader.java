@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -22,7 +22,6 @@ import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.model.AbstractModelLoader;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
-import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.xml.core.internal.DebugAdapterFactory;
@@ -83,10 +82,10 @@ public class XMLModelLoader extends AbstractModelLoader {
 		// created. Each time that happends, a side effect is to
 		// also "spread" sprecific registered adapters,
 		// they two can propigate is needed.
-		((INodeNotifier) domModel.getDocument()).getAdapterFor(PropagatingAdapter.class);
+		domModel.getDocument().getAdapterFor(PropagatingAdapter.class);
 
 		if (Debug.debugNotificationAndEvents) {
-			PropagatingAdapter propagatingAdapter = (PropagatingAdapter) ((INodeNotifier) domModel.getDocument()).getAdapterFor(PropagatingAdapter.class);
+			PropagatingAdapter propagatingAdapter = (PropagatingAdapter) domModel.getDocument().getAdapterFor(PropagatingAdapter.class);
 			propagatingAdapter.addAdaptOnCreateFactory(new DebugAdapterFactory());
 		}
 

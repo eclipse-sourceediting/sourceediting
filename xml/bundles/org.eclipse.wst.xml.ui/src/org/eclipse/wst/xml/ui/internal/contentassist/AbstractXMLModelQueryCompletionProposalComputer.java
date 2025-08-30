@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2021 IBM Corporation and others.
+ * Copyright (c) 2010, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -1443,7 +1443,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 
 				// get entity proposals, passing in the appropriate start
 				// string
-				ModelQuery mq = ModelQueryUtil.getModelQuery(((Node) treeNode).getOwnerDocument());
+				ModelQuery mq = ModelQueryUtil.getModelQuery(treeNode.getOwnerDocument());
 				if (mq != null) {
 					CMDocument xmlDoc = mq.getCorrespondingCMDocument(treeNode);
 					CMNamedNodeMap cmmap = null;
@@ -1621,7 +1621,7 @@ public abstract class AbstractXMLModelQueryCompletionProposalComputer extends Ab
 		String elementMatchString = node.getNodeName();
 		String cmnodeName = getRequiredName(parent, cmnode);// cmnode.getNodeName();
 		if (node instanceof Element) {
-			NamedNodeMap map = ((Element) node).getAttributes();
+			NamedNodeMap map = node.getAttributes();
 			String attrMatchString = ""; //$NON-NLS-1$
 			// iterate attribute possibilities for partially started node
 			for (int i = 0; (map != null) && (i < map.getLength()); i++) {

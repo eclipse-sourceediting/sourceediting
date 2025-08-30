@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2022 IBM Corporation and others.
+ * Copyright (c) 2010, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -870,7 +870,7 @@ public abstract class AbstractXMLCompletionProposalComputer implements ICompleti
 				}
 				else {
 					// insert a valid new name, or possibly an end tag
-					contentAssistRequest = new ContentAssistRequest(nodeAtOffset, ((Node) nodeAtOffset).getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
+					contentAssistRequest = new ContentAssistRequest(nodeAtOffset, nodeAtOffset.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
 					addEndTagProposals(contentAssistRequest, context);
 					contentAssistRequest.setReplacementBeginPosition(documentPosition);
 					contentAssistRequest.setReplacementLength(0);

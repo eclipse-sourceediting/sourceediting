@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,6 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.ISourceGenerator;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
-import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -364,7 +363,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 			// xsl:attribute
 			String nodeNamespaceURI = node.getNamespaceURI();
 			if (XSL_NAMESPACE.equals(nodeNamespaceURI)) {
-				String nodeName = ((Element) node).getLocalName();
+				String nodeName = node.getLocalName();
 				if (XSL_ATTRIBUTE.equals(nodeName) || XSL_TEXT.equals(nodeName)) {
 					sawXmlSpace = true;
 					formatContraints.setInPreserveSpaceElement(true);

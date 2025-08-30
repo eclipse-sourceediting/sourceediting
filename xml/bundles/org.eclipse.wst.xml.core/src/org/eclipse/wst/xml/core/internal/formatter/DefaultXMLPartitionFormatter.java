@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2020 IBM Corporation and others.
+ * Copyright (c) 2007, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,6 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -1489,7 +1488,7 @@ public class DefaultXMLPartitionFormatter {
 				// xsl:attribute
 				String nodeNamespaceURI = currentNode.getNamespaceURI();
 				if (XSL_NAMESPACE.equals(nodeNamespaceURI)) {
-					String nodeName = ((Element) currentNode).getLocalName();
+					String nodeName = currentNode.getLocalName();
 					if (XSL_ATTRIBUTE.equals(nodeName) || XSL_TEXT.equals(nodeName)) {
 						childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.PRESERVE);
 					}
