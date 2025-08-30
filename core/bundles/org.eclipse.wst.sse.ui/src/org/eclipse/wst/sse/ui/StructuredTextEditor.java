@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2023 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -1408,7 +1408,7 @@ public class StructuredTextEditor extends TextEditor {
 	protected void createActions() {
 		super.createActions();
 		ResourceBundle resourceBundle = SSEUIMessages.getResourceBundle();
-		IWorkbenchHelpSystem helpSystem = SSEUIPlugin.getDefault().getWorkbench().getHelpSystem();
+		IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
 		// TextView Action - moving the selected text to
 		// the clipboard
 		// override the cut/paste/delete action to make
@@ -2096,7 +2096,7 @@ public class StructuredTextEditor extends TextEditor {
 		
 		IDocument newDocument = getDocumentProvider().getDocument(input);
 		if (newDocument instanceof IExecutionDelegatable) {
-			((IExecutionDelegatable) newDocument).setExecutionDelegate(new EditorExecutionContext(this));
+			((IExecutionDelegatable) newDocument).setExecutionDelegate(new EditorExecutionContext(getEditorPart(), this));
 		}
 
 		// if we have a Model provider, get the model from it
@@ -3554,7 +3554,7 @@ public class StructuredTextEditor extends TextEditor {
 
 	void updateRangeIndication(ISelection selection) {
 		boolean rangeUpdated = false;
-		if (selection instanceof IStructuredSelection && !((IStructuredSelection) selection).isEmpty()) {
+		if (selection instanceof IStructuredSelection && !selection.isEmpty()) {
 			Object[] objects = ((IStructuredSelection) selection).toArray();
 			if (objects.length > 0 ) {
 				// no ordering is guaranteed for multiple selection

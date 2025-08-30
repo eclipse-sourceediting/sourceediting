@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -47,7 +47,7 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 		}
 	}
 	
-	private Stack fExecutionDelegates = new Stack();
+	private Stack<IExecutionDelegate> fExecutionDelegates = new Stack<>();
 	private ILock fLockable = Job.getJobManager().newLock();
 
 	public JobSafeStructuredDocument() {
@@ -69,7 +69,7 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 
 	private IExecutionDelegate getExecutionDelegate() {
 		if (!fExecutionDelegates.isEmpty())
-			return (IExecutionDelegate) fExecutionDelegates.peek();
+			return fExecutionDelegates.peek();
 		return null;
 	}
 	
@@ -90,7 +90,7 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 	protected final void releaseLock() {
 		getLockObject().release();
 	}
-	
+
 	/*
 	 * @see org.eclipse.jface.text.IDocument.replace(int, int, String)
 	 */

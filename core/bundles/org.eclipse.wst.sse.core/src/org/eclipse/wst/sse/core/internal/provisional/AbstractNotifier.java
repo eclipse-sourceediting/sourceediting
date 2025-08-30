@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2010 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -110,11 +110,11 @@ public abstract class AbstractNotifier implements INodeNotifier {
 	 * Returns a shallow clone of list, since clients should not manipulate
 	 * our list directly. Instead, they should use add/removeAdapter.
 	 */
-	public synchronized Collection getAdapters() {
+	public synchronized Collection<INodeAdapter> getAdapters() {
 		if (fAdapters != null) {
 			if (adapterCount == 0) {
 				fAdapters = null;
-				return Collections.EMPTY_LIST;
+				return Collections.emptyList();
 			}
 			else {
 				// we need to make a new array, to be sure
@@ -132,7 +132,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 			}
 		}
 		else
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 	}
 
 	private long getAdapterTimeCriteria() {
@@ -185,7 +185,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 			}
 		}
 
-		for (int i = 0; i < localAdapterCount; i++) {
+		for (int i = 0; localAdapters != null && i < localAdapterCount; i++) {
 			INodeAdapter a = localAdapters[i];
 
 			if (Logger.DEBUG_ADAPTERNOTIFICATIONTIME) {

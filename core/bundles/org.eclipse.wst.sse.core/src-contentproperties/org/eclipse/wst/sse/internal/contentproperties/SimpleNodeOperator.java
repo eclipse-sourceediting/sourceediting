@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2012 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -248,7 +248,7 @@ class SimpleNodeOperator {
 				if (m == null)
 					continue;
 				if (m.getNamedItem(attName) != null) {
-					if (attValue.equals(((Attr) m.getNamedItem(attName)).getNodeValue()))
+					if (attValue.equals(m.getNamedItem(attName).getNodeValue()))
 						return navpoint;
 				}
 				NodeList childNodes = navpoint.getChildNodes();

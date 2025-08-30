@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2018 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -37,12 +38,14 @@ class EditorExecutionContext implements IExecutionDelegate {
 	 * garbage creation. Will make use of the progress service if possible.
 	 */
 	private static class ReusableUIRunner implements Runnable, IRunnableWithProgress {
-		private StructuredTextEditor editor;
+		private StructuredTextEditor textEditor;
+		private IEditorPart editorPart = null;
 		private ISafeRunnable fRunnable = null;
 
-		ReusableUIRunner(StructuredTextEditor part) {
+		ReusableUIRunner(IEditorPart editorPart, StructuredTextEditor textEditor) {
 			super();
-			editor = part;
+			this.textEditor = textEditor;
+			this.editorPart = editorPart;
 		}
 
 		/*
@@ -51,7 +54,7 @@ class EditorExecutionContext implements IExecutionDelegate {
 		 * @see java.lang.Runnable#run()
 		 */
 		public void run() {
-			IWorkbenchPartSite site = editor.getEditorPart().getSite();
+			IWorkbenchPartSite site = editorPart.getSite();
 			final IWorkbenchWindow workbenchWindow = (site == null) ? null : site.getWorkbenchWindow();
 			final IWorkbenchSiteProgressService jobService = (site == null) ? null : site.getAdapter(IWorkbenchSiteProgressService.class);
 			/*
@@ -66,7 +69,7 @@ class EditorExecutionContext implements IExecutionDelegate {
 				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=165180
 				 */
 				try {
-					jobService.runInUI(workbenchWindow, this, editor.getEditorPart().getEditorInput().getAdapter(IResource.class));
+					jobService.runInUI(workbenchWindow, this, editorPart.getEditorInput().getAdapter(IResource.class));
 				}
 				catch (InvocationTargetException e) {
 					Logger.logException(e);
@@ -88,7 +91,9 @@ class EditorExecutionContext implements IExecutionDelegate {
 				IWorkbench workbench = SSEUIPlugin.getInstance().getWorkbench();
 				final Display display = workbench.getDisplay();
 				if (display != null && !display.isDisposed()) {
-					editor.beginBackgroundOperation();
+					if (textEditor != null) {
+						textEditor.beginBackgroundOperation();
+					}
 					try {
 						/*
 						 * Here's where the document update/modification
@@ -102,7 +107,9 @@ class EditorExecutionContext implements IExecutionDelegate {
 						 * particular update is done. Its up to the editor to
 						 * decide exactly when to leave its "background mode"
 						 */
-						editor.endBackgroundOperation();
+						if (textEditor != null) {
+							textEditor.endBackgroundOperation();
+						}
 					}
 				}
 				fRunnable = null;
@@ -126,13 +133,15 @@ class EditorExecutionContext implements IExecutionDelegate {
 		}
 	}
 
-	StructuredTextEditor fEditor;
+	StructuredTextEditor fTextEditor;
+	IEditorPart fEditorPart = null;
 	private ReusableUIRunner fReusableRunner;
 
-	public EditorExecutionContext(StructuredTextEditor editor) {
+	public EditorExecutionContext(IEditorPart editorPart, StructuredTextEditor editor) {
 		super();
-		fEditor = editor;
-		fReusableRunner = new ReusableUIRunner(fEditor);
+		fEditorPart = editorPart;
+		fTextEditor = editor;
+		fReusableRunner = new ReusableUIRunner(fEditorPart, fTextEditor);
 	}
 
 	/*

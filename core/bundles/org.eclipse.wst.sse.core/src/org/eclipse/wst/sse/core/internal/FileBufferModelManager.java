@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2024 IBM Corporation and others.
+ * Copyright (c) 2001, 2025 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -288,7 +288,7 @@ public class FileBufferModelManager {
 			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(root));
 			for (int i = 0; i < files.length; i++) {
 				if ((files[i].getType() & IResource.FOLDER) == IResource.FOLDER) {
-					if (fPath.isPrefixOf(((IFolder) files[i]).getFullPath())) {
+					if (fPath.isPrefixOf(files[i].getFullPath())) {
 						return (IFolder) files[i];
 					}
 				}
@@ -354,7 +354,7 @@ public class FileBufferModelManager {
 				if (Logger.DEBUG_TEXTBUFFERLIFECYCLE) {
 					Logger.log(Logger.INFO, "Discarded buffer: " + locationString(textBuffer) + " " + buffer + " " + ((ITextFileBuffer) buffer).getDocument()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
-				DocumentInfo info = (DocumentInfo) fDocumentMap.get(textBuffer.getDocument());
+				DocumentInfo info = fDocumentMap.get(textBuffer.getDocument());
 				if (info != null) {
 					info.bufferReferenceCount--;
 					checkReferenceCounts(info, textBuffer.getDocument());
@@ -370,7 +370,7 @@ public class FileBufferModelManager {
 				}
 				if (!(textBuffer.getDocument() instanceof IStructuredDocument))
 					return;
-				DocumentInfo info = (DocumentInfo) fDocumentMap.get(textBuffer.getDocument());
+				DocumentInfo info = fDocumentMap.get(textBuffer.getDocument());
 				if (info != null && info.model != null) {
 					String msg = "Updating model dirty state for" + locationString(textBuffer); //$NON-NLS-1$
 					if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT || Logger.DEBUG_TEXTBUFFERLIFECYCLE) {
@@ -430,9 +430,9 @@ public class FileBufferModelManager {
 		FileBuffers.getTextFileBufferManager().removeFileBufferListener(instance.fFileBufferListener);
 
 		if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT || Logger.DEBUG_FILEBUFFERMODELLEAKS) {
-			IDocument[] danglingDocuments = (IDocument[]) instance.fDocumentMap.keySet().toArray(new IDocument[0]);
+			IDocument[] danglingDocuments = instance.fDocumentMap.keySet().toArray(new IDocument[0]);
 			for (int i = 0; i < danglingDocuments.length; i++) {
-				DocumentInfo info = (DocumentInfo) instance.fDocumentMap.get(danglingDocuments[i]);
+				DocumentInfo info = instance.fDocumentMap.get(danglingDocuments[i]);
 				if (info.modelReferenceCount > 0)
 					System.err.println("LEAKED MODEL: " + locationString(info.buffer) + " " + (info.model != null ? info.model.getId() : null)); //$NON-NLS-1$ //$NON-NLS-2$
 				if (info.bufferReferenceCount > 0)
@@ -446,13 +446,13 @@ public class FileBufferModelManager {
 	}
 
 	// a map of IStructuredDocuments to DocumentInfo objects
-	Map fDocumentMap = null;
+	Map<IDocument, DocumentInfo> fDocumentMap = null;
 
 	FileBufferMapper fFileBufferListener = new FileBufferMapper();
 
 	FileBufferModelManager() {
 		super();
-		fDocumentMap = new Hashtable(4);
+		fDocumentMap = new Hashtable<>(4);
 	}
 
 	public String calculateId(IFile file) {
@@ -507,7 +507,7 @@ public class FileBufferModelManager {
 			Logger.logException(iae);
 			return false;
 		}
-		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
+		DocumentInfo info = fDocumentMap.get(document);
 		if (info == null)
 			return false;
 		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
@@ -649,7 +649,7 @@ public class FileBufferModelManager {
 			Logger.logException(iae);
 			return false;
 		}
-		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
+		DocumentInfo info = fDocumentMap.get(document);
 		if( info == null)
 			return false;
 		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
@@ -676,14 +676,14 @@ public class FileBufferModelManager {
 			return null;
 		}
 
-		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
+		DocumentInfo info = fDocumentMap.get(document);
 		if (info != null)
 			return info.buffer;
 		return null;
 	}
 
 	String getContentTypeID(IDocument document) {
-		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
+		DocumentInfo info = fDocumentMap.get(document);
 		if (info != null)
 			return info.contentTypeID;
 		return null;
@@ -706,7 +706,7 @@ public class FileBufferModelManager {
 			bufferManager.connect(location, LocationKind.LOCATION, getProgressMonitor());
 			ITextFileBuffer buffer = bufferManager.getTextFileBuffer(location, LocationKind.LOCATION);
 			if (buffer != null) {
-				DocumentInfo info = (DocumentInfo) fDocumentMap.get(buffer.getDocument());
+				DocumentInfo info = fDocumentMap.get(buffer.getDocument());
 				if (info != null) {
 					/*
 					 * Note: "info" being null means someone requested a
@@ -781,7 +781,7 @@ public class FileBufferModelManager {
 				bufferManager.connect(location, LocationKind.IFILE, getProgressMonitor());
 				ITextFileBuffer buffer = bufferManager.getTextFileBuffer(location, LocationKind.IFILE);
 				if (buffer != null) {
-					DocumentInfo info = (DocumentInfo) fDocumentMap.get(buffer.getDocument());
+					DocumentInfo info = fDocumentMap.get(buffer.getDocument());
 					if (info != null) {
 						/*
 						 * Note: "info" being null means someone requested a
@@ -843,7 +843,7 @@ public class FileBufferModelManager {
 			return null;
 		}
 
-		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
+		DocumentInfo info = fDocumentMap.get(document);
 		if (info != null && info.model == null) {
 			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT) {
 				Logger.log(Logger.INFO, "FileBufferModelManager creating model for " + locationString(info.buffer) + " " + info.buffer.getDocument()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -906,7 +906,7 @@ public class FileBufferModelManager {
 			return false;
 		}
 
-		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
+		DocumentInfo info = fDocumentMap.get(document);
 		return info != null;
 	}
 
@@ -916,7 +916,7 @@ public class FileBufferModelManager {
 			Logger.logException(iae);
 			return;
 		}
-		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
+		DocumentInfo info = fDocumentMap.get(document);
 		if (info != null) {
 			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT) {
 				Logger.log(Logger.INFO, "FileBufferModelManager noticed full release of model for " + locationString(info.buffer) + " " + info.buffer.getDocument()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -954,7 +954,7 @@ public class FileBufferModelManager {
 			Logger.logException(iae);
 			return;
 		}
-		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
+		DocumentInfo info = fDocumentMap.get(document);
 		if (info == null) {
 			Logger.log(Logger.ERROR, "FileBufferModelManager was asked to revert a document that was not being managed"); //$NON-NLS-1$
 		}
