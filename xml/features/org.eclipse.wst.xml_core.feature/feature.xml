@@ -31,19 +31,6 @@
       %license
    </license>
 
-
-   <plugin
-         id="org.apache.xml.resolver"
-         version="1.2.0.qualifier"/>
-
-   <plugin
-         id="org.apache.xml.serializer"
-         version="2.7.1.qualifier"/>
-
-   <plugin
-         id="org.apache.xerces"
-         version="0.0.0"/>
-
    <plugin
          id="org.eclipse.wst.standard.schemas"
          version="0.0.0"/>
