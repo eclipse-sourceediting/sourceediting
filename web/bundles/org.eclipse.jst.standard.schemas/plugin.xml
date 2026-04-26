@@ -346,6 +346,9 @@
             <uri
                 name="https://jakarta.ee/xml/ns/persistence/orm/orm_3_1.xsd"
                 uri="dtdsAndSchemas/orm_3_1.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/persistence/orm/orm_3_2.xsd"
+                uri="dtdsAndSchemas/orm_3_2.xsd" />
 
 
             <uri
@@ -369,6 +372,9 @@
             <uri
                 name="https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
                 uri="dtdsAndSchemas/persistence_3_0.xsd" />
+            <uri
+                name="https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
+                uri="dtdsAndSchemas/persistence_3_2.xsd" />
 
 
             <uri
