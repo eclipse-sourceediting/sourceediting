@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2015 IBM Corporation and others.
+ * Copyright (c) 2004, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -24,16 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.jsp.tagext.FunctionInfo;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-import javax.servlet.jsp.tagext.TagData;
-import javax.servlet.jsp.tagext.TagExtraInfo;
-import javax.servlet.jsp.tagext.TagFileInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
-import javax.servlet.jsp.tagext.ValidationMessage;
-import javax.servlet.jsp.tagext.VariableInfo;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
@@ -42,6 +32,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
@@ -79,14 +70,15 @@ import com.ibm.icu.text.MessageFormat;
  */
 public class TaglibHelper {
 
-	private static final String ITERATION_QUALIFIER = "javax.servlet.jsp.tagext"; //$NON-NLS-1$
+	private static final List<String> ITERATION_QUALIFIERS = List.of(
+		"jakarta.servlet.jsp.tagext",
+		"javax.servlet.jsp.tagext"); //$NON-NLS-1$
 	private static final String ITERATION_NAME = "IterationTag"; //$NON-NLS-1$
 	
 	// for debugging
 	private static final boolean DEBUG;
 	static {
-		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/taglibvars"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		DEBUG = Boolean.parseBoolean(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/taglibvars")); //$NON-NLS-1$
 	}
 
 	private IProject fProject = null;
@@ -99,9 +91,9 @@ public class TaglibHelper {
 	 * Because the TaglibHelper is destroyed and recreated whenever
 	 * the classpath changes this cache will not become stale
 	 */
-	Set fNotFoundClasses = null;
+	Set<String> fNotFoundClasses = null;
 
-	Map fClassMap = null;
+	Map<String, Boolean> fClassMap = null;
 
 	/**
 	 * Used to keep the {@link #fNotFoundClasses} cache clean when memory is low
@@ -113,8 +105,8 @@ public class TaglibHelper {
 		setProject(project);
 		fMemoryListener = new MemoryListener();
 		fMemoryListener.connect();
-		fNotFoundClasses = new HashSet();
-		fClassMap = Collections.synchronizedMap(new HashMap());
+		fNotFoundClasses = new HashSet<>();
+		fClassMap = Collections.synchronizedMap(new HashMap<>());
 	}
 
 	/**
@@ -131,7 +123,7 @@ public class TaglibHelper {
 		}
 		synchronized (fClassMap) {
 			if (fClassMap.containsKey(type.getFullyQualifiedName()))
-				return ((Boolean) fClassMap.get(type.getFullyQualifiedName())).booleanValue();
+				return fClassMap.get(type.getFullyQualifiedName()).booleanValue();
 		}
 
 		String signature;
@@ -184,7 +176,7 @@ public class TaglibHelper {
 	private boolean handleInterface(IType type, String qualifier, String name) throws JavaModelException, ClassNotFoundException {
 		boolean isIteration = false;
 		// Qualified interface is an iteration tag
-		if (ITERATION_QUALIFIER.equals(qualifier) && ITERATION_NAME.equals(name))
+		if (ITERATION_QUALIFIERS.contains(qualifier) && ITERATION_NAME.equals(name))
 			isIteration = true;
 		// Check ancestors of this interface
 		else
@@ -202,7 +194,7 @@ public class TaglibHelper {
 		return qual.toString();
 	}
 
-	private boolean isIterationTag(TLDElementDeclaration elementDecl, IStructuredDocument document, ITextRegionCollection customTag, List problems) {
+	private boolean isIterationTag(TLDElementDeclaration elementDecl, IStructuredDocument document, ITextRegionCollection customTag, List<IProblem> problems) {
 		String className = elementDecl.getTagclass();
 		if (className == null || className.length() == 0 || fProject == null || fNotFoundClasses.contains(className))
 			return false;
@@ -210,14 +202,14 @@ public class TaglibHelper {
 		try {
 			synchronized (fClassMap) {
 				if (fClassMap.containsKey(className))
-					return ((Boolean) fClassMap.get(className)).booleanValue();
+					return fClassMap.get(className).booleanValue();
 			}
 			return isIterationTag(fJavaProject.findType(className));
 		} catch (ClassNotFoundException e) {
 			//the class could not be found so add it to the cache
 			fNotFoundClasses.add(className);
 
-			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TagClassNotFound, JSPCoreMessages.TaglibHelper_3, className, true);
+			IProblem createdProblem = createJSPProblem(document, customTag, IJSPProblem.TagClassNotFound, JSPCoreMessages.TaglibHelper_3, className, true);
 			if (createdProblem != null)
 				problems.add(createdProblem);
 			if (DEBUG)
@@ -238,26 +230,26 @@ public class TaglibHelper {
 		return false;
 	}
 
-	public CustomTag getCustomTag(String tagToAdd, IStructuredDocument structuredDoc, ITextRegionCollection customTag, List problems) {
-		List results = new ArrayList();
+	public CustomTag getCustomTag(String tagToAdd, IStructuredDocument structuredDoc, ITextRegionCollection customTag, List<IProblem> problems) {
+		List<TaglibVariable> results = new ArrayList<>();
 		boolean isIterationTag = false;
 		String tagClass = null;
 		String teiClass = null;
 		if (problems == null)
-			problems = new ArrayList();
+			problems = new ArrayList<IProblem>();
 		ModelQuery mq = getModelQuery(structuredDoc);
 		if (mq != null) {
 			TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(structuredDoc);
 
 			if (mgr != null) {
 
-				List trackers = mgr.getCMDocumentTrackers(-1);
-				Iterator taglibs = trackers.iterator();
+				List<TaglibTracker> trackers = mgr.getCMDocumentTrackers(-1);
+				Iterator<TaglibTracker> taglibs = trackers.iterator();
 	
 				CMDocument doc = null;
 				CMNamedNodeMap elements = null;
 				while (taglibs.hasNext()) {
-					doc = (CMDocument) taglibs.next();
+					doc = taglibs.next();
 					CMNode node = null;
 					if ((elements = doc.getElements()) != null && (node = elements.getNamedItem(tagToAdd)) != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION) {
 	
@@ -292,7 +284,7 @@ public class TaglibHelper {
 			}
 		}
 
-		return new CustomTag(tagToAdd, tagClass, teiClass, (TaglibVariable[]) results.toArray(new TaglibVariable[results.size()]), isIterationTag);
+		return new CustomTag(tagToAdd, tagClass, teiClass, results.toArray(new TaglibVariable[results.size()]), isIterationTag);
 	}
 	/**
 	 * @param tagToAdd
@@ -304,11 +296,11 @@ public class TaglibHelper {
 	 *            tag
 	 * @param problems problems that are generated while creating variables are added to this collection
 	 */
-	public TaglibVariable[] getTaglibVariables(String tagToAdd, IStructuredDocument structuredDoc, ITextRegionCollection customTag, List problems) {
+	public TaglibVariable[] getTaglibVariables(String tagToAdd, IStructuredDocument structuredDoc, ITextRegionCollection customTag, List<IProblem> problems) {
 
-		List results = new ArrayList();
+		List<TaglibVariable> results = new ArrayList<>();
 		if (problems == null)
-			problems = new ArrayList();
+			problems = new ArrayList<>();
 		ModelQuery mq = getModelQuery(structuredDoc);
 		if (mq != null) {
 			TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(structuredDoc);
@@ -318,8 +310,8 @@ public class TaglibHelper {
 			if (mgr == null)
 				return new TaglibVariable[0];
 
-			List trackers = mgr.getCMDocumentTrackers(-1);
-			Iterator taglibs = trackers.iterator();
+			List<TaglibTracker> trackers = mgr.getCMDocumentTrackers(-1);
+			Iterator<TaglibTracker> taglibs = trackers.iterator();
 
 			// TaglibSupport support = ((TaglibModelQuery)
 			// mq).getTaglibSupport();
@@ -331,7 +323,7 @@ public class TaglibHelper {
 			CMDocument doc = null;
 			CMNamedNodeMap elements = null;
 			while (taglibs.hasNext()) {
-				doc = (CMDocument) taglibs.next();
+				doc = taglibs.next();
 				CMNode node = null;
 				if ((elements = doc.getElements()) != null && (node = elements.getNamedItem(tagToAdd)) != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION) {
 
@@ -361,7 +353,7 @@ public class TaglibHelper {
 			}
 		}
 
-		return (TaglibVariable[]) results.toArray(new TaglibVariable[results.size()]);
+		return results.toArray(new TaglibVariable[results.size()]);
 	}
 
 	/**
@@ -371,11 +363,11 @@ public class TaglibHelper {
 	 *            list where the <code>TaglibVariable</code> s are added
 	 * @param node
 	 */
-	private void addVariables(List results, CMNode node, ITextRegionCollection customTag) {
-		List list = ((TLDElementDeclaration) node).getVariables();
-		Iterator it = list.iterator();
+	private void addVariables(List<TaglibVariable> results, CMNode node, ITextRegionCollection customTag) {
+		List<TLDVariable> list = ((TLDElementDeclaration) node).getVariables();
+		Iterator<TLDVariable> it = list.iterator();
 		while (it.hasNext()) {
-			TLDVariable var = (TLDVariable) it.next();
+			TLDVariable var = it.next();
 			if (!var.getDeclare())
 				continue;
 
@@ -473,7 +465,7 @@ public class TaglibHelper {
 	 * @param uri
 	 *            URI where the tld can be found
 	 */
-	private void addTEIVariables(IStructuredDocument document, ITextRegionCollection customTag, List results, TLDElementDeclaration decl, String prefix, String uri, List problems) {
+	private void addTEIVariables(IStructuredDocument document, ITextRegionCollection customTag, List<TaglibVariable> results, TLDElementDeclaration decl, String prefix, String uri, List<IProblem> problems) {
 		if (TLDElementDeclaration.SOURCE_TAG_FILE.equals(decl.getProperty(TLDElementDeclaration.TAG_SOURCE)) || fJavaProject == null)
 			return;
 		String teiClassname = decl.getTeiclass();
@@ -482,26 +474,28 @@ public class TaglibHelper {
 
 		ClassLoader loader = getClassloader();
 
+//		Class<javax.servlet.jsp.tagext.TagExtraInfo> teiClass = null;
 		Class teiClass = null;
 		try {
 			/*
 			 * JDT could tell us about it, but loading and calling it would
 			 * still take time
 			 */
+//			teiClass = (Class<javax.servlet.jsp.tagext.TagExtraInfo>) Class.forName(teiClassname, true, loader);
 			teiClass = Class.forName(teiClassname, true, loader);
 			if (teiClass != null) {
 				Object teiObject = teiClass.newInstance();
-				if (TagExtraInfo.class.isInstance(teiObject)) {
-					TagExtraInfo tei = (TagExtraInfo) teiObject;
-					Hashtable tagDataTable = extractTagData(customTag);
-					TagInfo info = getTagInfo(decl, tei, prefix, uri);
+				if (javax.servlet.jsp.tagext.TagExtraInfo.class.isInstance(teiObject)) {
+					javax.servlet.jsp.tagext.TagExtraInfo tei = (javax.servlet.jsp.tagext.TagExtraInfo) teiObject;
+					Hashtable<String, Object> tagDataTable = extractTagData(customTag);
+					javax.servlet.jsp.tagext.TagInfo info = getTagInfo(decl, tei, prefix, uri);
 					if (info != null) {
 						tei.setTagInfo(info);
 
 						// add to results
-						TagData td = new TagData(tagDataTable);
+						javax.servlet.jsp.tagext.TagData td = new javax.servlet.jsp.tagext.TagData(tagDataTable);
 
-						VariableInfo[] vInfos = tei.getVariableInfo(td);
+						javax.servlet.jsp.tagext.VariableInfo[] vInfos = tei.getVariableInfo(td);
 						if (vInfos != null) {
 							for (int i = 0; i < vInfos.length; i++) {
 								String className = vInfos[i].getClassName();
@@ -512,10 +506,42 @@ public class TaglibHelper {
 							}
 						}
 
-						ValidationMessage[] messages = tei.validate(td);
+						javax.servlet.jsp.tagext.ValidationMessage[] messages = tei.validate(td);
 						if (messages != null && messages.length > 0) {
 							for (int i = 0; i < messages.length; i++) {
-								Object createdProblem = createValidationMessageProblem(document, customTag, messages[i].getMessage());
+								IProblem createdProblem = createValidationMessageProblem(document, customTag, messages[i].getMessage());
+								if (createdProblem != null) {
+									problems.add(createdProblem);
+								}
+							}
+						}
+					}
+				}
+				else if (jakarta.servlet.jsp.tagext.TagExtraInfo.class.isInstance(teiObject)) {
+					jakarta.servlet.jsp.tagext.TagExtraInfo tei = (jakarta.servlet.jsp.tagext.TagExtraInfo) teiObject;
+					Hashtable<String, Object> tagDataAttrs = extractTagData(customTag);
+					jakarta.servlet.jsp.tagext.TagInfo info = getTagInfo(decl, tei, prefix, uri);
+					if (info != null) {
+						tei.setTagInfo(info);
+
+						// add to results
+						jakarta.servlet.jsp.tagext.TagData td = new jakarta.servlet.jsp.tagext.TagData(tagDataAttrs);
+
+						jakarta.servlet.jsp.tagext.VariableInfo[] vInfos = tei.getVariableInfo(td);
+						if (vInfos != null) {
+							for (int i = 0; i < vInfos.length; i++) {
+								String className = vInfos[i].getClassName();
+								if (className != null) {
+									className = getVariableClass(className);
+								}
+								results.add(new TaglibVariable(className, vInfos[i].getVarName(), vInfos[i].getScope(), decl.getDescription()));
+							}
+						}
+
+						jakarta.servlet.jsp.tagext.ValidationMessage[] messages = tei.validate(td);
+						if (messages != null && messages.length > 0) {
+							for (int i = 0; i < messages.length; i++) {
+								IProblem createdProblem = createValidationMessageProblem(document, customTag, messages[i].getMessage());
 								if (createdProblem != null) {
 									problems.add(createdProblem);
 								}
@@ -524,7 +550,7 @@ public class TaglibHelper {
 					}
 				}
 				else {
-					Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassMisc, JSPCoreMessages.TaglibHelper_2, teiClassname, true);
+					IProblem createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassMisc, JSPCoreMessages.TaglibHelper_2, teiClassname, true);
 					if (createdProblem != null) {
 						problems.add(createdProblem);
 					}
@@ -539,7 +565,7 @@ public class TaglibHelper {
 			//the class could not be found so add it to the cache
 			fNotFoundClasses.add(teiClassname);
 
-			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassNotFound, JSPCoreMessages.TaglibHelper_0, teiClassname, true);
+			IProblem createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassNotFound, JSPCoreMessages.TaglibHelper_0, teiClassname, true);
 			if (createdProblem != null) {
 				problems.add(createdProblem);
 			}
@@ -547,8 +573,8 @@ public class TaglibHelper {
 			if (DEBUG)
 				logException(teiClassname, e);
 		}
-		catch (InstantiationException e) {
-			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassNotInstantiated, JSPCoreMessages.TaglibHelper_1, teiClassname, true);
+		catch (InstantiationException|ClassCastException e) {
+			IProblem createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassNotInstantiated, JSPCoreMessages.TaglibHelper_1, teiClassname, true);
 			if (createdProblem != null) {
 				problems.add(createdProblem);
 			}
@@ -566,7 +592,7 @@ public class TaglibHelper {
 		// logException(teiClassname, e);
 		// }
 		catch (Exception e) {
-			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassMisc, JSPCoreMessages.TaglibHelper_2, teiClassname, true);
+			IProblem createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassMisc, JSPCoreMessages.TaglibHelper_2, teiClassname, true);
 			if (createdProblem != null) {
 				problems.add(createdProblem);
 			}
@@ -576,7 +602,7 @@ public class TaglibHelper {
 		}
 		catch (Error e) {
 			// this is 3rd party code, need to catch all errors
-			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassNotInstantiated, JSPCoreMessages.TaglibHelper_1, teiClassname, true);
+			IProblem createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassNotInstantiated, JSPCoreMessages.TaglibHelper_1, teiClassname, true);
 			if (createdProblem != null) {
 				problems.add(createdProblem);
 			}
@@ -593,7 +619,7 @@ public class TaglibHelper {
 	 * @param teiClass
 	 * @return
 	 */
-	private Object createJSPProblem(final IStructuredDocument document, final ITextRegionCollection customTag, final int problemID, final String messageKey, final String argument, boolean preferVars) {
+	private IProblem createJSPProblem(final IStructuredDocument document, final ITextRegionCollection customTag, final int problemID, final String messageKey, final String argument, boolean preferVars) {
 		final String tagname = customTag.getText(customTag.getRegions().get(1));
 
 		final int start;
@@ -666,7 +692,7 @@ public class TaglibHelper {
 			}
 
 			public String getMessage() {
-				return MessageFormat.format(messageKey, new String[]{tagname, argument});
+				return MessageFormat.format(messageKey, new Object[]{tagname, argument});
 			}
 
 			public int getID() {
@@ -688,7 +714,7 @@ public class TaglibHelper {
 	 * @param validationMessage
 	 * @return
 	 */
-	private Object createValidationMessageProblem(final IStructuredDocument document, final ITextRegionCollection customTag, final String validationMessage) {
+	private IProblem createValidationMessageProblem(final IStructuredDocument document, final ITextRegionCollection customTag, final String validationMessage) {
 		final int start;
 		if (customTag.getNumberOfRegions() > 3) {
 			start = customTag.getStartOffset(customTag.getRegions().get(2));
@@ -783,12 +809,12 @@ public class TaglibHelper {
 	 * @return the TagInfo for the TLDELementDeclaration if the declaration is
 	 *         valid, otherwise null
 	 */
-	private TagInfo getTagInfo(final TLDElementDeclaration decl, TagExtraInfo tei, String prefix, String uri) {
+	private javax.servlet.jsp.tagext.TagInfo getTagInfo(final TLDElementDeclaration decl, javax.servlet.jsp.tagext.TagExtraInfo tei, String prefix, String uri) {
 
-		TagLibraryInfo libInfo = new TagLibraryInfoImpl(prefix, uri, decl);
+		javax.servlet.jsp.tagext.TagLibraryInfo libInfo = new TagLibraryInfoImpl(prefix, uri, decl);
 
 		CMNamedNodeMap attrs = decl.getAttributes();
-		TagAttributeInfo[] attrInfos = new TagAttributeInfo[attrs.getLength()];
+		javax.servlet.jsp.tagext.TagAttributeInfo[] attrInfos = new javax.servlet.jsp.tagext.TagAttributeInfo[attrs.getLength()];
 		TLDAttributeDeclaration attr = null;
 		String type = ""; //$NON-NLS-1$ 
 
@@ -799,14 +825,47 @@ public class TaglibHelper {
 			// default value for type is String
 			if (attr.getType() == null || attr.getType().equals("")) //$NON-NLS-1$ 
 				type = "java.lang.String"; //$NON-NLS-1$ 
-			attrInfos[i] = new TagAttributeInfo(attr.getAttrName(), attr.isRequired(), type, false);
+			attrInfos[i] = new javax.servlet.jsp.tagext.TagAttributeInfo(attr.getAttrName(), attr.isRequired(), type, false);
 		}
 
 		String tagName = decl.getNodeName();
 		String tagClass = decl.getTagclass();
 		String bodyContent = decl.getBodycontent();
 		if (tagName != null && tagClass != null && bodyContent != null)
-			return new TagInfo(tagName, tagClass, bodyContent, decl.getInfo(), libInfo, tei, attrInfos);
+			return new javax.servlet.jsp.tagext.TagInfo(tagName, tagClass, bodyContent, decl.getInfo(), libInfo, tei, attrInfos);
+		return null;
+
+	}
+
+	/**
+	 * @param decl
+	 * @return the TagInfo for the TLDELementDeclaration if the declaration is
+	 *         valid, otherwise null
+	 */
+	private jakarta.servlet.jsp.tagext.TagInfo getTagInfo(final TLDElementDeclaration decl, jakarta.servlet.jsp.tagext.TagExtraInfo tei, String prefix, String uri) {
+
+		jakarta.servlet.jsp.tagext.TagLibraryInfo libInfo = new JakartaTagLibraryInfoImpl(prefix, uri, decl);
+
+		CMNamedNodeMap attrs = decl.getAttributes();
+		jakarta.servlet.jsp.tagext.TagAttributeInfo[] attrInfos = new jakarta.servlet.jsp.tagext.TagAttributeInfo[attrs.getLength()];
+		TLDAttributeDeclaration attr = null;
+		String type = ""; //$NON-NLS-1$
+
+		// get tag attribute infos
+		for (int i = 0; i < attrs.getLength(); i++) {
+			attr = (TLDAttributeDeclaration) attrs.item(i);
+			type = attr.getType();
+			// default value for type is String
+			if (attr.getType() == null || attr.getType().equals("")) //$NON-NLS-1$
+				type = "java.lang.String"; //$NON-NLS-1$
+			attrInfos[i] = new jakarta.servlet.jsp.tagext.TagAttributeInfo(attr.getAttrName(), attr.isRequired(), type, false);
+		}
+
+		String tagName = decl.getNodeName();
+		String tagClass = decl.getTagclass();
+		String bodyContent = decl.getBodycontent();
+		if (tagName != null && tagClass != null && bodyContent != null)
+			return new jakarta.servlet.jsp.tagext.TagInfo(tagName, tagClass, bodyContent, decl.getInfo(), libInfo, tei, attrInfos);
 		return null;
 
 	}
@@ -829,8 +888,8 @@ public class TaglibHelper {
 	 * @param customTag
 	 * @return
 	 */
-	private Hashtable extractTagData(ITextRegionCollection customTag) {
-		Hashtable tagDataTable = new Hashtable();
+	private Hashtable<String, Object> extractTagData(ITextRegionCollection customTag) {
+		Hashtable<String, Object> tagDataTable = new Hashtable<String, Object>();
 		ITextRegionList regions = customTag.getRegions();
 		ITextRegion r = null;
 		String attrName = ""; //$NON-NLS-1$
@@ -921,7 +980,7 @@ public class TaglibHelper {
 		return TLDElementDeclaration.SOURCE_TAG_FILE.equals(decl.getProperty(TLDElementDeclaration.TAG_SOURCE)) || (path != null && path.startsWith("/META-INF/tags")); //$NON-NLS-1$
 	}
 
-	private boolean validateTagClass(IStructuredDocument document, ITextRegionCollection customTag, TLDElementDeclaration decl, List problems) {
+	private boolean validateTagClass(IStructuredDocument document, ITextRegionCollection customTag, TLDElementDeclaration decl, List<IProblem> problems) {
 		// skip if from a tag file
 		if (isTagFile(decl) || fJavaProject == null) {
 			return false;
@@ -938,7 +997,7 @@ public class TaglibHelper {
 			}
 		}
 		if (tagClass == null) {
-			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TagClassNotFound, JSPCoreMessages.TaglibHelper_3, tagClassname, false);
+			IProblem createdProblem = createJSPProblem(document, customTag, IJSPProblem.TagClassNotFound, JSPCoreMessages.TaglibHelper_3, tagClassname, false);
 			if (createdProblem != null) {
 				problems.add(createdProblem);
 			}
@@ -1005,7 +1064,7 @@ public class TaglibHelper {
 
 	}
 
-	class TagLibraryInfoImpl extends TagLibraryInfo {
+	class TagLibraryInfoImpl extends javax.servlet.jsp.tagext.TagLibraryInfo {
 		TLDElementDeclaration decl;
 
 		TagLibraryInfoImpl(String prefix, String uri, TLDElementDeclaration decl){
@@ -1041,45 +1100,123 @@ public class TaglibHelper {
 			return ((TLDDocument)decl.getOwnerDocument()).getJspversion();
 		}
 
-		public TagInfo[] getTags() {
+		public javax.servlet.jsp.tagext.TagInfo[] getTags() {
 			if (Platform.inDebugMode())
 				new NotImplementedException().printStackTrace();
 			return super.getTags();
 		}
 
-		public TagFileInfo[] getTagFiles() {
+		public javax.servlet.jsp.tagext.TagFileInfo[] getTagFiles() {
 			if (Platform.inDebugMode())
 				new NotImplementedException().printStackTrace();
 			return super.getTagFiles();
 		}
 
-		public TagInfo getTag(String shortname) {
+		public javax.servlet.jsp.tagext.TagInfo getTag(String shortname) {
 			if (Platform.inDebugMode())
 				new NotImplementedException().printStackTrace();
 			return super.getTag(shortname);
 		}
 
-		public TagFileInfo getTagFile(String shortname) {
+		public javax.servlet.jsp.tagext.TagFileInfo getTagFile(String shortname) {
 			if (Platform.inDebugMode())
 				new NotImplementedException().printStackTrace();
 			return super.getTagFile(shortname);
 		}
 
-		public FunctionInfo[] getFunctions() {
+		public javax.servlet.jsp.tagext.FunctionInfo[] getFunctions() {
 			if (Platform.inDebugMode())
 				new NotImplementedException().printStackTrace();
 			return super.getFunctions();
 		}
 
-		public FunctionInfo getFunction(String name) {
+		public javax.servlet.jsp.tagext.FunctionInfo getFunction(String name) {
 			new NotImplementedException(name).printStackTrace();
 			return super.getFunction(name);
 		}
 
-		public TagLibraryInfo[] getTagLibraryInfos()  {
+		public javax.servlet.jsp.tagext.TagLibraryInfo[] getTagLibraryInfos()  {
 			if (Platform.inDebugMode())
 				new NotImplementedException().printStackTrace();
-			return new TagLibraryInfo[] { this };
+			return new javax.servlet.jsp.tagext.TagLibraryInfo[] { this };
+		}
+	}
+
+	class JakartaTagLibraryInfoImpl extends jakarta.servlet.jsp.tagext.TagLibraryInfo {
+		TLDElementDeclaration decl;
+
+		JakartaTagLibraryInfoImpl(String prefix, String uri, TLDElementDeclaration decl){
+			super(prefix, uri);
+			this.decl = decl;
+		}
+
+		public String getURI() {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getURI();
+		}
+
+		public String getPrefixString() {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getPrefixString();
+		}
+
+		public String getShortName() {
+			return ((TLDDocument)decl.getOwnerDocument()).getShortname();
+		}
+
+		public String getReliableURN() {
+			return ((TLDDocument)decl.getOwnerDocument()).getUri();
+		}
+
+		public String getInfoString() {
+			return ((TLDDocument)decl.getOwnerDocument()).getInfo();
+		}
+
+		public String getRequiredVersion() {
+			return ((TLDDocument)decl.getOwnerDocument()).getJspversion();
+		}
+
+		public jakarta.servlet.jsp.tagext.TagInfo[] getTags() {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getTags();
+		}
+
+		public jakarta.servlet.jsp.tagext.TagFileInfo[] getTagFiles() {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getTagFiles();
+		}
+
+		public jakarta.servlet.jsp.tagext.TagInfo getTag(String shortname) {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getTag(shortname);
+		}
+
+		public jakarta.servlet.jsp.tagext.TagFileInfo getTagFile(String shortname) {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getTagFile(shortname);
+		}
+
+		public jakarta.servlet.jsp.tagext.FunctionInfo[] getFunctions() {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return super.getFunctions();
+		}
+
+		public jakarta.servlet.jsp.tagext.FunctionInfo getFunction(String name) {
+			new NotImplementedException(name).printStackTrace();
+			return super.getFunction(name);
+		}
+
+		public jakarta.servlet.jsp.tagext.TagLibraryInfo[] getTagLibraryInfos()  {
+			if (Platform.inDebugMode())
+				new NotImplementedException().printStackTrace();
+			return new jakarta.servlet.jsp.tagext.TagLibraryInfo[] { this };
 		}
 	}
 }

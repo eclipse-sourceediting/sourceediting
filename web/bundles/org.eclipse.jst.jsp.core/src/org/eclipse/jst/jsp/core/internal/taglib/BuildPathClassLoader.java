@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2009, 2026 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -95,10 +95,12 @@ public class BuildPathClassLoader extends ClassLoader {
 				if ("class".equalsIgnoreCase(path.getFileExtension())) {
 					IFile file = null;
 
-					if (resource != null && resource.getType() == IResource.FILE)
+					if (resource != null && resource.getType() == IResource.FILE) {
 						file = (IFile) resource;
-					else
+					}
+					else {
 						file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+					}
 
 					if (file != null && file.isAccessible()) {
 						byte[] bytes = loadBytes(file);

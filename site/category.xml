@@ -118,4 +118,10 @@
 
   <category-def name="wtp.js_support.sources" label="Web Tools Platform (WTP) JavaScript Support Sources"><description>These bundles provide sources.</description></category-def>
   <category-def name="wtp.js_support.sdk.sources" label="Web Tools Platform SDK (WTP SDK) JavaScript Support Sources"><description>These bundles provide sources.</description></category-def>
+
+<category-def name="deps" label="Dependencies"><description>These 3rd party bundles are required to install and run WTP Source Editing, but not included in features.</description></category-def>
+    <bundle id="jakarta.servlet"><category name="deps"/></bundle>
+    <bundle id="jakarta.servlet.jsp"><category name="deps"/></bundle>
+    <bundle id="javax.servlet"><category name="deps"/></bundle>
+    <bundle id="javax.servlet.jsp"><category name="deps"/></bundle>
 </site>
