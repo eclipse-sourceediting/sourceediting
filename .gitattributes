@@ -1,0 +1,14 @@
+# Copyright (c) 2026, Oracle and/or its affiliates.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# https://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# Preserve the bytes and upstream whitespace of these vendor schemas.
+web/bundles/org.eclipse.jst.standard.schemas/dtdsAndSchemas/jakartaee_11.xsd -text -whitespace
+web/bundles/org.eclipse.jst.standard.schemas/dtdsAndSchemas/jsp_4_0.xsd -text -whitespace
+web/bundles/org.eclipse.jst.standard.schemas/dtdsAndSchemas/web-app_6_1.xsd -text -whitespace
+web/bundles/org.eclipse.jst.standard.schemas/dtdsAndSchemas/web-common_6_1.xsd -text -whitespace
+web/bundles/org.eclipse.jst.standard.schemas/dtdsAndSchemas/web-fragment_6_1.xsd -text -whitespace
+web/bundles/org.eclipse.jst.standard.schemas/dtdsAndSchemas/xml.xsd -text -whitespace
