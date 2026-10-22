@@ -582,6 +582,13 @@
                 name="http://xmlns.jcp.org/xml/ns/javaee/web-partialresponse_2_3.xsd"
                 uri="dtdsAndSchemas/web-partialresponse_2_3.xsd"/>
 
+            <uri name="https://jakarta.ee/xml/ns/jakartaee/jakartaee_11.xsd" uri="dtdsAndSchemas/jakartaee_11.xsd"/>
+            <uri name="https://jakarta.ee/xml/ns/jakartaee/jsp_4_0.xsd" uri="dtdsAndSchemas/jsp_4_0.xsd"/>
+            <uri name="https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd" uri="dtdsAndSchemas/web-app_6_1.xsd"/>
+            <uri name="https://jakarta.ee/xml/ns/jakartaee/web-common_6_1.xsd" uri="dtdsAndSchemas/web-common_6_1.xsd"/>
+            <uri name="https://jakarta.ee/xml/ns/jakartaee/web-fragment_6_1.xsd" uri="dtdsAndSchemas/web-fragment_6_1.xsd"/>
+            <uri name="https://www.w3.org/2001/xml.xsd" uri="dtdsAndSchemas/xml.xsd"/>
+            <uri name="http://www.w3.org/2001/xml.xsd" uri="dtdsAndSchemas/xml.xsd"/>
         </catalogContribution>
 
     </extension>
