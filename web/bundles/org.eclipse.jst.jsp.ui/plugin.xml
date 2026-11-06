@@ -6,7 +6,7 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor
 			name="%JSP_Source_Page_Editor.name"
-			icon="$nl$/icons//full/obj16/sourceEditor.gif"
+			icon="$nl$/icons//full/obj16/sourceEditor.svg"
 			extensions="jsp, jsf, jspf, jspx, tag, tagx, tagf"
 			contributorClass="org.eclipse.jst.jsp.ui.internal.editor.ActionContributorJSP"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
@@ -19,7 +19,7 @@
 		</editor>
 		<editor
 			name="%CSS_JSP_Source_Page_Editor.name"
-			icon="$nl$/icons//full/obj16/sourceEditor.gif"
+			icon="$nl$/icons//full/obj16/sourceEditor.svg"
 			contributorClass="org.eclipse.jst.jsp.ui.internal.editor.ActionContributorJSP"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.jst.jsp.core.cssjspsource.source">

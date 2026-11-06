@@ -325,7 +325,7 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor
 			name="%XML_Editor.name"
-			icon="$nl$/icons/xmldoc.gif"
+			icon="$nl$/icons/xmldoc.svg"
 			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart">
@@ -527,7 +527,7 @@
             colorPreferenceKey="matchingTagIndicationColor"
             presentationLayer="4"
             label="%MatchingTagPreference.label"
-            icon="icons/full/obj16/tag-generic.gif"
+            icon="icons/full/obj16/tag-generic.svg"
             textPreferenceValue="false"
             textPreferenceKey="matchingTagIndication"
             highlightPreferenceKey="matchingTagHighlight"
@@ -752,7 +752,7 @@
     <wizard
           category="org.eclipse.wst.XMLCategory"
           class="org.eclipse.wst.xml.ui.internal.wizards.ImportXMLCatalogWizard"
-          icon="icons/xmldoc.gif"
+          icon="icons/xmldoc.svg"
           id="org.eclipse.wst.xml.ui.internal.wizards.ImportXMLCatalogWizard"
           name="%_UI_WIZARD_IMPORT_EXPORT_XMLCATALOG">
        <description>
@@ -769,7 +769,7 @@
     <wizard
           category="org.eclipse.wst.XMLCategory"
           class="org.eclipse.wst.xml.ui.internal.wizards.ExportXMLCatalogWizard"
-          icon="icons/xmldoc.gif"
+          icon="icons/xmldoc.svg"
           id="org.eclipse.wst.xml.ui.internal.wizards.ExportXMLCatalogWizard"
           name="%_UI_WIZARD_IMPORT_EXPORT_XMLCATALOG">
        <description>
@@ -1488,7 +1488,7 @@
 	<extension point="org.eclipse.ui.perspectives">
 		<perspective id="org.eclipse.wst.xml.ui.perspective"
 			class="org.eclipse.wst.xml.ui.internal.perspective.XMLPerspectiveFactory"
-			icon="$nl$/icons/full/xml_perspective.gif" 
+			icon="$nl$/icons/full/xml_perspective.svg" 
 			name="%XML.name"/>
 	</extension>
 	
@@ -1604,7 +1604,7 @@
  <extension
        point="org.eclipse.wst.sse.ui.completionProposal">
     <proposalCategory
-          icon="icons/full/obj16/tag-generic.gif"
+          icon="icons/full/obj16/tag-generic.svg"
           id="org.eclipse.wst.xml.ui.proposalCategory.xmlTags"
           name="%proposalCategory.xmlTags">
     </proposalCategory>
@@ -1648,7 +1648,7 @@
      <view category="org.eclipse.wst.xml"
            class="org.eclipse.wst.xml.ui.internal.views.annotations.XMLAnnotationsView"
            id="org.eclipse.wst.xml.ui.views.annotations.XMLAnnotationsView"
-           icon="icons/full/obj16/comment_obj.gif"
+           icon="icons/full/obj16/comment_obj.svg"
            name="%xmlannotations"
            restorable="true">
      </view>
